@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, MapPin, Calendar, FileText } from "lucide-react";
 
@@ -35,6 +35,12 @@ export function ReportDetails() {
   const communityAsync = useAsync(() => getCommunityConfirmation(id), [id]);
 
   const report = reportAsync.data;
+
+  useEffect(() => {
+    if (!["pending", "processing"].includes(report?.aiStatus)) return undefined;
+    const timer = window.setInterval(reportAsync.reload, 3000);
+    return () => window.clearInterval(timer);
+  }, [report?.aiStatus, reportAsync.reload]);
   const resolved = report?.status === "resolved" || report?.status === "closed";
 
   const handleConfirm = async (verdict) => {

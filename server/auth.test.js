@@ -16,7 +16,7 @@ let base;
 
 before(() => new Promise((resolve) => { server = app.listen(0, "127.0.0.1", () => { base = `http://127.0.0.1:${server.address().port}/api/auth`; resolve(); }); }));
 after(() => new Promise((resolve) => {
-  server.close(() => { fs.rmSync(tempDir, { recursive: true, force: true }); resolve(); });
+  server.close(() => { sql.close(); fs.rmSync(tempDir, { recursive: true, force: true }); resolve(); });
   server.closeAllConnections();
 }));
 

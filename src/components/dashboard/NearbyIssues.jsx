@@ -70,7 +70,7 @@ function IssueRow({ issue, user, onVote, voting }) {
                 disabled={voting}
                 onClick={() => onVote?.(issue.id, "legit")}
               >
-                <ThumbsUp size={12} /> Legit {issue.legitimacy.legit}
+                <ThumbsUp size={12} /> Confirm issue {issue.legitimacy.legit}
               </Button>
               <Button
                 type="button"
@@ -80,7 +80,7 @@ function IssueRow({ issue, user, onVote, voting }) {
                 disabled={voting}
                 onClick={() => onVote?.(issue.id, "fake")}
               >
-                <ThumbsDown size={12} /> Fake {issue.legitimacy.fake}
+                <ThumbsDown size={12} /> Needs review {issue.legitimacy.fake}
               </Button>
             </>
           )}

@@ -30,13 +30,8 @@ function validateFile(file) {
 }
 
 function MediaItem({ item, onRemove }) {
-  const [phase, setPhase] = useState("processing");
+  const phase = "ready";
   const Icon = item.kind === "video" ? Video : ImagePlus;
-
-  useEffect(() => {
-    const t = setTimeout(() => setPhase("ready"), 900);
-    return () => clearTimeout(t);
-  }, []);
 
   return (
     <div className="group relative aspect-square overflow-hidden rounded-lg border bg-muted">

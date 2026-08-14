@@ -4,7 +4,7 @@ import cors from "cors";
 import fs from "node:fs";
 import path from "node:path";
 import { authRouter, withAuth } from "./auth.js";
-import { reportsRouter } from "./reports.js";
+import { reportsRouter, resumePendingAnalyses } from "./reports.js";
 import { requireTrustedMutation } from "./security.js";
 
 export const app = express();
@@ -46,5 +46,6 @@ if (process.env.NODE_ENV !== "test") {
   app.listen(PORT, () => {
     console.log(`CivicAI API running on http://localhost:${PORT}`);
     console.log("Auth: bcrypt + hashed server-side sessions + real transactional email");
+    resumePendingAnalyses();
   });
 }

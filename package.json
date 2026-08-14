@@ -10,6 +10,7 @@
     "postinstall": "npm --prefix server install",
     "build": "vite build",
     "lint": "oxlint",
+    "test": "npm --prefix server test",
     "preview": "vite preview",
     "start": "node server/server.js"
   },

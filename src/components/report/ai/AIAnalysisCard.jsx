@@ -9,15 +9,17 @@ import { cn } from "@/lib/utils";
 
 function pickCategory(analysis) {
   if (analysis.classification) return analysis.classification.categoryKey ?? "other";
-  return analysis.category ?? "other";
+  return analysis.aiCategory ?? analysis.category ?? "other";
 }
 
 function pickSeverity(analysis) {
+  if (analysis.aiSeverity) return analysis.aiSeverity;
   if (analysis.severity) return analysis.severity.level ?? analysis.severity;
-  return analysis.severity ?? "medium";
+  return "medium";
 }
 
 function pickPriority(analysis) {
+  if (typeof analysis.aiPriority === "number") return analysis.aiPriority;
   if (typeof analysis.priority === "number") return analysis.priority;
   if (analysis.priority?.score != null) return analysis.priority.score;
   return analysis.priorityScore ?? 0;
@@ -25,10 +27,7 @@ function pickPriority(analysis) {
 
 /**
  * Shared AI analysis summary card — one consistent rendering of the
- * analysis contract for citizen step 4, admin issue details, priority
- * queue rows and department tasks. Handles both the structured contract
- * (analysisService.runAnalysis) and the flat citizen shape
- * (reportService.analyzeReport).
+ * persisted advisory analysis contract for citizen, admin, and authority views.
  */
 export function AIAnalysisCard({ analysis, onOpenReport, className }) {
   const category = pickCategory(analysis);
@@ -41,16 +40,16 @@ export function AIAnalysisCard({ analysis, onOpenReport, className }) {
   const priorityScore = pickPriority(analysis);
   const prioMeta = priorityLevelForScore(priorityScore);
 
-  const confidence =
-    analysis.classification?.confidence ?? analysis.aiConfidence?.classification;
+  const rawConfidence = analysis.classification?.confidence ?? analysis.aiConfidence?.classification ?? analysis.aiConfidence;
+  const confidence = typeof rawConfidence === "number" && rawConfidence <= 1 ? Math.round(rawConfidence * 100) : rawConfidence;
 
-  const state = analysis.state ?? "complete";
-  const department = analysis.department?.name ?? analysis.department;
+  const state = analysis.state ?? analysis.aiStatus ?? "complete";
+  const department = analysis.aiDepartment ?? analysis.department?.name ?? analysis.department;
   const departmentConfidence =
-    analysis.department?.confidence ?? analysis.aiConfidence?.department;
+    analysis.department?.confidence;
   const duplicate = analysis.duplicate?.detected ?? analysis.duplicate;
   const matchedId = analysis.duplicate?.matchedReportId ?? analysis.duplicate?.matched?.reportId;
-  const explanation = analysis.explanation?.points ?? (analysis.explanation ? [{ detail: analysis.explanation }] : []);
+  const explanation = analysis.explanation?.points ?? (analysis.aiReasoningSummary ? [{ detail: analysis.aiReasoningSummary }] : analysis.explanation ? [{ detail: analysis.explanation }] : []);
 
   return (
     <AnalysisPanel

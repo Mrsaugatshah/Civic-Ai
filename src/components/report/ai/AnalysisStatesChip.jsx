@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils";
 
 const STATE_STYLE = {
   complete: "bg-success/10 text-success-foreground",
+  pending: "bg-muted text-muted-foreground",
+  processing: "bg-ai/10 text-ai-foreground",
   partial: "bg-warning/10 text-warning-foreground",
   low_confidence: "bg-warning/10 text-warning-foreground",
   failed: "bg-error/10 text-error-foreground",

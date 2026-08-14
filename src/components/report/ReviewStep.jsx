@@ -1,9 +1,9 @@
-import { FileImage, Mic, FileText, MapPin, Sparkles, Pencil, Gauge, ShieldCheck } from "lucide-react";
+import { FileImage, Mic, FileText, MapPin, Sparkles, Pencil, ShieldCheck } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { reportCategoryMeta, SEVERITY_META } from "./reportMeta";
+import { reportCategoryMeta } from "./reportMeta";
 
 function ReviewRow({ icon, label, onEdit, children }) {
   return (
@@ -28,12 +28,9 @@ function ReviewRow({ icon, label, onEdit, children }) {
 export function ReviewStep({ report, analysis, edits, onJump }) {
   const { media = [], transcript = "", description = "", location } = report;
   const category = edits.category ?? analysis?.category;
-  const severity = edits.severity ?? analysis?.severity;
-  const corrected = edits.category || edits.severity;
 
   const catMeta = category ? reportCategoryMeta(category) : null;
   const CatIcon = catMeta?.icon;
-  const sevMeta = severity ? SEVERITY_META[severity] : null;
 
   return (
     <div className="space-y-4">
@@ -85,7 +82,7 @@ export function ReviewStep({ report, analysis, edits, onJump }) {
             </ReviewRow>
 
             <ReviewRow icon={<Sparkles size={15} />} label="AI analysis" onEdit={() => onJump(3)}>
-              {analysis ? (
+              {category ? (
                 <div className="flex flex-wrap items-center gap-2">
                   {catMeta && CatIcon && (
                     <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold ${catMeta.tone}`}>
@@ -93,28 +90,11 @@ export function ReviewStep({ report, analysis, edits, onJump }) {
                       {catMeta.label}
                     </span>
                   )}
-                  {sevMeta && (
-                    <span
-                      className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold"
-                      style={{ backgroundColor: `${sevMeta.dot}1A`, color: sevMeta.dot }}
-                    >
-                      <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: sevMeta.dot }} />
-                      {sevMeta.label}
-                    </span>
-                  )}
-                  <span className="flex items-center gap-1 text-xs font-semibold text-foreground">
-                    <Gauge size={13} className="text-ai" />
-                    Priority {analysis.priorityScore}/100
-                  </span>
-                  {corrected && (
-                    <Badge variant="secondary" className="font-normal">
-                      <Pencil size={10} className="text-primary" />
-                      Updated by you
-                    </Badge>
-                  )}
+                  <Badge variant="secondary" className="font-normal">Citizen-selected category</Badge>
+                  <span className="text-xs text-muted-foreground">AI recommendations run after the report is safely stored.</span>
                 </div>
               ) : (
-                <span className="text-muted-foreground">Run AI analysis first</span>
+                <span className="text-muted-foreground">Choose a category before submitting</span>
               )}
             </ReviewRow>
           </div>

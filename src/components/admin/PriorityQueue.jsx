@@ -110,10 +110,7 @@ export function PriorityQueue({ data, loading, error, onRetry, onOpenIssue }) {
                   <StatusBadge status={issue.status} className="shrink-0 px-2 py-0.5 text-[11px]" />
                 </div>
                 <AIAnalysisCard analysis={issue} />
-                <p className="text-xs text-muted-foreground">
-                  Community legitimacy: {issue.legitimacy.score == null ? "Unverified" : `${issue.legitimacy.score}%`}
-                  {` · ${issue.legitimacy.legit} legit / ${issue.legitimacy.fake} fake`}
-                </p>
+                <p className="text-xs text-muted-foreground">AI authenticity assessment: {issue.legitimacy.assessment?.replaceAll("_", " ") ?? "Not analyzed"} · Advisory only</p>
               </button>
             ))}
           </div>

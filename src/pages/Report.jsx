@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowLeft, Sparkles } from "lucide-react";
 import { toast } from "sonner";
@@ -28,16 +28,11 @@ const STEPS = [
   { title: "Add evidence", subtitle: "Photos, videos, or a voice note help the AI understand the problem." },
   { title: "Describe the issue", subtitle: "A few sentences are enough — the AI drafts the rest." },
   { title: "Pin the location", subtitle: "Drop the pin on the exact spot so the right team finds it." },
-  { title: "AI analysis", subtitle: "CivicAI estimates the category, severity, and priority." },
-  { title: "Review & submit", subtitle: "Confirm everything, correct the AI if needed, and submit." },
+  { title: "Report category", subtitle: "Choose the closest category; secure AI analysis starts after submission." },
+  { title: "Review & submit", subtitle: "Confirm the citizen-provided information and submit it safely." },
 ];
 
 const EMPTY_REPORT = { media: [], transcript: "", description: "", location: null };
-
-function reportFingerprint(report) {
-  const { media = [], transcript = "", description = "", location } = report;
-  return `${description}|${transcript}|${media.length}|${location?.name}|${location?.mapX}|${location?.mapY}`;
-}
 
 export function Report() {
   const [searchParams] = useSearchParams();
@@ -58,7 +53,6 @@ function GuidedReport() {
   const [report, setReport] = useState(EMPTY_REPORT);
   const [step, setStep] = useState(0);
   const [errors, setErrors] = useState({});
-  const [analysis, setAnalysis] = useState(null);
   const [edits, setEdits] = useState({});
   const [phase, setPhase] = useState("form"); // form | submitting | success | submitError
   const [submission, setSubmission] = useState(null);
@@ -89,17 +83,16 @@ function GuidedReport() {
       const hasContent =
         report.media.length > 0 || report.transcript || report.description || report.location || step > 0;
       if (hasContent) {
-        saveDraft({ report, step, analysis, edits, touched: true });
+        saveDraft({ report, step, edits, touched: true });
       }
     }, 400);
     return () => clearTimeout(timer);
-  }, [report, step, analysis, edits, phase, restored]);
+  }, [report, step, edits, phase, restored]);
 
   const continueDraft = () => {
     if (!draft) return;
     setReport(draft.report ?? EMPTY_REPORT);
     setStep(draft.step ?? 0);
-    setAnalysis(draft.analysis ?? null);
     setEdits(draft.edits ?? {});
     setDraft(null);
     toast.info("Draft restored — pick up where you left off.");
@@ -160,18 +153,17 @@ function GuidedReport() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const fingerprint = useMemo(() => reportFingerprint(report), [report]);
-  const analysisDone = Boolean(analysis);
+  const analysisDone = Boolean(edits.category);
 
   const handleSubmit = async () => {
     if (phase === "submitting") return;
-    const category = edits.category ?? analysis?.category ?? "other";
+    const category = edits.category ?? "other";
     const categoryDefinition = getCategory(category);
     setPhase("submitting");
     try {
       const result = await submitReport({
         title: categoryDefinition?.label ?? "Civic issue report",
-        categoryLabel: categoryDefinition?.label ?? analysis?.categoryLabel,
+        categoryLabel: categoryDefinition?.label,
         category,
         description: report.description || report.transcript,
         location: report.location,
@@ -227,9 +219,6 @@ function GuidedReport() {
         return (
           <AnalysisStep
             input={{ description: report.description, transcript: report.transcript, location: report.location }}
-            fingerprint={fingerprint}
-            analysis={analysis}
-            setAnalysis={setAnalysis}
             edits={edits}
             setEdits={setEdits}
           />
@@ -238,7 +227,7 @@ function GuidedReport() {
         return (
           <ReviewStep
             report={report}
-            analysis={analysis}
+            analysis={null}
             edits={edits}
             onJump={jumpTo}
           />
@@ -295,7 +284,7 @@ function GuidedReport() {
         backLabel={step === 3 ? "Back to location" : "Back"}
         canContinue={step !== 3 || analysisDone}
         busy={phase === "submitting"}
-        aside={<ReportPreview report={report} analysis={analysis} />}
+        aside={<ReportPreview report={report} analysis={null} />}
       >
         {stepContent}
       </ReportLayout>

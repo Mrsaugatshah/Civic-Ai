@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 
 export function ReportSuccess({ submission, onTrack, onHome }) {
   const [count, setCount] = useState(0);
-  const doneCount = 2;
+  const doneCount = 1;
 
   useEffect(() => {
     const start = performance.now();
@@ -52,8 +52,7 @@ export function ReportSuccess({ submission, onTrack, onHome }) {
             Report submitted
           </h1>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-            Thanks for looking out for your neighborhood. The responsible team has been notified and
-            will pick this up based on AI priority.
+            Thanks for looking out for your neighborhood. Your report is safely stored and backend AI analysis is now queued.
           </p>
         </div>
 

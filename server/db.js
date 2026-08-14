@@ -65,7 +65,40 @@ sql.exec(`
     token_hash TEXT NOT NULL UNIQUE, created_at INTEGER NOT NULL, expires_at INTEGER NOT NULL
   );
   CREATE INDEX IF NOT EXISTS idx_sessions_user ON sessions(user_id);
+  CREATE TABLE IF NOT EXISTS report_ai_analyses (
+    id TEXT PRIMARY KEY, report_id TEXT NOT NULL REFERENCES reports(id) ON DELETE CASCADE,
+    version INTEGER NOT NULL, status TEXT NOT NULL,
+    category TEXT, subcategory TEXT, priority_level TEXT, priority_score INTEGER, severity TEXT,
+    department TEXT, confidence REAL, summary TEXT, reasoning_summary TEXT, safety_risk TEXT,
+    requires_immediate_attention INTEGER, authenticity_assessment TEXT,
+    suspicion_indicators_json TEXT, duplicate_keywords_json TEXT, similar_report_ids_json TEXT,
+    tags_json TEXT, detected_language TEXT, provider TEXT, model TEXT, failure_code TEXT,
+    attempt_count INTEGER NOT NULL DEFAULT 0, requested_by TEXT, started_at TEXT,
+    completed_at TEXT, created_at TEXT NOT NULL, updated_at TEXT NOT NULL,
+    UNIQUE(report_id, version)
+  );
+  CREATE INDEX IF NOT EXISTS idx_ai_analyses_report_version ON report_ai_analyses(report_id, version DESC);
+  CREATE INDEX IF NOT EXISTS idx_ai_analyses_status ON report_ai_analyses(status, created_at);
+  CREATE TABLE IF NOT EXISTS report_overrides (
+    id TEXT PRIMARY KEY, report_id TEXT NOT NULL REFERENCES reports(id) ON DELETE CASCADE,
+    actor_id TEXT NOT NULL, field TEXT NOT NULL, previous_value TEXT, new_value TEXT NOT NULL,
+    reason TEXT, created_at TEXT NOT NULL
+  );
+  CREATE INDEX IF NOT EXISTS idx_report_overrides_report ON report_overrides(report_id, created_at DESC);
 `);
+
+function ensureReportColumn(name, definition) {
+  const columns = new Set(sql.prepare("PRAGMA table_info(reports)").all().map((column) => column.name));
+  if (!columns.has(name)) sql.exec(`ALTER TABLE reports ADD COLUMN ${name} ${definition}`);
+}
+
+for (const [name, definition] of [
+  ["ai_analysis_id", "TEXT"], ["ai_priority_level", "TEXT"], ["ai_severity", "TEXT"],
+  ["ai_reasoning_summary", "TEXT"], ["ai_safety_risk", "TEXT"], ["ai_immediate_attention", "INTEGER"],
+  ["ai_authenticity", "TEXT"], ["ai_language", "TEXT"], ["ai_tags_json", "TEXT"],
+  ["ai_duplicate_keywords_json", "TEXT"], ["ai_similar_ids_json", "TEXT"], ["ai_provider", "TEXT"],
+  ["ai_model", "TEXT"], ["ai_failure_code", "TEXT"], ["ai_attempt_count", "INTEGER NOT NULL DEFAULT 0"],
+]) ensureReportColumn(name, definition);
 
 function defaultDB() {
   return {

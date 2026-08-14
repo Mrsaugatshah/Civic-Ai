@@ -30,24 +30,20 @@ import {
 } from "@/components/ui/select";
 import { ReportSuccess } from "./ReportSuccess";
 import {
-  analyzeReport,
   submitReport,
   REPORT_PLACES,
 } from "@/services/report/reportService";
-import { getCategory } from "@/services/categories/categoryService";
-import { useAuth } from "@/contexts/AuthContext";
 
 let quickSeq = 0;
 
 export function QuickReport() {
   const navigate = useNavigate();
-  const { user } = useAuth();
   const inputRef = useRef(null);
   const [media, setMedia] = useState([]);
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState(null);
   const [locating, setLocating] = useState(false);
-  const [phase, setPhase] = useState("form"); // form | analyzing | error | success
+  const [phase, setPhase] = useState("form"); // form | submitting | error | success
   const [submission, setSubmission] = useState(null);
   const [error, setError] = useState("");
 
@@ -66,7 +62,7 @@ export function QuickReport() {
       }
       const reader = new FileReader();
       reader.onload = () => {
-        setMedia((m) => [...m, { id: `q-${++quickSeq}`, name: file.name, preview: reader.result }]);
+        setMedia((m) => [...m, { id: `q-${++quickSeq}`, name: file.name, preview: reader.result, file }]);
       };
       reader.readAsDataURL(file);
     }
@@ -118,26 +114,16 @@ export function QuickReport() {
       return;
     }
     setError("");
-    setPhase("analyzing");
+    setPhase("submitting");
     try {
-      const result = await analyzeReport(
-        { description, transcript: "", location },
-        {}
-      );
-      const categoryDefinition = getCategory(result.category);
       const submitResult = await submitReport({
-        priority: result.priorityScore,
-        categoryLabel: result.categoryLabel,
-        categoryDepartment: categoryDefinition?.department ?? result.categoryDepartment,
-        category: result.category,
-        severity: result.severity,
+        title: "Quick civic report",
+        category: "other",
         description,
         location,
         media: media.map((item) => ({ ...item, kind: "image" })),
-        explanation: result.explanation,
-        reporter: { id: user?.id, email: user?.email, name: user?.name },
       });
-      setSubmission({ ...submitResult, categoryKey: result.category });
+      setSubmission({ ...submitResult, categoryKey: "other" });
       setPhase("success");
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch {
@@ -301,11 +287,11 @@ export function QuickReport() {
                   Back
                 </Link>
               </Button>
-              <Button size="sm" onClick={submit} disabled={phase === "analyzing"}>
-                {phase === "analyzing" ? (
+              <Button size="sm" onClick={submit} disabled={phase === "submitting"}>
+                {phase === "submitting" ? (
                   <>
                     <Loader2 size={15} className="animate-spin" />
-                    Analyzing &amp; submitting…
+                    Submitting securely…
                   </>
                 ) : (
                   <>
@@ -318,7 +304,7 @@ export function QuickReport() {
             </div>
             <p className="mt-2 flex items-center justify-center gap-1.5 text-center text-[11px] text-muted-foreground">
               <UploadCloud size={11} />
-              Our AI verifies, prioritizes, and routes your report.
+              Your report is stored first; advisory AI analysis then runs securely on the backend.
             </p>
           </div>
         </div>
