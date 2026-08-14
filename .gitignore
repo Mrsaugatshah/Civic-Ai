@@ -1,6 +1,31 @@
+# Dependencies
 node_modules/
+server/node_modules/
+
+# Build output
 dist/
-*.log
+build/
+
+# Environment files
 .env
+.env.local
+.env.*.local
+server/.env
+
+# Logs
+*.log
+
+# Vite/cache
+.vite/
+
+# OS
 .DS_Store
-Civic-Shield/
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*.temp
