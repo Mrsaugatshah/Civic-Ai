@@ -1,5 +1,5 @@
                    CivicAI
- -> Making civic's problem reporting simpler, smarter, and more transparent.
+ -> Making civic's problem reporting simpler, smarter, and more transparent..
 
  -> CivicAI is an AI-powered civic issue reporting and management platform
     designed to connect citizens with the concerned departments for solving
