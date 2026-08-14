@@ -1,0 +1,2452 @@
+{
+  "users": [
+    {
+      "id": "u_citizen",
+      "name": "Asha Mistry",
+      "email": "asha@city.gov",
+      "passwordHash": "$2a$10$TDeVdPtHDqnsFc5ZV9u.ZumrzIQ8oMqKW1GGIMNLVyVNKBk2kGTFS",
+      "role": "citizen",
+      "phone": "+977 9812 000 111",
+      "location": "Ward 11, Bharatpur",
+      "emailVerified": true,
+      "status": "active",
+      "provider": "password",
+      "createdAt": 1786600270918
+    },
+    {
+      "id": "u_authority",
+      "name": "Rajan Shrestha",
+      "email": "ward11@city.gov",
+      "passwordHash": "$2a$10$TDeVdPtHDqnsFc5ZV9u.ZumrzIQ8oMqKW1GGIMNLVyVNKBk2kGTFS",
+      "role": "authority",
+      "organization": "Ward 11 Office",
+      "department": "Roads & Infrastructure",
+      "phone": "+977 9812 000 222",
+      "emailVerified": true,
+      "status": "active",
+      "provider": "password",
+      "createdAt": 1786600270918
+    },
+    {
+      "id": "u_admin",
+      "name": "System Admin",
+      "email": "admin@city.gov",
+      "passwordHash": "$2a$10$TDeVdPtHDqnsFc5ZV9u.ZumrzIQ8oMqKW1GGIMNLVyVNKBk2kGTFS",
+      "role": "admin",
+      "emailVerified": true,
+      "status": "active",
+      "provider": "provisioned",
+      "createdAt": 1786600270918
+    },
+    {
+      "id": "u_73b68bda",
+      "name": "Rajan Mahato",
+      "email": "rajancdy14@gmail.com",
+      "passwordHash": "$2a$10$dlJZX5SaT/PByGedzmZpBuWU8TC8clQ.WLfxI31pyLzjPB87Fkesq",
+      "role": "citizen",
+      "phone": "9876543210",
+      "location": "Chitwan",
+      "organization": "",
+      "department": "",
+      "status": "active",
+      "emailVerified": true,
+      "provider": "password",
+      "createdAt": 1786600389506
+    },
+    {
+      "id": "u_b3f201d3",
+      "name": "Test",
+      "email": "regtest@test.dev",
+      "passwordHash": "$2a$10$eSBg.4SGWkaDxG/d/8y18em2Ney2bhxpiY6gSVXvWC.2EWPsO/TM6",
+      "role": "citizen",
+      "phone": "",
+      "location": "",
+      "organization": "",
+      "department": "",
+      "status": "active",
+      "emailVerified": false,
+      "provider": "password",
+      "createdAt": 1786608926335
+    },
+    {
+      "id": "u_729ddf0c-f7a1-44ec-81ae-1d03b57351fa",
+      "name": "sudip",
+      "email": "razancdy1@gmail.com",
+      "passwordHash": "$2a$12$dQk/6xOXz7N.A.4VL8d3iuRaGzmSEwTTQCejXIcbL0IxgSJvAypuy",
+      "role": "citizen",
+      "phone": "9876543210",
+      "location": "Chitwan",
+      "organization": "",
+      "department": "",
+      "status": "active",
+      "emailVerified": false,
+      "provider": "password",
+      "createdAt": 1786710409964,
+      "updatedAt": 1786710409964
+    },
+    {
+      "id": "u_6a7e1eb8-7d7b-4755-b1c4-ed52040bbb98",
+      "name": "Sudip Kafla",
+      "email": "kaflasudip717@gmail.com",
+      "passwordHash": "$2a$12$x4oN/ePBAX7MYvoNWwbmzuPL22wv1tJTz1NfMN2LyRV4y.7VF5ly6",
+      "role": "citizen",
+      "phone": "9876543211",
+      "location": "Chitwan",
+      "organization": "",
+      "department": "",
+      "status": "active",
+      "emailVerified": false,
+      "provider": "password",
+      "createdAt": 1786710468754,
+      "updatedAt": 1786710468754
+    },
+    {
+      "id": "u_caa4946d-6b0b-4baf-aa4e-a11e4302a021",
+      "name": "Sudip Kafla",
+      "email": "kaflesudip717@gmail.com",
+      "passwordHash": "$2a$12$3UcEpWvmSviAEW6wOvfpTOgQ.AsbF2.6fA.2yMdiNWygVwN8dY.dK",
+      "role": "citizen",
+      "phone": "9087654321",
+      "location": "chitwan",
+      "organization": "",
+      "department": "",
+      "status": "active",
+      "emailVerified": false,
+      "provider": "password",
+      "createdAt": 1786710559276,
+      "updatedAt": 1786710559276
+    },
+    {
+      "id": "u_344b3646-dc38-4877-a80d-1fe1b7cc1d31",
+      "name": "Ankit Adhakari",
+      "email": "adhikariankit45@gmail.com",
+      "passwordHash": "$2a$12$8D3rELoIE7JnSXy4j9hqUeDbw/DuOrb9ySz64Zf1E4CwcSnwi5f9q",
+      "role": "citizen",
+      "phone": "9087654321",
+      "location": "Chitwan",
+      "organization": "",
+      "department": "",
+      "status": "active",
+      "emailVerified": false,
+      "provider": "password",
+      "createdAt": 1786710729327,
+      "updatedAt": 1786710729327
+    },
+    {
+      "id": "u_c99016e3-8037-4779-8a61-e1633fbb2f59",
+      "name": "Sudip Kafla",
+      "email": "saugats082@gmail.com",
+      "passwordHash": "$2a$12$Xlmr2brjAkM72wDHrrfy1.u7RtOGii62gkV8J9OivFGrhkpqFvGti",
+      "role": "citizen",
+      "phone": "9087654321",
+      "location": "Chitwan",
+      "organization": "",
+      "department": "",
+      "status": "active",
+      "emailVerified": true,
+      "provider": "password",
+      "createdAt": 1786711620115,
+      "updatedAt": 1786712183915
+    }
+  ],
+  "sessions": [],
+  "emailVerificationTokens": [],
+  "passwordResetTokens": [],
+  "reports": [
+    {
+      "id": "CIV-2026-008421",
+      "category": "pothole",
+      "categoryLabel": "Pothole",
+      "title": "Road Damage — Main Road",
+      "description": "Large pothole on Main Road near the school crossing. Vehicles are swerving into the other lane to avoid it — dangerous during peak hours.",
+      "location": "Main Road, Narayangadh",
+      "locationData": {
+        "name": "Main Road, Narayangadh",
+        "mapX": 41,
+        "mapY": 52
+      },
+      "ward": "Ward 11",
+      "department": "Roads & Infrastructure",
+      "severity": "high",
+      "priority": 87,
+      "status": "in_progress",
+      "reportedAt": "2026-08-14T08:32:19.500Z",
+      "assignedAt": "2026-08-14T09:02:19.501Z",
+      "inProgressAt": "2026-08-14T09:32:19.501Z",
+      "resolvedAt": null,
+      "reporterId": "u_citizen",
+      "reporterName": "Asha Mistry",
+      "reportCount": 3,
+      "imageDataUrl": null,
+      "aiConfidence": {
+        "classification": 97,
+        "severity": 91,
+        "department": 91
+      },
+      "explanation": "Large pothole near a school crossing. Vehicles swerve to avoid it, raising accident risk. Multiple similar reports nearby.",
+      "notes": [],
+      "resolution": null,
+      "community": null,
+      "communityVerification": {
+        "votes": {
+          "u_102": "legit",
+          "u_203": "legit",
+          "u_304": "legit",
+          "u_405": "legit",
+          "u_506": "fake"
+        },
+        "updatedAt": "2026-08-14T09:02:19.501Z"
+      },
+      "activity": [
+        {
+          "key": "reported",
+          "at": "2026-08-14T08:32:19.500Z",
+          "text": "Issue reported by a citizen."
+        },
+        {
+          "key": "ai_analyzed",
+          "at": "2026-08-14T08:32:19.500Z",
+          "text": "CivicAI classified this as pothole with high severity (priority 87/100)."
+        },
+        {
+          "key": "routing_suggested",
+          "at": "2026-08-14T09:02:19.501Z",
+          "text": "Suggested routing: Roads & Infrastructure."
+        },
+        {
+          "key": "department_assigned",
+          "at": "2026-08-14T09:02:19.501Z",
+          "text": "Report assigned to Roads & Infrastructure."
+        },
+        {
+          "key": "status_changed",
+          "at": "2026-08-14T09:32:19.501Z",
+          "text": "Status changed from Assigned to In Progress."
+        }
+      ]
+    },
+    {
+      "id": "CIV-2026-008102",
+      "category": "road",
+      "categoryLabel": "Road Damage",
+      "title": "Road Damage — Main Road",
+      "description": "Cracked surface widening near the same stretch on Main Road.",
+      "location": "Main Road, Narayangadh",
+      "locationData": {
+        "name": "Main Road, Narayangadh",
+        "mapX": 41,
+        "mapY": 52
+      },
+      "ward": "Ward 11",
+      "department": "Roads & Infrastructure",
+      "severity": "medium",
+      "priority": 64,
+      "status": "under_review",
+      "reportedAt": "2026-08-14T04:32:19.502Z",
+      "assignedAt": null,
+      "inProgressAt": null,
+      "resolvedAt": null,
+      "reporterId": "u_citizen",
+      "reporterName": "Asha Mistry",
+      "reportCount": 2,
+      "imageDataUrl": null,
+      "aiConfidence": {
+        "classification": 90,
+        "severity": 88,
+        "department": 92
+      },
+      "explanation": "CivicAI classified this as Road Damage with medium severity. The issue was routed to Roads & Infrastructure.",
+      "notes": [],
+      "resolution": null,
+      "community": null,
+      "communityVerification": {
+        "votes": {
+          "u_102": "legit",
+          "u_203": "legit",
+          "u_304": "fake"
+        },
+        "updatedAt": "2026-08-14T04:32:19.502Z"
+      },
+      "activity": [
+        {
+          "key": "reported",
+          "at": "2026-08-14T04:32:19.502Z",
+          "text": "Issue reported by a citizen."
+        },
+        {
+          "key": "ai_analyzed",
+          "at": "2026-08-14T04:32:19.502Z",
+          "text": "CivicAI classified this as road damage with medium severity (priority 64/100)."
+        }
+      ]
+    },
+    {
+      "id": "CIV-2026-008397",
+      "category": "light_pole",
+      "categoryLabel": "Light Pole",
+      "title": "Streetlight flickering near the crossing",
+      "description": "Irregular flicker for two nights, dimming the whole crossing after dark.",
+      "location": "Ratnanagar",
+      "locationData": {
+        "name": "Ratnanagar",
+        "mapX": 87,
+        "mapY": 43
+      },
+      "ward": "Ward 9",
+      "department": "Electricity",
+      "severity": "medium",
+      "priority": 63,
+      "status": "in_progress",
+      "reportedAt": "2026-08-13T10:32:19.502Z",
+      "assignedAt": "2026-08-13T14:32:19.502Z",
+      "inProgressAt": "2026-08-14T02:32:19.502Z",
+      "resolvedAt": null,
+      "reporterId": "u_citizen",
+      "reporterName": "Asha Mistry",
+      "reportCount": 2,
+      "imageDataUrl": null,
+      "aiConfidence": {
+        "classification": 97,
+        "severity": 87,
+        "department": 91
+      },
+      "explanation": "CivicAI classified this as Light Pole with medium severity. The issue was routed to Electricity.",
+      "notes": [],
+      "resolution": null,
+      "community": null,
+      "communityVerification": {
+        "votes": {},
+        "updatedAt": "2026-08-13T14:32:19.502Z"
+      },
+      "activity": [
+        {
+          "key": "reported",
+          "at": "2026-08-13T10:32:19.502Z",
+          "text": "Issue reported by a citizen."
+        },
+        {
+          "key": "ai_analyzed",
+          "at": "2026-08-13T10:32:19.502Z",
+          "text": "CivicAI classified this as light pole with medium severity (priority 63/100)."
+        },
+        {
+          "key": "routing_suggested",
+          "at": "2026-08-13T14:32:19.502Z",
+          "text": "Suggested routing: Electricity."
+        },
+        {
+          "key": "department_assigned",
+          "at": "2026-08-13T14:32:19.502Z",
+          "text": "Report assigned to Electricity."
+        },
+        {
+          "key": "status_changed",
+          "at": "2026-08-14T02:32:19.502Z",
+          "text": "Status changed from Assigned to In Progress."
+        }
+      ]
+    },
+    {
+      "id": "CIV-2026-008340",
+      "category": "garbage_overflow",
+      "categoryLabel": "Garbage Overflow",
+      "title": "Garbage collection missed two rounds",
+      "description": "Bins overflowing near the market. Smell and strays are increasing.",
+      "location": "Bharatpur",
+      "locationData": {
+        "name": "Bharatpur",
+        "mapX": 36,
+        "mapY": 43
+      },
+      "ward": "Ward 11",
+      "department": "Waste Management",
+      "severity": "high",
+      "priority": 76,
+      "status": "assigned",
+      "reportedAt": "2026-08-12T10:32:19.502Z",
+      "assignedAt": "2026-08-13T04:32:19.502Z",
+      "inProgressAt": null,
+      "resolvedAt": null,
+      "reporterId": "u_citizen",
+      "reporterName": "Asha Mistry",
+      "reportCount": 3,
+      "imageDataUrl": null,
+      "aiConfidence": {
+        "classification": 94,
+        "severity": 90,
+        "department": 92
+      },
+      "explanation": "CivicAI classified this as Garbage Overflow with high severity. The issue was routed to Waste Management.",
+      "notes": [],
+      "resolution": null,
+      "community": null,
+      "communityVerification": {
+        "votes": {},
+        "updatedAt": "2026-08-13T04:32:19.502Z"
+      },
+      "activity": [
+        {
+          "key": "reported",
+          "at": "2026-08-12T10:32:19.502Z",
+          "text": "Issue reported by a citizen."
+        },
+        {
+          "key": "ai_analyzed",
+          "at": "2026-08-12T10:32:19.502Z",
+          "text": "CivicAI classified this as garbage overflow with high severity (priority 76/100)."
+        },
+        {
+          "key": "routing_suggested",
+          "at": "2026-08-13T04:32:19.502Z",
+          "text": "Suggested routing: Waste Management."
+        },
+        {
+          "key": "department_assigned",
+          "at": "2026-08-13T04:32:19.502Z",
+          "text": "Report assigned to Waste Management."
+        }
+      ]
+    },
+    {
+      "id": "CIV-2026-008281",
+      "category": "water",
+      "categoryLabel": "Water & Sewage",
+      "title": "Leaking water pipe",
+      "description": "Leak running from a utility box onto the footpath, wasting water all day.",
+      "location": "Khairahani",
+      "locationData": {
+        "name": "Khairahani",
+        "mapX": 39,
+        "mapY": 80
+      },
+      "ward": "Ward 4",
+      "department": "Water & Sanitation",
+      "severity": "high",
+      "priority": 71,
+      "status": "under_review",
+      "reportedAt": "2026-08-14T05:32:19.502Z",
+      "assignedAt": null,
+      "inProgressAt": null,
+      "resolvedAt": null,
+      "reporterId": "u_citizen",
+      "reporterName": "Asha Mistry",
+      "reportCount": 1,
+      "imageDataUrl": null,
+      "aiConfidence": {
+        "classification": 97,
+        "severity": 85,
+        "department": 93
+      },
+      "explanation": "CivicAI classified this as Water & Sewage with high severity. The issue was routed to Water & Sanitation.",
+      "notes": [],
+      "resolution": null,
+      "community": null,
+      "communityVerification": {
+        "votes": {},
+        "updatedAt": "2026-08-14T05:32:19.502Z"
+      },
+      "activity": [
+        {
+          "key": "reported",
+          "at": "2026-08-14T05:32:19.502Z",
+          "text": "Issue reported by a citizen."
+        },
+        {
+          "key": "ai_analyzed",
+          "at": "2026-08-14T05:32:19.502Z",
+          "text": "CivicAI classified this as water & sewage with high severity (priority 71/100)."
+        }
+      ]
+    },
+    {
+      "id": "CIV-2026-008198",
+      "category": "road",
+      "categoryLabel": "Road Damage",
+      "title": "Faded pedestrian crossing repainted",
+      "description": "Markings were refreshed near the school crossing.",
+      "location": "Ratnanagar",
+      "locationData": {
+        "name": "Ratnanagar",
+        "mapX": 87,
+        "mapY": 43
+      },
+      "ward": "Ward 9",
+      "department": "Roads & Infrastructure",
+      "severity": "low",
+      "priority": 52,
+      "status": "resolved",
+      "reportedAt": "2026-08-03T10:32:19.502Z",
+      "assignedAt": "2026-08-04T00:32:19.502Z",
+      "inProgressAt": "2026-08-05T16:32:19.502Z",
+      "resolvedAt": "2026-08-07T08:32:19.502Z",
+      "reporterId": "u_citizen",
+      "reporterName": "Asha Mistry",
+      "reportCount": 1,
+      "imageDataUrl": null,
+      "aiConfidence": {
+        "classification": 94,
+        "severity": 86,
+        "department": 92
+      },
+      "explanation": "CivicAI classified this as Road Damage with medium severity. The issue was resolved by Roads & Infrastructure.",
+      "notes": [],
+      "resolution": {
+        "description": "The pedestrian crossing was repainted by the Roads crew.",
+        "resolvedAt": "2026-08-07T08:32:19.502Z",
+        "resolvedBy": "Ward maintenance crew",
+        "uploadedAt": "2026-08-07T08:32:19.502Z"
+      },
+      "community": {
+        "reportId": "CIV-2026-008198",
+        "confirmed": 7,
+        "notConfirmed": 1,
+        "target": 8,
+        "confidence": 82
+      },
+      "communityVerification": {
+        "votes": {
+          "u_102": "legit",
+          "u_203": "legit",
+          "u_304": "legit",
+          "u_405": "legit",
+          "u_506": "legit",
+          "u_607": "legit",
+          "u_708": "legit",
+          "u_809": "fake"
+        },
+        "updatedAt": "2026-08-07T08:32:19.502Z"
+      },
+      "activity": [
+        {
+          "key": "reported",
+          "at": "2026-08-03T10:32:19.502Z",
+          "text": "Issue reported by a citizen."
+        },
+        {
+          "key": "ai_analyzed",
+          "at": "2026-08-03T10:32:19.502Z",
+          "text": "CivicAI classified this as road damage with low severity (priority 52/100)."
+        },
+        {
+          "key": "routing_suggested",
+          "at": "2026-08-04T00:32:19.502Z",
+          "text": "Suggested routing: Roads & Infrastructure."
+        },
+        {
+          "key": "department_assigned",
+          "at": "2026-08-04T00:32:19.502Z",
+          "text": "Report assigned to Roads & Infrastructure."
+        },
+        {
+          "key": "status_changed",
+          "at": "2026-08-05T16:32:19.502Z",
+          "text": "Status changed from Assigned to In Progress."
+        },
+        {
+          "key": "resolved",
+          "at": "2026-08-07T08:32:19.502Z",
+          "text": "The issue was marked as resolved and resolution evidence was uploaded."
+        }
+      ]
+    },
+    {
+      "id": "CIV-2026-008152",
+      "category": "safety",
+      "categoryLabel": "Public Safety",
+      "title": "Unsafe crossing near the market",
+      "description": "Missing road sign and worn markings where many shoppers cross.",
+      "location": "Bharatpur",
+      "locationData": {
+        "name": "Bharatpur",
+        "mapX": 36,
+        "mapY": 43
+      },
+      "ward": "Ward 11",
+      "department": "Public Safety",
+      "severity": "low",
+      "priority": 73,
+      "status": "resolved",
+      "reportedAt": "2026-08-05T10:32:19.502Z",
+      "assignedAt": "2026-08-06T02:32:19.502Z",
+      "inProgressAt": "2026-08-08T04:32:19.502Z",
+      "resolvedAt": "2026-08-09T20:32:19.502Z",
+      "reporterId": "u_citizen",
+      "reporterName": "Asha Mistry",
+      "reportCount": 1,
+      "imageDataUrl": null,
+      "aiConfidence": {
+        "classification": 91,
+        "severity": 87,
+        "department": 89
+      },
+      "explanation": "CivicAI classified this as Public Safety with high severity. The issue was resolved by Public Safety.",
+      "notes": [],
+      "resolution": {
+        "description": "New signage was installed and the crossing markings were repainted.",
+        "resolvedAt": "2026-08-09T20:32:19.502Z",
+        "resolvedBy": "Ward maintenance crew",
+        "uploadedAt": "2026-08-09T20:32:19.502Z"
+      },
+      "community": {
+        "reportId": "CIV-2026-008152",
+        "confirmed": 12,
+        "notConfirmed": 1,
+        "target": 13,
+        "confidence": 88
+      },
+      "communityVerification": {
+        "votes": {
+          "u_102": "legit",
+          "u_203": "legit",
+          "u_304": "legit",
+          "u_405": "legit",
+          "u_506": "legit",
+          "u_607": "legit",
+          "u_708": "legit",
+          "u_809": "legit",
+          "u_910": "legit",
+          "u_111": "legit",
+          "u_222": "legit",
+          "u_333": "legit",
+          "u_444": "fake"
+        },
+        "updatedAt": "2026-08-09T20:32:19.502Z"
+      },
+      "activity": [
+        {
+          "key": "reported",
+          "at": "2026-08-05T10:32:19.502Z",
+          "text": "Issue reported by a citizen."
+        },
+        {
+          "key": "ai_analyzed",
+          "at": "2026-08-05T10:32:19.502Z",
+          "text": "CivicAI classified this as public safety with low severity (priority 73/100)."
+        },
+        {
+          "key": "routing_suggested",
+          "at": "2026-08-06T02:32:19.502Z",
+          "text": "Suggested routing: Public Safety."
+        },
+        {
+          "key": "department_assigned",
+          "at": "2026-08-06T02:32:19.502Z",
+          "text": "Report assigned to Public Safety."
+        },
+        {
+          "key": "status_changed",
+          "at": "2026-08-08T04:32:19.502Z",
+          "text": "Status changed from Assigned to In Progress."
+        },
+        {
+          "key": "resolved",
+          "at": "2026-08-09T20:32:19.502Z",
+          "text": "The issue was marked as resolved and resolution evidence was uploaded."
+        }
+      ]
+    },
+    {
+      "id": "CIV-2026-008103",
+      "category": "garbage_overflow",
+      "categoryLabel": "Garbage Overflow",
+      "title": "Waste pile cleared near Bis Hazari lake",
+      "description": "The pile was removed and a collection schedule was added.",
+      "location": "Ratnanagar",
+      "locationData": {
+        "name": "Ratnanagar",
+        "mapX": 87,
+        "mapY": 43
+      },
+      "ward": "Ward 9",
+      "department": "Waste Management",
+      "severity": "low",
+      "priority": 71,
+      "status": "resolved",
+      "reportedAt": "2026-08-06T10:32:19.502Z",
+      "assignedAt": "2026-08-06T22:32:19.502Z",
+      "inProgressAt": "2026-08-09T10:32:19.502Z",
+      "resolvedAt": "2026-08-10T10:32:19.502Z",
+      "reporterId": "u_citizen",
+      "reporterName": "Asha Mistry",
+      "reportCount": 1,
+      "imageDataUrl": null,
+      "aiConfidence": {
+        "classification": 97,
+        "severity": 85,
+        "department": 93
+      },
+      "explanation": "CivicAI classified this as Garbage Overflow with high severity. The issue was resolved by Waste Management.",
+      "notes": [],
+      "resolution": {
+        "description": "Waste was collected and the area was cleaned.",
+        "resolvedAt": "2026-08-10T10:32:19.502Z",
+        "resolvedBy": "Ward maintenance crew",
+        "uploadedAt": "2026-08-10T10:32:19.502Z"
+      },
+      "community": {
+        "reportId": "CIV-2026-008103",
+        "confirmed": 15,
+        "notConfirmed": 1,
+        "target": 16,
+        "confidence": 90
+      },
+      "communityVerification": {
+        "votes": {
+          "u_102": "legit",
+          "u_203": "legit",
+          "u_304": "legit",
+          "u_405": "legit",
+          "u_506": "legit",
+          "u_607": "legit",
+          "u_708": "legit",
+          "u_809": "legit",
+          "u_910": "legit",
+          "u_111": "legit",
+          "u_222": "legit",
+          "u_333": "legit",
+          "u_444": "legit",
+          "u_555": "legit",
+          "u_666": "legit",
+          "u_777": "fake"
+        },
+        "updatedAt": "2026-08-10T10:32:19.502Z"
+      },
+      "activity": [
+        {
+          "key": "reported",
+          "at": "2026-08-06T10:32:19.502Z",
+          "text": "Issue reported by a citizen."
+        },
+        {
+          "key": "ai_analyzed",
+          "at": "2026-08-06T10:32:19.502Z",
+          "text": "CivicAI classified this as garbage overflow with low severity (priority 71/100)."
+        },
+        {
+          "key": "routing_suggested",
+          "at": "2026-08-06T22:32:19.502Z",
+          "text": "Suggested routing: Waste Management."
+        },
+        {
+          "key": "department_assigned",
+          "at": "2026-08-06T22:32:19.502Z",
+          "text": "Report assigned to Waste Management."
+        },
+        {
+          "key": "status_changed",
+          "at": "2026-08-09T10:32:19.502Z",
+          "text": "Status changed from Assigned to In Progress."
+        },
+        {
+          "key": "resolved",
+          "at": "2026-08-10T10:32:19.502Z",
+          "text": "The issue was marked as resolved and resolution evidence was uploaded."
+        }
+      ]
+    },
+    {
+      "id": "CIV-2026-008051",
+      "category": "light_pole",
+      "categoryLabel": "Light Pole",
+      "title": "Dark stretch relit near the market",
+      "description": "Three lamps along the stretch were repaired.",
+      "location": "Bharatpur",
+      "locationData": {
+        "name": "Bharatpur",
+        "mapX": 36,
+        "mapY": 43
+      },
+      "ward": "Ward 11",
+      "department": "Electricity",
+      "severity": "low",
+      "priority": 44,
+      "status": "resolved",
+      "reportedAt": "2026-08-02T10:32:19.502Z",
+      "assignedAt": "2026-08-03T14:32:19.502Z",
+      "inProgressAt": "2026-08-04T10:32:19.502Z",
+      "resolvedAt": "2026-08-05T11:32:19.502Z",
+      "reporterId": "u_citizen",
+      "reporterName": "Asha Mistry",
+      "reportCount": 1,
+      "imageDataUrl": null,
+      "aiConfidence": {
+        "classification": 94,
+        "severity": 88,
+        "department": 90
+      },
+      "explanation": "CivicAI classified this as Light Pole with low severity. The issue was resolved by Electricity.",
+      "notes": [],
+      "resolution": {
+        "description": "The streetlights were repaired and are working again.",
+        "resolvedAt": "2026-08-05T11:32:19.502Z",
+        "resolvedBy": "Ward maintenance crew",
+        "uploadedAt": "2026-08-05T11:32:19.502Z"
+      },
+      "community": {
+        "reportId": "CIV-2026-008051",
+        "confirmed": 6,
+        "notConfirmed": 0,
+        "target": 6,
+        "confidence": 78
+      },
+      "communityVerification": {
+        "votes": {
+          "u_102": "legit",
+          "u_203": "legit",
+          "u_304": "legit",
+          "u_405": "legit",
+          "u_506": "legit",
+          "u_607": "legit"
+        },
+        "updatedAt": "2026-08-05T11:32:19.502Z"
+      },
+      "activity": [
+        {
+          "key": "reported",
+          "at": "2026-08-02T10:32:19.502Z",
+          "text": "Issue reported by a citizen."
+        },
+        {
+          "key": "ai_analyzed",
+          "at": "2026-08-02T10:32:19.502Z",
+          "text": "CivicAI classified this as light pole with low severity (priority 44/100)."
+        },
+        {
+          "key": "routing_suggested",
+          "at": "2026-08-03T14:32:19.502Z",
+          "text": "Suggested routing: Electricity."
+        },
+        {
+          "key": "department_assigned",
+          "at": "2026-08-03T14:32:19.502Z",
+          "text": "Report assigned to Electricity."
+        },
+        {
+          "key": "status_changed",
+          "at": "2026-08-04T10:32:19.502Z",
+          "text": "Status changed from Assigned to In Progress."
+        },
+        {
+          "key": "resolved",
+          "at": "2026-08-05T11:32:19.502Z",
+          "text": "The issue was marked as resolved and resolution evidence was uploaded."
+        }
+      ]
+    },
+    {
+      "id": "CIV-2026-008029",
+      "category": "water",
+      "categoryLabel": "Water & Sewage",
+      "title": "Water pipe leak fixed",
+      "description": "The leaking pipe was repaired and the footpath dried out.",
+      "location": "Khairahani",
+      "locationData": {
+        "name": "Khairahani",
+        "mapX": 39,
+        "mapY": 80
+      },
+      "ward": "Ward 4",
+      "department": "Water & Sanitation",
+      "severity": "low",
+      "priority": 66,
+      "status": "resolved",
+      "reportedAt": "2026-08-04T10:32:19.502Z",
+      "assignedAt": "2026-08-04T22:32:19.502Z",
+      "inProgressAt": "2026-08-05T10:32:19.502Z",
+      "resolvedAt": "2026-08-06T10:32:19.502Z",
+      "reporterId": "u_citizen",
+      "reporterName": "Asha Mistry",
+      "reportCount": 1,
+      "imageDataUrl": null,
+      "aiConfidence": {
+        "classification": 92,
+        "severity": 90,
+        "department": 88
+      },
+      "explanation": "CivicAI classified this as Water & Sewage with medium severity. The issue was resolved by Water & Sanitation.",
+      "notes": [],
+      "resolution": {
+        "description": "The water pipe was repaired by the Water & Sanitation crew.",
+        "resolvedAt": "2026-08-06T10:32:19.502Z",
+        "resolvedBy": "Ward maintenance crew",
+        "uploadedAt": "2026-08-06T10:32:19.502Z"
+      },
+      "community": {
+        "reportId": "CIV-2026-008029",
+        "confirmed": 9,
+        "notConfirmed": 1,
+        "target": 10,
+        "confidence": 84
+      },
+      "communityVerification": {
+        "votes": {
+          "u_102": "legit",
+          "u_203": "legit",
+          "u_304": "legit",
+          "u_405": "legit",
+          "u_506": "legit",
+          "u_607": "legit",
+          "u_708": "legit",
+          "u_809": "legit",
+          "u_910": "legit",
+          "u_111": "fake"
+        },
+        "updatedAt": "2026-08-06T10:32:19.502Z"
+      },
+      "activity": [
+        {
+          "key": "reported",
+          "at": "2026-08-04T10:32:19.502Z",
+          "text": "Issue reported by a citizen."
+        },
+        {
+          "key": "ai_analyzed",
+          "at": "2026-08-04T10:32:19.502Z",
+          "text": "CivicAI classified this as water & sewage with low severity (priority 66/100)."
+        },
+        {
+          "key": "routing_suggested",
+          "at": "2026-08-04T22:32:19.502Z",
+          "text": "Suggested routing: Water & Sanitation."
+        },
+        {
+          "key": "department_assigned",
+          "at": "2026-08-04T22:32:19.502Z",
+          "text": "Report assigned to Water & Sanitation."
+        },
+        {
+          "key": "status_changed",
+          "at": "2026-08-05T10:32:19.502Z",
+          "text": "Status changed from Assigned to In Progress."
+        },
+        {
+          "key": "resolved",
+          "at": "2026-08-06T10:32:19.502Z",
+          "text": "The issue was marked as resolved and resolution evidence was uploaded."
+        }
+      ]
+    },
+    {
+      "id": "CIV-2026-009001",
+      "category": "drainage",
+      "categoryLabel": "Drainage & Flooding",
+      "title": "Drain overflow after rain",
+      "description": "Water pooling knee-deep in the mornings near the bus stand.",
+      "location": "Rapti",
+      "locationData": {
+        "name": "Rapti",
+        "mapX": 63,
+        "mapY": 43
+      },
+      "ward": "Ward 13",
+      "department": "Roads & Infrastructure",
+      "severity": "critical",
+      "priority": 93,
+      "status": "assigned",
+      "reportedAt": "2026-08-13T20:32:19.503Z",
+      "assignedAt": "2026-08-14T02:32:19.503Z",
+      "inProgressAt": null,
+      "resolvedAt": null,
+      "reporterId": null,
+      "reporterName": "Citizen",
+      "reportCount": 5,
+      "imageDataUrl": null,
+      "aiConfidence": {
+        "classification": 95,
+        "severity": 87,
+        "department": 91
+      },
+      "explanation": "CivicAI classified this as undefined with critical severity. The issue was routed to Roads & Infrastructure.",
+      "notes": [],
+      "resolution": null,
+      "community": null,
+      "communityVerification": {
+        "votes": {
+          "u_102": "legit",
+          "u_203": "legit",
+          "u_304": "legit",
+          "u_405": "fake"
+        },
+        "updatedAt": "2026-08-14T02:32:19.503Z"
+      },
+      "activity": [
+        {
+          "key": "reported",
+          "at": "2026-08-13T20:32:19.503Z",
+          "text": "Issue reported by a citizen."
+        },
+        {
+          "key": "ai_analyzed",
+          "at": "2026-08-13T20:32:19.503Z",
+          "text": "CivicAI classified this as drainage & flooding with critical severity (priority 93/100)."
+        },
+        {
+          "key": "routing_suggested",
+          "at": "2026-08-14T02:32:19.503Z",
+          "text": "Suggested routing: Roads & Infrastructure."
+        },
+        {
+          "key": "department_assigned",
+          "at": "2026-08-14T02:32:19.503Z",
+          "text": "Report assigned to Roads & Infrastructure."
+        }
+      ]
+    },
+    {
+      "id": "CIV-2026-009004",
+      "category": "electric_line",
+      "categoryLabel": "Electric Line",
+      "title": "Power line down after storm",
+      "description": "Downed line across the lane. Residents are without power.",
+      "location": "Ichchhakamana",
+      "locationData": {
+        "name": "Ichchhakamana",
+        "mapX": 20,
+        "mapY": 33
+      },
+      "ward": "Ward 2",
+      "department": "Electricity",
+      "severity": "critical",
+      "priority": 91,
+      "status": "assigned",
+      "reportedAt": "2026-08-14T05:32:19.503Z",
+      "assignedAt": "2026-08-14T08:32:19.503Z",
+      "inProgressAt": null,
+      "resolvedAt": null,
+      "reporterId": null,
+      "reporterName": "Citizen",
+      "reportCount": 4,
+      "imageDataUrl": null,
+      "aiConfidence": {
+        "classification": 93,
+        "severity": 85,
+        "department": 89
+      },
+      "explanation": "CivicAI classified this as Electric Line with critical severity. The issue was routed to Electricity.",
+      "notes": [],
+      "resolution": null,
+      "community": null,
+      "communityVerification": {
+        "votes": {
+          "u_102": "legit",
+          "u_203": "legit",
+          "u_304": "fake"
+        },
+        "updatedAt": "2026-08-14T08:32:19.503Z"
+      },
+      "activity": [
+        {
+          "key": "reported",
+          "at": "2026-08-14T05:32:19.503Z",
+          "text": "Issue reported by a citizen."
+        },
+        {
+          "key": "ai_analyzed",
+          "at": "2026-08-14T05:32:19.503Z",
+          "text": "CivicAI classified this as electric line with critical severity (priority 91/100)."
+        },
+        {
+          "key": "routing_suggested",
+          "at": "2026-08-14T08:32:19.503Z",
+          "text": "Suggested routing: Electricity."
+        },
+        {
+          "key": "department_assigned",
+          "at": "2026-08-14T08:32:19.503Z",
+          "text": "Report assigned to Electricity."
+        }
+      ]
+    },
+    {
+      "id": "CIV-2026-009007",
+      "category": "water",
+      "categoryLabel": "Water & Sewage",
+      "title": "Sewage overflow near the bazaar",
+      "description": "Sewage spilling onto the footpath, blocking the walkway.",
+      "location": "Bharatpur",
+      "locationData": {
+        "name": "Bharatpur",
+        "mapX": 36,
+        "mapY": 43
+      },
+      "ward": "Ward 11",
+      "department": "Water & Sanitation",
+      "severity": "high",
+      "priority": 88,
+      "status": "in_progress",
+      "reportedAt": "2026-08-13T14:32:19.503Z",
+      "assignedAt": "2026-08-13T18:32:19.503Z",
+      "inProgressAt": "2026-08-14T01:32:19.503Z",
+      "resolvedAt": null,
+      "reporterId": null,
+      "reporterName": "Citizen",
+      "reportCount": 4,
+      "imageDataUrl": null,
+      "aiConfidence": {
+        "classification": 90,
+        "severity": 92,
+        "department": 92
+      },
+      "explanation": "CivicAI classified this as undefined with high severity. The issue was routed to Water & Sanitation.",
+      "notes": [],
+      "resolution": null,
+      "community": null,
+      "communityVerification": {
+        "votes": {
+          "u_102": "legit",
+          "u_203": "legit",
+          "u_304": "fake"
+        },
+        "updatedAt": "2026-08-13T18:32:19.503Z"
+      },
+      "activity": [
+        {
+          "key": "reported",
+          "at": "2026-08-13T14:32:19.503Z",
+          "text": "Issue reported by a citizen."
+        },
+        {
+          "key": "ai_analyzed",
+          "at": "2026-08-13T14:32:19.503Z",
+          "text": "CivicAI classified this as water & sewage with high severity (priority 88/100)."
+        },
+        {
+          "key": "routing_suggested",
+          "at": "2026-08-13T18:32:19.503Z",
+          "text": "Suggested routing: Water & Sanitation."
+        },
+        {
+          "key": "department_assigned",
+          "at": "2026-08-13T18:32:19.503Z",
+          "text": "Report assigned to Water & Sanitation."
+        },
+        {
+          "key": "status_changed",
+          "at": "2026-08-14T01:32:19.503Z",
+          "text": "Status changed from Assigned to In Progress."
+        }
+      ]
+    },
+    {
+      "id": "CIV-2026-009010",
+      "category": "road",
+      "categoryLabel": "Road Damage",
+      "title": "Cracked road surface on the bypass",
+      "description": "Surface damage widening with every rain. Vehicles are slowing sharply.",
+      "location": "Rapti",
+      "locationData": {
+        "name": "Rapti",
+        "mapX": 63,
+        "mapY": 43
+      },
+      "ward": "Ward 13",
+      "department": "Roads & Infrastructure",
+      "severity": "high",
+      "priority": 84,
+      "status": "in_progress",
+      "reportedAt": "2026-08-13T10:32:19.503Z",
+      "assignedAt": "2026-08-13T14:32:19.503Z",
+      "inProgressAt": "2026-08-14T00:32:19.503Z",
+      "resolvedAt": null,
+      "reporterId": null,
+      "reporterName": "Citizen",
+      "reportCount": 3,
+      "imageDataUrl": null,
+      "aiConfidence": {
+        "classification": 94,
+        "severity": 88,
+        "department": 88
+      },
+      "explanation": "CivicAI classified this as undefined with high severity. The issue was routed to Roads & Infrastructure.",
+      "notes": [],
+      "resolution": null,
+      "community": null,
+      "communityVerification": {
+        "votes": {
+          "u_102": "legit",
+          "u_203": "fake"
+        },
+        "updatedAt": "2026-08-13T14:32:19.503Z"
+      },
+      "activity": [
+        {
+          "key": "reported",
+          "at": "2026-08-13T10:32:19.503Z",
+          "text": "Issue reported by a citizen."
+        },
+        {
+          "key": "ai_analyzed",
+          "at": "2026-08-13T10:32:19.503Z",
+          "text": "CivicAI classified this as road damage with high severity (priority 84/100)."
+        },
+        {
+          "key": "routing_suggested",
+          "at": "2026-08-13T14:32:19.503Z",
+          "text": "Suggested routing: Roads & Infrastructure."
+        },
+        {
+          "key": "department_assigned",
+          "at": "2026-08-13T14:32:19.503Z",
+          "text": "Report assigned to Roads & Infrastructure."
+        },
+        {
+          "key": "status_changed",
+          "at": "2026-08-14T00:32:19.503Z",
+          "text": "Status changed from Assigned to In Progress."
+        }
+      ]
+    },
+    {
+      "id": "CIV-2026-009013",
+      "category": "garbage_overflow",
+      "categoryLabel": "Garbage Overflow",
+      "title": "Waste pile near the market",
+      "description": "Waste not collected for days. Smell and strays are increasing.",
+      "location": "Bharatpur",
+      "locationData": {
+        "name": "Bharatpur",
+        "mapX": 36,
+        "mapY": 43
+      },
+      "ward": "Ward 11",
+      "department": "Waste Management",
+      "severity": "high",
+      "priority": 79,
+      "status": "in_progress",
+      "reportedAt": "2026-08-13T04:32:19.503Z",
+      "assignedAt": "2026-08-13T10:32:19.503Z",
+      "inProgressAt": "2026-08-13T22:32:19.503Z",
+      "resolvedAt": null,
+      "reporterId": null,
+      "reporterName": "Citizen",
+      "reportCount": 4,
+      "imageDataUrl": null,
+      "aiConfidence": {
+        "classification": 97,
+        "severity": 93,
+        "department": 89
+      },
+      "explanation": "CivicAI classified this as Garbage Overflow with high severity. The issue was routed to Waste Management.",
+      "notes": [],
+      "resolution": null,
+      "community": null,
+      "communityVerification": {
+        "votes": {
+          "u_102": "legit",
+          "u_203": "legit",
+          "u_304": "fake"
+        },
+        "updatedAt": "2026-08-13T10:32:19.503Z"
+      },
+      "activity": [
+        {
+          "key": "reported",
+          "at": "2026-08-13T04:32:19.503Z",
+          "text": "Issue reported by a citizen."
+        },
+        {
+          "key": "ai_analyzed",
+          "at": "2026-08-13T04:32:19.503Z",
+          "text": "CivicAI classified this as garbage overflow with high severity (priority 79/100)."
+        },
+        {
+          "key": "routing_suggested",
+          "at": "2026-08-13T10:32:19.503Z",
+          "text": "Suggested routing: Waste Management."
+        },
+        {
+          "key": "department_assigned",
+          "at": "2026-08-13T10:32:19.503Z",
+          "text": "Report assigned to Waste Management."
+        },
+        {
+          "key": "status_changed",
+          "at": "2026-08-13T22:32:19.503Z",
+          "text": "Status changed from Assigned to In Progress."
+        }
+      ]
+    },
+    {
+      "id": "CIV-2026-009016",
+      "category": "light_pole",
+      "categoryLabel": "Light Pole",
+      "title": "Streetlight out at the bus stop",
+      "description": "The corner is completely dark at night near the bus shelter.",
+      "location": "Ratnanagar",
+      "locationData": {
+        "name": "Ratnanagar",
+        "mapX": 87,
+        "mapY": 43
+      },
+      "ward": "Ward 9",
+      "department": "Electricity",
+      "severity": "medium",
+      "priority": 68,
+      "status": "in_progress",
+      "reportedAt": "2026-08-12T18:32:19.503Z",
+      "assignedAt": "2026-08-13T02:32:19.503Z",
+      "inProgressAt": "2026-08-13T16:32:19.503Z",
+      "resolvedAt": null,
+      "reporterId": null,
+      "reporterName": "Citizen",
+      "reportCount": 2,
+      "imageDataUrl": null,
+      "aiConfidence": {
+        "classification": 94,
+        "severity": 92,
+        "department": 90
+      },
+      "explanation": "CivicAI classified this as Light Pole with medium severity. The issue was routed to Electricity.",
+      "notes": [],
+      "resolution": null,
+      "community": null,
+      "communityVerification": {
+        "votes": {
+          "u_102": "legit",
+          "u_203": "legit",
+          "u_304": "legit",
+          "u_405": "fake"
+        },
+        "updatedAt": "2026-08-13T02:32:19.503Z"
+      },
+      "activity": [
+        {
+          "key": "reported",
+          "at": "2026-08-12T18:32:19.503Z",
+          "text": "Issue reported by a citizen."
+        },
+        {
+          "key": "ai_analyzed",
+          "at": "2026-08-12T18:32:19.503Z",
+          "text": "CivicAI classified this as light pole with medium severity (priority 68/100)."
+        },
+        {
+          "key": "routing_suggested",
+          "at": "2026-08-13T02:32:19.503Z",
+          "text": "Suggested routing: Electricity."
+        },
+        {
+          "key": "department_assigned",
+          "at": "2026-08-13T02:32:19.503Z",
+          "text": "Report assigned to Electricity."
+        },
+        {
+          "key": "status_changed",
+          "at": "2026-08-13T16:32:19.503Z",
+          "text": "Status changed from Assigned to In Progress."
+        }
+      ]
+    },
+    {
+      "id": "CIV-2026-009019",
+      "category": "water",
+      "categoryLabel": "Water & Sewage",
+      "title": "Waterlogging after rain",
+      "description": "Road floods knee-deep during monsoon. Vehicles stall in the mornings.",
+      "location": "Khairahani",
+      "locationData": {
+        "name": "Khairahani",
+        "mapX": 39,
+        "mapY": 80
+      },
+      "ward": "Ward 4",
+      "department": "Water & Sanitation",
+      "severity": "critical",
+      "priority": 89,
+      "status": "under_review",
+      "reportedAt": "2026-08-14T04:32:19.503Z",
+      "assignedAt": null,
+      "inProgressAt": null,
+      "resolvedAt": null,
+      "reporterId": null,
+      "reporterName": "Citizen",
+      "reportCount": 6,
+      "imageDataUrl": null,
+      "aiConfidence": {
+        "classification": 91,
+        "severity": 93,
+        "department": 93
+      },
+      "explanation": "CivicAI classified this as undefined with critical severity. The issue was routed to Water & Sanitation.",
+      "notes": [],
+      "resolution": null,
+      "community": null,
+      "communityVerification": {
+        "votes": {
+          "u_102": "legit",
+          "u_203": "fake"
+        },
+        "updatedAt": "2026-08-14T04:32:19.503Z"
+      },
+      "activity": [
+        {
+          "key": "reported",
+          "at": "2026-08-14T04:32:19.503Z",
+          "text": "Issue reported by a citizen."
+        },
+        {
+          "key": "ai_analyzed",
+          "at": "2026-08-14T04:32:19.503Z",
+          "text": "CivicAI classified this as water & sewage with critical severity (priority 89/100)."
+        }
+      ]
+    },
+    {
+      "id": "CIV-2026-009022",
+      "category": "transportation",
+      "categoryLabel": "Transportation",
+      "title": "Abandoned vehicle blocking lane",
+      "description": "Car parked for over a month with no plates. Narrowing the lane.",
+      "location": "Bharatpur",
+      "locationData": {
+        "name": "Bharatpur",
+        "mapX": 36,
+        "mapY": 43
+      },
+      "ward": "Ward 11",
+      "department": "Roads & Infrastructure",
+      "severity": "medium",
+      "priority": 55,
+      "status": "under_review",
+      "reportedAt": "2026-08-12T08:32:19.503Z",
+      "assignedAt": null,
+      "inProgressAt": null,
+      "resolvedAt": null,
+      "reporterId": null,
+      "reporterName": "Citizen",
+      "reportCount": 2,
+      "imageDataUrl": null,
+      "aiConfidence": {
+        "classification": 97,
+        "severity": 89,
+        "department": 89
+      },
+      "explanation": "CivicAI classified this as undefined with medium severity. The issue was routed to Roads & Infrastructure.",
+      "notes": [],
+      "resolution": null,
+      "community": null,
+      "communityVerification": {
+        "votes": {
+          "u_102": "legit",
+          "u_203": "legit",
+          "u_304": "legit",
+          "u_405": "fake"
+        },
+        "updatedAt": "2026-08-12T08:32:19.503Z"
+      },
+      "activity": [
+        {
+          "key": "reported",
+          "at": "2026-08-12T08:32:19.503Z",
+          "text": "Issue reported by a citizen."
+        },
+        {
+          "key": "ai_analyzed",
+          "at": "2026-08-12T08:32:19.503Z",
+          "text": "CivicAI classified this as transportation with medium severity (priority 55/100)."
+        }
+      ]
+    },
+    {
+      "id": "CIV-2026-009025",
+      "category": "environment",
+      "categoryLabel": "Environment",
+      "title": "Smoke from open burning",
+      "description": "Open burning near the settlement is affecting air quality.",
+      "location": "Ichchhakamana",
+      "locationData": {
+        "name": "Ichchhakamana",
+        "mapX": 20,
+        "mapY": 33
+      },
+      "ward": "Ward 2",
+      "department": "Environment",
+      "severity": "medium",
+      "priority": 57,
+      "status": "under_review",
+      "reportedAt": "2026-08-13T08:32:19.503Z",
+      "assignedAt": null,
+      "inProgressAt": null,
+      "resolvedAt": null,
+      "reporterId": null,
+      "reporterName": "Citizen",
+      "reportCount": 1,
+      "imageDataUrl": null,
+      "aiConfidence": {
+        "classification": 91,
+        "severity": 91,
+        "department": 91
+      },
+      "explanation": "CivicAI classified this as undefined with medium severity. The issue was routed to Environment.",
+      "notes": [],
+      "resolution": null,
+      "community": null,
+      "communityVerification": {
+        "votes": {
+          "u_102": "legit",
+          "u_203": "legit",
+          "u_304": "fake"
+        },
+        "updatedAt": "2026-08-13T08:32:19.503Z"
+      },
+      "activity": [
+        {
+          "key": "reported",
+          "at": "2026-08-13T08:32:19.503Z",
+          "text": "Issue reported by a citizen."
+        },
+        {
+          "key": "ai_analyzed",
+          "at": "2026-08-13T08:32:19.503Z",
+          "text": "CivicAI classified this as environment with medium severity (priority 57/100)."
+        }
+      ]
+    },
+    {
+      "id": "CIV-2026-009028",
+      "category": "public_property",
+      "categoryLabel": "Public Property",
+      "title": "Damaged public shelter near Tandi",
+      "description": "Shelter roof is bent and the bench is broken after the storm.",
+      "location": "Rapti",
+      "locationData": {
+        "name": "Rapti",
+        "mapX": 63,
+        "mapY": 43
+      },
+      "ward": "Ward 13",
+      "department": "General Administration",
+      "severity": "low",
+      "priority": 42,
+      "status": "under_review",
+      "reportedAt": "2026-08-13T16:32:19.503Z",
+      "assignedAt": null,
+      "inProgressAt": null,
+      "resolvedAt": null,
+      "reporterId": null,
+      "reporterName": "Citizen",
+      "reportCount": 2,
+      "imageDataUrl": null,
+      "aiConfidence": {
+        "classification": 92,
+        "severity": 86,
+        "department": 88
+      },
+      "explanation": "CivicAI classified this as undefined with low severity. The issue was routed to General Administration.",
+      "notes": [],
+      "resolution": null,
+      "community": null,
+      "communityVerification": {
+        "votes": {
+          "u_102": "legit",
+          "u_203": "legit",
+          "u_304": "legit",
+          "u_405": "fake"
+        },
+        "updatedAt": "2026-08-13T16:32:19.503Z"
+      },
+      "activity": [
+        {
+          "key": "reported",
+          "at": "2026-08-13T16:32:19.503Z",
+          "text": "Issue reported by a citizen."
+        },
+        {
+          "key": "ai_analyzed",
+          "at": "2026-08-13T16:32:19.503Z",
+          "text": "CivicAI classified this as public property with low severity (priority 42/100)."
+        }
+      ]
+    },
+    {
+      "id": "CIV-2026-009031",
+      "category": "light_pole",
+      "categoryLabel": "Light Pole",
+      "title": "Dark stretch near the park gate",
+      "description": "Three lamps out along the path. Elderly residents avoid it after dark.",
+      "location": "Ratnanagar",
+      "locationData": {
+        "name": "Ratnanagar",
+        "mapX": 87,
+        "mapY": 43
+      },
+      "ward": "Ward 9",
+      "department": "Electricity",
+      "severity": "medium",
+      "priority": 61,
+      "status": "reported",
+      "reportedAt": "2026-08-14T07:32:19.503Z",
+      "assignedAt": null,
+      "inProgressAt": null,
+      "resolvedAt": null,
+      "reporterId": null,
+      "reporterName": "Citizen",
+      "reportCount": 2,
+      "imageDataUrl": null,
+      "aiConfidence": {
+        "classification": 95,
+        "severity": 85,
+        "department": 89
+      },
+      "explanation": "CivicAI classified this as Light Pole with medium severity. The issue was routed to Electricity.",
+      "notes": [],
+      "resolution": null,
+      "community": null,
+      "communityVerification": {
+        "votes": {
+          "u_102": "legit",
+          "u_203": "legit",
+          "u_304": "legit",
+          "u_405": "fake"
+        },
+        "updatedAt": "2026-08-14T07:32:19.503Z"
+      },
+      "activity": [
+        {
+          "key": "reported",
+          "at": "2026-08-14T07:32:19.503Z",
+          "text": "Issue reported by a citizen."
+        },
+        {
+          "key": "ai_analyzed",
+          "at": "2026-08-14T07:32:19.503Z",
+          "text": "CivicAI classified this as light pole with medium severity (priority 61/100)."
+        }
+      ]
+    },
+    {
+      "id": "CIV-2026-009034",
+      "category": "safety",
+      "categoryLabel": "Public Safety",
+      "title": "Hazardous alley near the hospital",
+      "description": "Deep potholes and missing light near the hospital entrance.",
+      "location": "Bharatpur",
+      "locationData": {
+        "name": "Bharatpur",
+        "mapX": 36,
+        "mapY": 43
+      },
+      "ward": "Ward 11",
+      "department": "Public Safety",
+      "severity": "high",
+      "priority": 82,
+      "status": "reported",
+      "reportedAt": "2026-08-14T08:32:19.503Z",
+      "assignedAt": null,
+      "inProgressAt": null,
+      "resolvedAt": null,
+      "reporterId": null,
+      "reporterName": "Citizen",
+      "reportCount": 2,
+      "imageDataUrl": null,
+      "aiConfidence": {
+        "classification": 92,
+        "severity": 86,
+        "department": 92
+      },
+      "explanation": "CivicAI classified this as undefined with high severity. The issue was routed to Public Safety.",
+      "notes": [],
+      "resolution": null,
+      "community": null,
+      "communityVerification": {
+        "votes": {
+          "u_102": "legit",
+          "u_203": "legit",
+          "u_304": "legit",
+          "u_405": "fake"
+        },
+        "updatedAt": "2026-08-14T08:32:19.503Z"
+      },
+      "activity": [
+        {
+          "key": "reported",
+          "at": "2026-08-14T08:32:19.503Z",
+          "text": "Issue reported by a citizen."
+        },
+        {
+          "key": "ai_analyzed",
+          "at": "2026-08-14T08:32:19.503Z",
+          "text": "CivicAI classified this as public safety with high severity (priority 82/100)."
+        }
+      ]
+    },
+    {
+      "id": "CIV-2026-009037",
+      "category": "garbage_overflow",
+      "categoryLabel": "Garbage Overflow",
+      "title": "Construction debris near the bridge",
+      "description": "Sand and rubble left on the pavement after a demolition.",
+      "location": "Bharatpur",
+      "locationData": {
+        "name": "Bharatpur",
+        "mapX": 36,
+        "mapY": 43
+      },
+      "ward": "Ward 11",
+      "department": "Waste Management",
+      "severity": "medium",
+      "priority": 58,
+      "status": "reported",
+      "reportedAt": "2026-08-14T06:32:19.503Z",
+      "assignedAt": null,
+      "inProgressAt": null,
+      "resolvedAt": null,
+      "reporterId": null,
+      "reporterName": "Citizen",
+      "reportCount": 2,
+      "imageDataUrl": null,
+      "aiConfidence": {
+        "classification": 92,
+        "severity": 92,
+        "department": 92
+      },
+      "explanation": "CivicAI classified this as Garbage Overflow with medium severity. The issue was routed to Waste Management.",
+      "notes": [],
+      "resolution": null,
+      "community": null,
+      "communityVerification": {
+        "votes": {
+          "u_102": "legit",
+          "u_203": "legit",
+          "u_304": "legit",
+          "u_405": "fake"
+        },
+        "updatedAt": "2026-08-14T06:32:19.503Z"
+      },
+      "activity": [
+        {
+          "key": "reported",
+          "at": "2026-08-14T06:32:19.503Z",
+          "text": "Issue reported by a citizen."
+        },
+        {
+          "key": "ai_analyzed",
+          "at": "2026-08-14T06:32:19.503Z",
+          "text": "CivicAI classified this as garbage overflow with medium severity (priority 58/100)."
+        }
+      ]
+    },
+    {
+      "id": "CIV-2026-009040",
+      "category": "road",
+      "categoryLabel": "Road Damage",
+      "title": "Pothole on East-West Highway",
+      "description": "Deep pothole near the junction, growing with every rain.",
+      "location": "Main Road, Narayangadh",
+      "locationData": {
+        "name": "Main Road, Narayangadh",
+        "mapX": 41,
+        "mapY": 52
+      },
+      "ward": "Ward 11",
+      "department": "Roads & Infrastructure",
+      "severity": "critical",
+      "priority": 92,
+      "status": "reported",
+      "reportedAt": "2026-08-14T09:32:19.503Z",
+      "assignedAt": null,
+      "inProgressAt": null,
+      "resolvedAt": null,
+      "reporterId": null,
+      "reporterName": "Citizen",
+      "reportCount": 3,
+      "imageDataUrl": null,
+      "aiConfidence": {
+        "classification": 94,
+        "severity": 86,
+        "department": 90
+      },
+      "explanation": "CivicAI classified this as undefined with critical severity. The issue was routed to Roads & Infrastructure.",
+      "notes": [],
+      "resolution": null,
+      "community": null,
+      "communityVerification": {
+        "votes": {
+          "u_102": "legit",
+          "u_203": "fake"
+        },
+        "updatedAt": "2026-08-14T09:32:19.503Z"
+      },
+      "activity": [
+        {
+          "key": "reported",
+          "at": "2026-08-14T09:32:19.503Z",
+          "text": "Issue reported by a citizen."
+        },
+        {
+          "key": "ai_analyzed",
+          "at": "2026-08-14T09:32:19.503Z",
+          "text": "CivicAI classified this as road damage with critical severity (priority 92/100)."
+        }
+      ]
+    },
+    {
+      "id": "CIV-2026-008047",
+      "category": "road",
+      "categoryLabel": "Road Damage",
+      "title": "Pothole patched on East-West Highway",
+      "description": "The deep pothole was patched and traffic flows smoothly again.",
+      "location": "Main Road, Narayangadh",
+      "locationData": {
+        "name": "Main Road, Narayangadh",
+        "mapX": 41,
+        "mapY": 52
+      },
+      "ward": "Ward 11",
+      "department": "Roads & Infrastructure",
+      "severity": "low",
+      "priority": 82,
+      "status": "resolved",
+      "reportedAt": "2026-08-05T10:32:19.503Z",
+      "assignedAt": "2026-08-06T06:32:19.503Z",
+      "inProgressAt": "2026-08-05T22:32:19.503Z",
+      "resolvedAt": "2026-08-06T10:32:19.503Z",
+      "reporterId": null,
+      "reporterName": "Citizen",
+      "reportCount": 1,
+      "imageDataUrl": null,
+      "aiConfidence": {
+        "classification": 92,
+        "severity": 86,
+        "department": 92
+      },
+      "explanation": "CivicAI classified this as Road Damage and the issue was resolved by Roads & Infrastructure.",
+      "notes": [],
+      "resolution": {
+        "description": "The pothole was patched by the maintenance team.",
+        "resolvedAt": "2026-08-06T10:32:19.503Z",
+        "resolvedBy": "Municipal maintenance team",
+        "uploadedAt": "2026-08-06T10:32:19.503Z"
+      },
+      "community": {
+        "reportId": "CIV-2026-008047",
+        "confirmed": 16,
+        "notConfirmed": 1,
+        "target": 17,
+        "confidence": 91
+      },
+      "communityVerification": {
+        "votes": {
+          "u_102": "legit",
+          "u_203": "legit",
+          "u_304": "legit",
+          "u_405": "legit",
+          "u_506": "legit",
+          "u_607": "legit",
+          "u_708": "legit",
+          "u_809": "legit",
+          "u_910": "legit",
+          "u_111": "legit",
+          "u_222": "legit",
+          "u_333": "legit",
+          "u_444": "legit",
+          "u_555": "legit",
+          "u_666": "legit",
+          "u_777": "legit",
+          "u_888": "fake"
+        },
+        "updatedAt": "2026-08-06T10:32:19.503Z"
+      },
+      "activity": [
+        {
+          "key": "reported",
+          "at": "2026-08-05T10:32:19.503Z",
+          "text": "Issue reported by a citizen."
+        },
+        {
+          "key": "ai_analyzed",
+          "at": "2026-08-05T10:32:19.503Z",
+          "text": "CivicAI classified this as road damage with low severity (priority 82/100)."
+        },
+        {
+          "key": "routing_suggested",
+          "at": "2026-08-06T06:32:19.503Z",
+          "text": "Suggested routing: Roads & Infrastructure."
+        },
+        {
+          "key": "department_assigned",
+          "at": "2026-08-06T06:32:19.503Z",
+          "text": "Report assigned to Roads & Infrastructure."
+        },
+        {
+          "key": "status_changed",
+          "at": "2026-08-05T22:32:19.503Z",
+          "text": "Status changed from Assigned to In Progress."
+        },
+        {
+          "key": "resolved",
+          "at": "2026-08-06T10:32:19.503Z",
+          "text": "The issue was marked as resolved and resolution evidence was uploaded."
+        }
+      ]
+    },
+    {
+      "id": "CIV-2026-008039",
+      "category": "electric_line",
+      "categoryLabel": "Electric Line",
+      "title": "Power line restored after outage",
+      "description": "Power was restored after the line was repaired.",
+      "location": "Ichchhakamana",
+      "locationData": {
+        "name": "Ichchhakamana",
+        "mapX": 20,
+        "mapY": 33
+      },
+      "ward": "Ward 2",
+      "department": "Electricity",
+      "severity": "low",
+      "priority": 78,
+      "status": "resolved",
+      "reportedAt": "2026-08-03T10:32:19.503Z",
+      "assignedAt": "2026-08-04T06:32:19.503Z",
+      "inProgressAt": "2026-08-03T22:32:19.503Z",
+      "resolvedAt": "2026-08-04T10:32:19.503Z",
+      "reporterId": null,
+      "reporterName": "Citizen",
+      "reportCount": 1,
+      "imageDataUrl": null,
+      "aiConfidence": {
+        "classification": 96,
+        "severity": 92,
+        "department": 88
+      },
+      "explanation": "CivicAI classified this as Electric Line and the issue was resolved by Electricity.",
+      "notes": [],
+      "resolution": {
+        "description": "The power line was repaired by the Electricity crew.",
+        "resolvedAt": "2026-08-04T10:32:19.503Z",
+        "resolvedBy": "Municipal maintenance team",
+        "uploadedAt": "2026-08-04T10:32:19.503Z"
+      },
+      "community": {
+        "reportId": "CIV-2026-008039",
+        "confirmed": 14,
+        "notConfirmed": 1,
+        "target": 15,
+        "confidence": 89
+      },
+      "communityVerification": {
+        "votes": {
+          "u_102": "legit",
+          "u_203": "legit",
+          "u_304": "legit",
+          "u_405": "legit",
+          "u_506": "legit",
+          "u_607": "legit",
+          "u_708": "legit",
+          "u_809": "legit",
+          "u_910": "legit",
+          "u_111": "legit",
+          "u_222": "legit",
+          "u_333": "legit",
+          "u_444": "legit",
+          "u_555": "legit",
+          "u_666": "fake"
+        },
+        "updatedAt": "2026-08-04T10:32:19.503Z"
+      },
+      "activity": [
+        {
+          "key": "reported",
+          "at": "2026-08-03T10:32:19.503Z",
+          "text": "Issue reported by a citizen."
+        },
+        {
+          "key": "ai_analyzed",
+          "at": "2026-08-03T10:32:19.503Z",
+          "text": "CivicAI classified this as electric line with low severity (priority 78/100)."
+        },
+        {
+          "key": "routing_suggested",
+          "at": "2026-08-04T06:32:19.503Z",
+          "text": "Suggested routing: Electricity."
+        },
+        {
+          "key": "department_assigned",
+          "at": "2026-08-04T06:32:19.503Z",
+          "text": "Report assigned to Electricity."
+        },
+        {
+          "key": "status_changed",
+          "at": "2026-08-03T22:32:19.503Z",
+          "text": "Status changed from Assigned to In Progress."
+        },
+        {
+          "key": "resolved",
+          "at": "2026-08-04T10:32:19.503Z",
+          "text": "The issue was marked as resolved and resolution evidence was uploaded."
+        }
+      ]
+    },
+    {
+      "id": "CIV-2026-008022",
+      "category": "drainage",
+      "categoryLabel": "Drainage & Flooding",
+      "title": "Waterlogging drain unclogged",
+      "description": "The drain was cleared and morning flooding has stopped.",
+      "location": "Kalika",
+      "locationData": {
+        "name": "Kalika",
+        "mapX": 54,
+        "mapY": 20
+      },
+      "ward": "Ward 6",
+      "department": "Roads & Infrastructure",
+      "severity": "low",
+      "priority": 67,
+      "status": "resolved",
+      "reportedAt": "2026-07-30T10:32:19.503Z",
+      "assignedAt": "2026-07-31T06:32:19.503Z",
+      "inProgressAt": "2026-07-30T22:32:19.503Z",
+      "resolvedAt": "2026-07-31T10:32:19.503Z",
+      "reporterId": null,
+      "reporterName": "Citizen",
+      "reportCount": 1,
+      "imageDataUrl": null,
+      "aiConfidence": {
+        "classification": 93,
+        "severity": 91,
+        "department": 89
+      },
+      "explanation": "CivicAI classified this as Drainage & Flooding and the issue was resolved by Roads & Infrastructure.",
+      "notes": [],
+      "resolution": {
+        "description": "The drain was desilted and unclogged.",
+        "resolvedAt": "2026-07-31T10:32:19.503Z",
+        "resolvedBy": "Municipal maintenance team",
+        "uploadedAt": "2026-07-31T10:32:19.503Z"
+      },
+      "community": {
+        "reportId": "CIV-2026-008022",
+        "confirmed": 11,
+        "notConfirmed": 0,
+        "target": 11,
+        "confidence": 87
+      },
+      "communityVerification": {
+        "votes": {
+          "u_102": "legit",
+          "u_203": "legit",
+          "u_304": "legit",
+          "u_405": "legit",
+          "u_506": "legit",
+          "u_607": "legit",
+          "u_708": "legit",
+          "u_809": "legit",
+          "u_910": "legit",
+          "u_111": "legit",
+          "u_222": "legit"
+        },
+        "updatedAt": "2026-07-31T10:32:19.503Z"
+      },
+      "activity": [
+        {
+          "key": "reported",
+          "at": "2026-07-30T10:32:19.503Z",
+          "text": "Issue reported by a citizen."
+        },
+        {
+          "key": "ai_analyzed",
+          "at": "2026-07-30T10:32:19.503Z",
+          "text": "CivicAI classified this as drainage & flooding with low severity (priority 67/100)."
+        },
+        {
+          "key": "routing_suggested",
+          "at": "2026-07-31T06:32:19.503Z",
+          "text": "Suggested routing: Roads & Infrastructure."
+        },
+        {
+          "key": "department_assigned",
+          "at": "2026-07-31T06:32:19.503Z",
+          "text": "Report assigned to Roads & Infrastructure."
+        },
+        {
+          "key": "status_changed",
+          "at": "2026-07-30T22:32:19.503Z",
+          "text": "Status changed from Assigned to In Progress."
+        },
+        {
+          "key": "resolved",
+          "at": "2026-07-31T10:32:19.503Z",
+          "text": "The issue was marked as resolved and resolution evidence was uploaded."
+        }
+      ]
+    },
+    {
+      "id": "CIV-2026-008015",
+      "category": "garbage_overflow",
+      "categoryLabel": "Garbage Overflow",
+      "title": "Debris removed from the bridge",
+      "description": "Sand and rubble were cleared from the pavement.",
+      "location": "Bharatpur",
+      "locationData": {
+        "name": "Bharatpur",
+        "mapX": 36,
+        "mapY": 43
+      },
+      "ward": "Ward 11",
+      "department": "Waste Management",
+      "severity": "low",
+      "priority": 58,
+      "status": "resolved",
+      "reportedAt": "2026-07-31T10:32:19.503Z",
+      "assignedAt": "2026-08-01T06:32:19.503Z",
+      "inProgressAt": "2026-07-31T22:32:19.503Z",
+      "resolvedAt": "2026-08-01T10:32:19.503Z",
+      "reporterId": null,
+      "reporterName": "Citizen",
+      "reportCount": 1,
+      "imageDataUrl": null,
+      "aiConfidence": {
+        "classification": 92,
+        "severity": 92,
+        "department": 92
+      },
+      "explanation": "CivicAI classified this as Garbage Overflow and the issue was resolved by Waste Management.",
+      "notes": [],
+      "resolution": {
+        "description": "Debris was removed by the Waste Management team.",
+        "resolvedAt": "2026-08-01T10:32:19.503Z",
+        "resolvedBy": "Municipal maintenance team",
+        "uploadedAt": "2026-08-01T10:32:19.503Z"
+      },
+      "community": {
+        "reportId": "CIV-2026-008015",
+        "confirmed": 10,
+        "notConfirmed": 1,
+        "target": 11,
+        "confidence": 85
+      },
+      "communityVerification": {
+        "votes": {
+          "u_102": "legit",
+          "u_203": "legit",
+          "u_304": "legit",
+          "u_405": "legit",
+          "u_506": "legit",
+          "u_607": "legit",
+          "u_708": "legit",
+          "u_809": "legit",
+          "u_910": "legit",
+          "u_111": "legit",
+          "u_222": "fake"
+        },
+        "updatedAt": "2026-08-01T10:32:19.503Z"
+      },
+      "activity": [
+        {
+          "key": "reported",
+          "at": "2026-07-31T10:32:19.503Z",
+          "text": "Issue reported by a citizen."
+        },
+        {
+          "key": "ai_analyzed",
+          "at": "2026-07-31T10:32:19.503Z",
+          "text": "CivicAI classified this as garbage overflow with low severity (priority 58/100)."
+        },
+        {
+          "key": "routing_suggested",
+          "at": "2026-08-01T06:32:19.503Z",
+          "text": "Suggested routing: Waste Management."
+        },
+        {
+          "key": "department_assigned",
+          "at": "2026-08-01T06:32:19.503Z",
+          "text": "Report assigned to Waste Management."
+        },
+        {
+          "key": "status_changed",
+          "at": "2026-07-31T22:32:19.503Z",
+          "text": "Status changed from Assigned to In Progress."
+        },
+        {
+          "key": "resolved",
+          "at": "2026-08-01T10:32:19.503Z",
+          "text": "The issue was marked as resolved and resolution evidence was uploaded."
+        }
+      ]
+    },
+    {
+      "id": "CIV-2026-008003",
+      "category": "transportation",
+      "categoryLabel": "Transportation",
+      "title": "Abandoned vehicle removed from lane",
+      "description": "The vehicle blocking the lane was towed by the city.",
+      "location": "Bharatpur",
+      "locationData": {
+        "name": "Bharatpur",
+        "mapX": 36,
+        "mapY": 43
+      },
+      "ward": "Ward 11",
+      "department": "Roads & Infrastructure",
+      "severity": "low",
+      "priority": 55,
+      "status": "resolved",
+      "reportedAt": "2026-07-29T10:32:19.503Z",
+      "assignedAt": "2026-07-30T06:32:19.503Z",
+      "inProgressAt": "2026-07-29T22:32:19.503Z",
+      "resolvedAt": "2026-07-30T10:32:19.503Z",
+      "reporterId": null,
+      "reporterName": "Citizen",
+      "reportCount": 1,
+      "imageDataUrl": null,
+      "aiConfidence": {
+        "classification": 97,
+        "severity": 89,
+        "department": 89
+      },
+      "explanation": "CivicAI classified this as Transportation and the issue was resolved by Roads & Infrastructure.",
+      "notes": [],
+      "resolution": {
+        "description": "The abandoned vehicle was removed by the city.",
+        "resolvedAt": "2026-07-30T10:32:19.503Z",
+        "resolvedBy": "Municipal maintenance team",
+        "uploadedAt": "2026-07-30T10:32:19.503Z"
+      },
+      "community": {
+        "reportId": "CIV-2026-008003",
+        "confirmed": 9,
+        "notConfirmed": 1,
+        "target": 10,
+        "confidence": 83
+      },
+      "communityVerification": {
+        "votes": {
+          "u_102": "legit",
+          "u_203": "legit",
+          "u_304": "legit",
+          "u_405": "legit",
+          "u_506": "legit",
+          "u_607": "legit",
+          "u_708": "legit",
+          "u_809": "legit",
+          "u_910": "legit",
+          "u_111": "fake"
+        },
+        "updatedAt": "2026-07-30T10:32:19.503Z"
+      },
+      "activity": [
+        {
+          "key": "reported",
+          "at": "2026-07-29T10:32:19.503Z",
+          "text": "Issue reported by a citizen."
+        },
+        {
+          "key": "ai_analyzed",
+          "at": "2026-07-29T10:32:19.503Z",
+          "text": "CivicAI classified this as transportation with low severity (priority 55/100)."
+        },
+        {
+          "key": "routing_suggested",
+          "at": "2026-07-30T06:32:19.503Z",
+          "text": "Suggested routing: Roads & Infrastructure."
+        },
+        {
+          "key": "department_assigned",
+          "at": "2026-07-30T06:32:19.503Z",
+          "text": "Report assigned to Roads & Infrastructure."
+        },
+        {
+          "key": "status_changed",
+          "at": "2026-07-29T22:32:19.503Z",
+          "text": "Status changed from Assigned to In Progress."
+        },
+        {
+          "key": "resolved",
+          "at": "2026-07-30T10:32:19.503Z",
+          "text": "The issue was marked as resolved and resolution evidence was uploaded."
+        }
+      ]
+    },
+    {
+      "id": "CIV-2026-007998",
+      "category": "environment",
+      "categoryLabel": "Environment",
+      "title": "Fallen tree branch cleared from footpath",
+      "description": "The branch was removed and the path is walkable again.",
+      "location": "Madi",
+      "locationData": {
+        "name": "Madi",
+        "mapX": 76,
+        "mapY": 78
+      },
+      "ward": "Ward 2",
+      "department": "Environment",
+      "severity": "low",
+      "priority": 49,
+      "status": "resolved",
+      "reportedAt": "2026-08-01T10:32:19.503Z",
+      "assignedAt": "2026-08-02T06:32:19.503Z",
+      "inProgressAt": "2026-08-01T22:32:19.503Z",
+      "resolvedAt": "2026-08-02T10:32:19.503Z",
+      "reporterId": null,
+      "reporterName": "Citizen",
+      "reportCount": 1,
+      "imageDataUrl": null,
+      "aiConfidence": {
+        "classification": 91,
+        "severity": 93,
+        "department": 89
+      },
+      "explanation": "CivicAI classified this as Environment and the issue was resolved by Environment.",
+      "notes": [],
+      "resolution": {
+        "description": "The branch was removed by the Parks & Greenery team.",
+        "resolvedAt": "2026-08-02T10:32:19.503Z",
+        "resolvedBy": "Municipal maintenance team",
+        "uploadedAt": "2026-08-02T10:32:19.503Z"
+      },
+      "community": {
+        "reportId": "CIV-2026-007998",
+        "confirmed": 8,
+        "notConfirmed": 0,
+        "target": 8,
+        "confidence": 80
+      },
+      "communityVerification": {
+        "votes": {
+          "u_102": "legit",
+          "u_203": "legit",
+          "u_304": "legit",
+          "u_405": "legit",
+          "u_506": "legit",
+          "u_607": "legit",
+          "u_708": "legit",
+          "u_809": "legit"
+        },
+        "updatedAt": "2026-08-02T10:32:19.503Z"
+      },
+      "activity": [
+        {
+          "key": "reported",
+          "at": "2026-08-01T10:32:19.503Z",
+          "text": "Issue reported by a citizen."
+        },
+        {
+          "key": "ai_analyzed",
+          "at": "2026-08-01T10:32:19.503Z",
+          "text": "CivicAI classified this as environment with low severity (priority 49/100)."
+        },
+        {
+          "key": "routing_suggested",
+          "at": "2026-08-02T06:32:19.503Z",
+          "text": "Suggested routing: Environment."
+        },
+        {
+          "key": "department_assigned",
+          "at": "2026-08-02T06:32:19.503Z",
+          "text": "Report assigned to Environment."
+        },
+        {
+          "key": "status_changed",
+          "at": "2026-08-01T22:32:19.503Z",
+          "text": "Status changed from Assigned to In Progress."
+        },
+        {
+          "key": "resolved",
+          "at": "2026-08-02T10:32:19.503Z",
+          "text": "The issue was marked as resolved and resolution evidence was uploaded."
+        }
+      ]
+    },
+    {
+      "id": "CIV-2026-007985",
+      "category": "light_pole",
+      "categoryLabel": "Light Pole",
+      "title": "Streetlight restored at the park gate",
+      "description": "The lamp was replaced and the corner is lit again at night.",
+      "location": "Ratnanagar",
+      "locationData": {
+        "name": "Ratnanagar",
+        "mapX": 87,
+        "mapY": 43
+      },
+      "ward": "Ward 9",
+      "department": "Electricity",
+      "severity": "low",
+      "priority": 48,
+      "status": "resolved",
+      "reportedAt": "2026-08-05T10:32:19.503Z",
+      "assignedAt": "2026-08-06T06:32:19.503Z",
+      "inProgressAt": "2026-08-05T22:32:19.503Z",
+      "resolvedAt": "2026-08-06T10:32:19.503Z",
+      "reporterId": null,
+      "reporterName": "Citizen",
+      "reportCount": 1,
+      "imageDataUrl": null,
+      "aiConfidence": {
+        "classification": 90,
+        "severity": 92,
+        "department": 88
+      },
+      "explanation": "CivicAI classified this as Light Pole and the issue was resolved by Electricity.",
+      "notes": [],
+      "resolution": {
+        "description": "The streetlight was replaced by the Street Lighting unit.",
+        "resolvedAt": "2026-08-06T10:32:19.503Z",
+        "resolvedBy": "Municipal maintenance team",
+        "uploadedAt": "2026-08-06T10:32:19.503Z"
+      },
+      "community": {
+        "reportId": "CIV-2026-007985",
+        "confirmed": 12,
+        "notConfirmed": 1,
+        "target": 13,
+        "confidence": 86
+      },
+      "communityVerification": {
+        "votes": {
+          "u_102": "legit",
+          "u_203": "legit",
+          "u_304": "legit",
+          "u_405": "legit",
+          "u_506": "legit",
+          "u_607": "legit",
+          "u_708": "legit",
+          "u_809": "legit",
+          "u_910": "legit",
+          "u_111": "legit",
+          "u_222": "legit",
+          "u_333": "legit",
+          "u_444": "fake"
+        },
+        "updatedAt": "2026-08-06T10:32:19.503Z"
+      },
+      "activity": [
+        {
+          "key": "reported",
+          "at": "2026-08-05T10:32:19.503Z",
+          "text": "Issue reported by a citizen."
+        },
+        {
+          "key": "ai_analyzed",
+          "at": "2026-08-05T10:32:19.503Z",
+          "text": "CivicAI classified this as light pole with low severity (priority 48/100)."
+        },
+        {
+          "key": "routing_suggested",
+          "at": "2026-08-06T06:32:19.503Z",
+          "text": "Suggested routing: Electricity."
+        },
+        {
+          "key": "department_assigned",
+          "at": "2026-08-06T06:32:19.503Z",
+          "text": "Report assigned to Electricity."
+        },
+        {
+          "key": "status_changed",
+          "at": "2026-08-05T22:32:19.503Z",
+          "text": "Status changed from Assigned to In Progress."
+        },
+        {
+          "key": "resolved",
+          "at": "2026-08-06T10:32:19.503Z",
+          "text": "The issue was marked as resolved and resolution evidence was uploaded."
+        }
+      ]
+    }
+  ],
+  "confirmations": {},
+  "confirmationFeedback": {}
+}
