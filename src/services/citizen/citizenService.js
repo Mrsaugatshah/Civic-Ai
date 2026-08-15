@@ -2,7 +2,7 @@ export const LATENCY=0;
 export const LOCATIONS=["Bharatpur","Ratnanagar","Khairahani","Rapti","Kalika","Madi","Ichchhakamana"];
 export const CIVIC_LEVELS=[{min:0,label:"Getting Started"},{min:200,label:"Active Reporter"},{min:400,label:"Community Builder"},{min:600,label:"Great Community Contributor"},{min:800,label:"Civic Champion"}];
 export function levelForScore(score){return[...CIVIC_LEVELS].reverse().find(level=>score>=level.min)||CIVIC_LEVELS[0];}
-async function api(path){const response=await fetch(`/api${path}`,{credentials:"include"});const body=await response.json().catch(()=>({}));if(!response.ok)throw new Error(body.error?.message||"Could not load CivicAI data.");return body.data;}
+async function api(path,options={}){const response=await fetch(`/api${path}`,{credentials:"include",...options,headers:{"Content-Type":"application/json","X-CivicAI-CSRF":"1",...(options.headers||{})}});const body=await response.json().catch(()=>({}));if(!response.ok)throw new Error(body.error?.message||"Could not load CivicAI data.");return body.data;}
 async function mine(){return api("/reports/my?limit=50");}
 async function community(){return api("/reports/community?limit=5");}
 function severity(priority){return priority>=85?"critical":priority>=70?"high":priority>=45?"medium":"low";}
@@ -12,4 +12,5 @@ export async function fetchNearbyIssues(){const data=await community();return da
 export async function fetchRecentReports(){const data=await mine();return{items:data.items.slice(0,3).map(r=>({...r,severity:severity(r.priority||0),eta:"Updated from CivicAI",timeline:timeline(r)}))};}
 export async function fetchCommunityImpact(){const data=await mine();return{stats:[{label:"Issues resolved",value:String(data.stats.resolved),tone:"success"},{label:"Total reports",value:String(data.stats.total),tone:"primary"},{label:"In progress",value:String(data.stats.inProgress),tone:"brand"},{label:"Critical",value:String(data.stats.critical),tone:"ai"}],chart:[],note:"These totals come from your CivicAI report records."};}
 export async function fetchCivicInsight(){const data=await mine();return{badge:"Live Insight",headline:`${data.stats.pending} reports are awaiting action`,body:`You have ${data.stats.inProgress} reports in progress and ${data.stats.resolved} resolved.`,points:[],confidence:"Database derived"};}
-export async function fetchNotifications(){return api("/notifications");}
+export async function fetchNotifications(){const data=await api("/notifications");return {...data,items:(data.items||[]).map((item)=>({...item,iconKey:item.kind==="status"?"progress":item.kind==="resolved"?"resolved":"digest",time:item.createdAt?new Date(item.createdAt).toLocaleString():""}))};}
+export async function markNotificationsRead({all=false,ids=[]}={}){return api("/notifications/read",{method:"POST",body:JSON.stringify({all,ids}),csrf:true});}

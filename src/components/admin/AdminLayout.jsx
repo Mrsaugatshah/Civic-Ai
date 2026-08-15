@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard, ListOrdered, AlertTriangle, Map, Sparkles, BarChart3, Tags,
 } from "lucide-react";
@@ -23,6 +23,7 @@ const NAV = [
 export function AdminLayout({ children, initialActive = "overview" }) {
   const [active, setActive] = useState(initialActive);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleNav = (item) => {
     if (item.route) {
@@ -35,6 +36,10 @@ export function AdminLayout({ children, initialActive = "overview" }) {
       return;
     }
     setActive(item.key);
+    if (location.pathname !== "/admin/dashboard") {
+      navigate(`/admin/dashboard#${item.id}`);
+      return;
+    }
     document.getElementById(item.id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 

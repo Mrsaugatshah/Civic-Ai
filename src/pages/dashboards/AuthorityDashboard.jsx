@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "@/contexts/AuthContext";
@@ -14,6 +15,13 @@ export function AuthorityDashboard() {
   const department = user?.department || "Your Department";
 
   const dashboard = useAsync(() => getDepartmentDashboard(department), [department]);
+
+  useEffect(() => {
+    const target = window.location.hash.slice(1);
+    if (!target) return undefined;
+    const timer = window.setTimeout(() => document.getElementById(target)?.scrollIntoView({ behavior: "smooth", block: "start" }), 0);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   const openTask = (task) => navigate(`/authority/issues/${task.id}`);
 

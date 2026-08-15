@@ -33,6 +33,13 @@ export function invalid(message) {
 
 export function validateAnalysis(value) {
   if (!value || typeof value !== "object" || Array.isArray(value)) throw invalid("AI response must be an object.");
+  // Some OpenAI-compatible models shorten this field despite the structured
+  // schema. Accept that single, unambiguous alias while keeping all other
+  // unknown fields rejected so provider drift cannot silently corrupt data.
+  if (Object.hasOwn(value, "immediate_attention") && !Object.hasOwn(value, "requires_immediate_attention")) {
+    value = { ...value, requires_immediate_attention: value.immediate_attention };
+    delete value.immediate_attention;
+  }
   for (const key of Object.keys(value)) if (!ALLOWED_KEYS.has(key)) throw invalid(`AI response contains an unexpected field: ${key}.`);
   if (!CATEGORY_KEYS.includes(value.category)) throw invalid("AI returned an unknown category.");
   if (!PRIORITIES.includes(value.priority)) throw invalid("AI returned an unknown priority.");

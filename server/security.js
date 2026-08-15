@@ -18,14 +18,26 @@ export function createRateLimiter({ windowMs, limit, key = (req) => req.ip }) {
   };
 }
 
+export function isTrustedFrontendOrigin(origin) {
+  if (!origin) return true;
+  const configured = (process.env.FRONTEND_URL || "http://localhost:5173").replace(/\/$/, "");
+  if (origin.replace(/\/$/, "") === configured) return true;
+  if (process.env.NODE_ENV !== "development") return false;
+  try {
+    const parsed = new URL(origin);
+    return ["localhost", "127.0.0.1", "[::1]"].includes(parsed.hostname);
+  } catch {
+    return false;
+  }
+}
+
 export function requireTrustedMutation(req, res, next) {
   if (!["POST", "PUT", "PATCH", "DELETE"].includes(req.method)) return next();
   if (req.get("X-CivicAI-CSRF") !== "1") {
     return res.status(403).json({ code: "csrf_failed", error: "The request could not be verified. Refresh and try again." });
   }
   const origin = req.get("Origin");
-  const allowed = (process.env.FRONTEND_URL || "http://localhost:5173").replace(/\/$/, "");
-  if (origin && origin.replace(/\/$/, "") !== allowed) {
+  if (!isTrustedFrontendOrigin(origin)) {
     return res.status(403).json({ code: "origin_rejected", error: "The request origin is not allowed." });
   }
   next();

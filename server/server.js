@@ -5,13 +5,13 @@ import fs from "node:fs";
 import path from "node:path";
 import { authRouter, withAuth } from "./auth.js";
 import { reportsRouter, resumePendingAnalyses } from "./reports.js";
-import { requireTrustedMutation } from "./security.js";
+import { isTrustedFrontendOrigin, requireTrustedMutation } from "./security.js";
 
 export const app = express();
 app.disable("x-powered-by");
 app.set("trust proxy", process.env.TRUST_PROXY === "true" ? 1 : false);
 const frontendOrigin = (process.env.FRONTEND_URL || "http://localhost:5173").replace(/\/$/, "");
-app.use(cors({ origin: frontendOrigin, credentials: true, methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"], allowedHeaders: ["Content-Type", "X-CivicAI-CSRF"] }));
+app.use(cors({ origin: (origin, callback) => callback(null, !origin || isTrustedFrontendOrigin(origin) ? (origin || frontendOrigin) : false), credentials: true, methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"], allowedHeaders: ["Content-Type", "X-CivicAI-CSRF"] }));
 app.use(express.json({ limit: "64kb" }));
 app.use(requireTrustedMutation);
 

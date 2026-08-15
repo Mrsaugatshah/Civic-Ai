@@ -1,7 +1,5 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { toast } from "sonner";
-import { Home, Map, AlertCircle, FileText, Bell, User, Plus, Sparkles } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Home, Map, AlertCircle, FileText, Bell, Plus, Sparkles } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -19,13 +17,11 @@ const SIDEBAR_NAV = [
 
 const MOBILE_NAV = [
   { key: "home", label: "Home", icon: Home, id: "home" },
+  { key: "issues", label: "Issues", icon: AlertCircle, id: "issues" },
   { key: "reports", label: "My Reports", icon: FileText, id: "reports" },
   { key: "map", label: "Map", icon: Map, id: "map" },
   { key: "notifications", label: "Notify", icon: Bell, id: null },
-  { key: "profile", label: "Profile", icon: User, id: null },
 ];
-
-const COMING_SOON = "This section is built in a later part of the project.";
 
 function scrollTo(id) {
   if (id === "home") {
@@ -36,17 +32,17 @@ function scrollTo(id) {
 }
 
 export function CitizenLayout({ children, unreadCount, onOpenNotifications }) {
-  const [active, setActive] = useState("home");
+  const { pathname } = useLocation();
   const navigate = useNavigate();
 
+  const routeActive = pathname.startsWith("/issues") ? "issues"
+    : pathname.startsWith("/reports") ? "reports"
+      : pathname === "/map" ? "map" : "home";
+  const active = routeActive;
+
   const handleNav = (key, id) => {
-    setActive(key);
     if (key === "notifications") {
       onOpenNotifications?.();
-      return;
-    }
-    if (key === "profile") {
-      toast.info(COMING_SOON);
       return;
     }
     if (key === "map") {

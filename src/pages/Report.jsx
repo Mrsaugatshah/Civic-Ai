@@ -21,6 +21,7 @@ import {
   loadDraft,
   saveDraft,
   submitReport,
+  submitGuestReport,
 } from "@/services/report/reportService";
 import { getCategory } from "@/services/categories/categoryService";
 
@@ -34,21 +35,21 @@ const STEPS = [
 
 const EMPTY_REPORT = { media: [], transcript: "", description: "", location: null };
 
-export function Report() {
+export function Report({ guest = false }) {
   const [searchParams] = useSearchParams();
   const quick = searchParams.get("quick") === "1";
 
   if (quick) {
-    return <QuickReportEntry />;
+    return <QuickReportEntry guest={guest} />;
   }
-  return <GuidedReport />;
+  return <GuidedReport guest={guest} />;
 }
 
-function QuickReportEntry() {
-  return <QuickReport />;
+function QuickReportEntry({ guest }) {
+  return <QuickReport guest={guest} />;
 }
 
-function GuidedReport() {
+function GuidedReport({ guest = false }) {
   const navigate = useNavigate();
   const [report, setReport] = useState(EMPTY_REPORT);
   const [step, setStep] = useState(0);
@@ -163,7 +164,7 @@ function GuidedReport() {
     setPhase("submitting");
     setSubmitError("");
     try {
-      const result = await submitReport({
+      const result = await (guest ? submitGuestReport : submitReport)({
         title: categoryDefinition?.label ?? "Civic issue report",
         categoryLabel: categoryDefinition?.label,
         category,
@@ -172,7 +173,7 @@ function GuidedReport() {
         media: report.media,
       });
       clearDraft();
-      setSubmission({ ...result, categoryKey: category });
+      setSubmission({ ...result, categoryKey: category, guest });
       setPhase("success");
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (error) {
@@ -182,10 +183,12 @@ function GuidedReport() {
   };
 
   const onTrack = () => {
+    if (guest) {
+      navigate(`/track?trackingId=${encodeURIComponent(submission?.trackingId || submission?.id || "")}&accessToken=${encodeURIComponent(submission?.accessToken || "")}`);
+      return;
+    }
     navigate("/dashboard");
-    setTimeout(() => {
-      document.getElementById("reports")?.scrollIntoView({ behavior: "smooth" });
-    }, 250);
+    setTimeout(() => document.getElementById("reports")?.scrollIntoView({ behavior: "smooth" }), 250);
   };
 
   const stepContent = (() => {
@@ -224,6 +227,7 @@ function GuidedReport() {
             input={{ description: report.description, transcript: report.transcript, location: report.location }}
             edits={edits}
             setEdits={setEdits}
+            guest={guest}
           />
         );
       default:

@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { LayoutDashboard, ListChecks, Map } from "lucide-react";
 
 import { useAuth } from "@/contexts/AuthContext";
 import { useAsync } from "@/hooks/useAsync";
 import { getDepartmentNotifications } from "@/services/authority/authorityService";
+import { markNotificationsRead } from "@/services/citizen/citizenService";
 
 import { Logo } from "@/components/layout/Navbar";
 import { UserMenu } from "@/components/layout/UserMenu";
@@ -23,6 +24,7 @@ export function AuthorityLayout({ children }) {
   const [active, setActive] = useState("overview");
   const [notifOpen, setNotifOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuth();
   const department = user?.department || "Your Department";
 
@@ -35,7 +37,16 @@ export function AuthorityLayout({ children }) {
       return;
     }
     setActive(item.key);
+    if (location.pathname !== "/authority/dashboard") {
+      navigate(`/authority/dashboard#${item.id}`);
+      return;
+    }
     document.getElementById(item.id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const handleMarkAllRead = async () => {
+    await markNotificationsRead({ all: true });
+    notifications.reload();
   };
 
   return (
@@ -134,7 +145,7 @@ export function AuthorityLayout({ children }) {
         loading={notifications.loading}
         error={notifications.error}
         onRetry={notifications.reload}
-        onMarkAllRead={() => {}}
+        onMarkAllRead={handleMarkAllRead}
       />
     </div>
   );

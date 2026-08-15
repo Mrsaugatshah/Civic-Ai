@@ -66,8 +66,37 @@ export async function submitReport(payload) {
   return { id: report.id, priority: report.priority, aiStatus: report.aiStatus, status: report.status, createdAt: report.submittedAt, category: report.categoryLabel, address: report.address };
 }
 
-export async function analyzeDraft({ description, category = "other", title = "Civic issue", location }) {
-  const response = await fetch("/api/reports/analyze", {
+export async function submitGuestReport(payload) {
+  const form = new FormData();
+  const location = payload.location || {};
+  form.set("title", payload.title || "Civic issue report");
+  form.set("description", payload.description || "");
+  form.set("category", payload.category || "other");
+  form.set("latitude", String(location.latitude));
+  form.set("longitude", String(location.longitude));
+  form.set("address", location.name || "Selected map location");
+  form.set("ward", location.ward || "");
+  form.set("municipality", location.municipality || "");
+  form.set("province", location.province || "");
+  for (const item of payload.media || []) if (item.file) form.append("evidence", item.file, item.name);
+  let response;
+  try { response = await fetch("/api/guest/reports", { method: "POST", credentials: "include", headers: { "X-CivicAI-CSRF": "1" }, body: form }); }
+  catch { throw new Error("We couldn't connect to CivicAI. Your report was not submitted."); }
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(body.error?.message || "The report could not be submitted.");
+  const report = body.data;
+  return { id: report.id, trackingId: report.trackingId, accessToken: report.accessToken, priority: report.priority, aiStatus: report.aiStatus, status: report.status, createdAt: report.submittedAt, category: report.categoryLabel, categoryKey: report.category, address: report.address };
+}
+
+export async function trackGuestReport(trackingId, accessToken) {
+  const response = await fetch("/api/guest/track", { method: "POST", credentials: "include", headers: { "Content-Type": "application/json", "X-CivicAI-CSRF": "1" }, body: JSON.stringify({ trackingId, accessToken }) });
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(body.error?.message || "We couldn't find that guest complaint.");
+  return body.data;
+}
+
+export async function analyzeDraft({ description, category = "other", title = "Civic issue", location, guest = false }) {
+  const response = await fetch(guest ? "/api/guest/analyze" : "/api/reports/analyze", {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json", "X-CivicAI-CSRF": "1" },

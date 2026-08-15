@@ -119,7 +119,7 @@ export function AdminIssueDetail() {
         toast.error(err.message);
         setPendingStatus(null);
       } else {
-        toast.error(error?.message || "Couldn't update the status. Please try again.");
+        toast.error(err?.message || "Couldn't update the status. Please try again.");
       }
     } finally {
       setStatusSaving(false);

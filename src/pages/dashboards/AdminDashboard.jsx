@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useAsync } from "@/hooks/useAsync";
@@ -28,6 +28,13 @@ export function AdminDashboard() {
   const queue = useAsync(getPriorityQueue, []);
   const insights = useAsync(getAIInsights, []);
   const analytics = useAsync(useCallback(() => getAnalytics(range), [range]), [range]);
+
+  useEffect(() => {
+    const target = window.location.hash.slice(1);
+    if (!target) return undefined;
+    const timer = window.setTimeout(() => document.getElementById(target)?.scrollIntoView({ behavior: "smooth", block: "start" }), 0);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   const openIssue = (issue) => navigate(`/admin/issues/${issue.id}`);
 

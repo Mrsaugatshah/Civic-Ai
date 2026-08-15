@@ -18,7 +18,7 @@ function normalizeCategory(value) {
   })?.key || null;
 }
 
-export function AnalysisStep({ input, edits, setEdits }) {
+export function AnalysisStep({ input, edits, setEdits, guest = false }) {
   const category=edits.category;
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
@@ -26,9 +26,17 @@ export function AnalysisStep({ input, edits, setEdits }) {
     let active = true;
     if (!input?.description || input.description.trim().length < 10) return undefined;
     setLoading(true);
-    analyzeDraft({ description: input.description, category: category || "other", location: input.location })
+    analyzeDraft({ description: input.description, category: category || "other", location: input.location, guest })
       .then((data) => { if (active) { setResult(data); const suggested = normalizeCategory(data.category); if (suggested && !edits.category) setEdits((current) => ({ ...current, category: suggested })); } })
-      .catch((error) => { if (active) { setResult(null); toast.error(error.message); } })
+      .catch((error) => {
+        if (active) {
+          setResult(null);
+          // AI is advisory. Keep the guided flow submit-able with the safe
+          // existing fallback category when the provider is unavailable.
+          if (!edits.category) setEdits((current) => ({ ...current, category: "other" }));
+          toast.error("AI analysis is unavailable. Choose a category manually to continue.");
+        }
+      })
       .finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
     // Re-run only when the citizen's description changes; manual category edits must not trigger a new request.

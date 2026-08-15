@@ -90,6 +90,15 @@ export function ReportSuccess({ submission, onTrack, onHome }) {
             </div>
           </div>
 
+          {submission?.guest && (
+            <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 text-center">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Guest tracking code</p>
+              <p className="mt-1 font-mono text-lg font-bold text-foreground">{submission.trackingId || submission.id}</p>
+              <p className="mt-1 text-xs text-muted-foreground">Save this code and your private access token to check progress later.</p>
+              <p className="mt-2 break-all rounded bg-background p-2 text-[11px] text-muted-foreground">Access token: {submission.accessToken}</p>
+            </div>
+          )}
+
           <div className="rounded-lg border bg-muted/40 p-4">
             <p className="mb-3 flex items-center gap-1.5 text-xs font-semibold text-foreground">
               <Sparkles size={12} className="text-ai" />
@@ -136,7 +145,7 @@ export function ReportSuccess({ submission, onTrack, onHome }) {
           </div>
 
           <p className="text-center text-xs leading-relaxed text-muted-foreground">
-            Track your report anytime from your dashboard. You'll be notified as its status changes.
+            {submission?.guest ? "Use the tracking code and access token to check your complaint." : "Track your report anytime from your dashboard. You'll be notified as its status changes."}
           </p>
 
           <p className="text-center text-xs text-muted-foreground">

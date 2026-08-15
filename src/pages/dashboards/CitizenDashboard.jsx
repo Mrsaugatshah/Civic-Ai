@@ -11,6 +11,7 @@ import {
   fetchCommunityImpact,
   fetchCivicInsight,
   fetchNotifications,
+  markNotificationsRead,
 } from "@/services/citizen/citizenService";
 
 import { CitizenLayout } from "@/components/dashboard/CitizenLayout";
@@ -49,9 +50,15 @@ export function CitizenDashboard() {
 
   const unreadCount = notifications.filter((item) => item.unread).length;
 
-  const handleMarkAllRead = () => {
-    setReadAll(true);
-    toast.success("All notifications marked as read.");
+  const handleMarkAllRead = async () => {
+    try {
+      await markNotificationsRead({ all: true });
+      setReadAll(true);
+      await notif.reload();
+      toast.success("All notifications marked as read.");
+    } catch (error) {
+      toast.error(error.message || "Couldn't update notifications.");
+    }
   };
 
   const handleVerificationVote = async (reportId, vote) => {

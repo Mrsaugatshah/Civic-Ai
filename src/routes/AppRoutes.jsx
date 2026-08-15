@@ -10,6 +10,8 @@ import { Register } from "@/pages/auth/Register";
 import { ForgotPassword } from "@/pages/auth/ForgotPassword";
 import { ResetPassword } from "@/pages/auth/ResetPassword";
 import { VerifyEmail } from "@/pages/auth/VerifyEmail";
+import GuestLanding from "@/pages/GuestLanding";
+import GuestTrack from "@/pages/GuestTrack";
 
 // Route-level code splitting: heavier pages (map, dashboards, charts, report
 // flow) load on demand so the initial landing + auth chunk stays small.
@@ -29,7 +31,6 @@ const ReportDetails = lazy(() => import("@/pages/ReportDetails").then((m) => ({ 
 
 import { RoleGuard } from "@/routes/RoleGuard";
 import { useAuth } from "@/contexts/AuthContext";
-import { roleHome } from "@/utils/roles";
 
 function RouteFallback() {
   return (
@@ -40,9 +41,8 @@ function RouteFallback() {
 }
 
 function HomeRoute() {
-  const { user, isAuthenticated, isLoading } = useAuth();
+  const { isLoading } = useAuth();
   if (isLoading) return <RouteFallback />;
-  if (isAuthenticated) return <Navigate to={roleHome(user.role)} replace />;
   return <Landing />;
 }
 
@@ -109,6 +109,8 @@ const routeElements = (
     <Route path="/forgot-password" element={<ForgotPassword />} />
     <Route path="/reset-password" element={<ResetPassword />} />
     <Route path="/verify-email" element={<VerifyEmail />} />
+    <Route path="/guest" element={<GuestLanding />} />
+    <Route path="/track" element={<GuestTrack />} />
     <Route path="/design-system" element={<DesignSystem />} />
     <Route
       path="/report"
@@ -118,6 +120,7 @@ const routeElements = (
         </RoleGuard>
       }
     />
+    <Route path="/guest/report" element={<Report guest />} />
     <Route path="/map" element={<CityMapPage />} />
 
     <Route

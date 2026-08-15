@@ -26,6 +26,7 @@ sql.exec(`
     ai_status TEXT NOT NULL DEFAULT 'pending', ai_category TEXT, ai_priority INTEGER,
     ai_confidence REAL, ai_summary TEXT, ai_department TEXT, ai_analyzed_at TEXT,
     possible_duplicate_id TEXT, duplicate_similarity REAL,
+    reporter_type TEXT NOT NULL DEFAULT 'registered', community_priority_bonus INTEGER NOT NULL DEFAULT 0,
     created_at TEXT NOT NULL, updated_at TEXT NOT NULL, submitted_at TEXT NOT NULL,
     acknowledged_at TEXT, assigned_at TEXT, resolved_at TEXT, resolved_by TEXT, closed_at TEXT
   );
@@ -96,12 +97,22 @@ sql.exec(`
     token_hash TEXT NOT NULL UNIQUE, created_at INTEGER NOT NULL, expires_at INTEGER NOT NULL
   );
   CREATE INDEX IF NOT EXISTS idx_sessions_user ON sessions(user_id);
+  CREATE TABLE IF NOT EXISTS guest_report_access (
+    id TEXT PRIMARY KEY, report_id TEXT NOT NULL UNIQUE REFERENCES reports(id) ON DELETE CASCADE,
+    token_hash TEXT NOT NULL UNIQUE, created_at INTEGER NOT NULL, expires_at INTEGER NOT NULL
+  );
+  CREATE INDEX IF NOT EXISTS idx_guest_access_expires ON guest_report_access(expires_at);
 `);
 
 // Forward-compatible migration for databases created before resolution actor
 // tracking was introduced.  SQLite has no IF NOT EXISTS for columns.
 const reportColumns = sql.prepare("PRAGMA table_info(reports)").all().map((column) => column.name);
 if (!reportColumns.includes("resolved_by")) sql.exec("ALTER TABLE reports ADD COLUMN resolved_by TEXT");
+if (!reportColumns.includes("reporter_type")) sql.exec("ALTER TABLE reports ADD COLUMN reporter_type TEXT NOT NULL DEFAULT 'registered'");
+if (!reportColumns.includes("community_priority_bonus")) sql.exec("ALTER TABLE reports ADD COLUMN community_priority_bonus INTEGER NOT NULL DEFAULT 0");
+sql.exec("CREATE INDEX IF NOT EXISTS idx_reports_reporter_type ON reports(reporter_type, created_at DESC)");
+sql.exec("CREATE TABLE IF NOT EXISTS guest_report_access (id TEXT PRIMARY KEY, report_id TEXT NOT NULL UNIQUE REFERENCES reports(id) ON DELETE CASCADE, token_hash TEXT NOT NULL UNIQUE, created_at INTEGER NOT NULL, expires_at INTEGER NOT NULL)");
+sql.exec("CREATE INDEX IF NOT EXISTS idx_guest_access_expires ON guest_report_access(expires_at)");
 
 function defaultDB() {
   return {

@@ -115,7 +115,7 @@ export function NotificationsMenu({
         </div>
         <div className="border-t px-5 py-3">
           <div className="text-center text-[11px] text-muted-foreground">
-            <Badge variant="outline" className="font-normal">3 new</Badge> since your last visit
+            {unreadCount > 0 ? <><Badge variant="outline" className="font-normal">{unreadCount} unread</Badge> notification{unreadCount === 1 ? "" : "s"}</> : "You're up to date"}
           </div>
         </div>
       </DialogContent>

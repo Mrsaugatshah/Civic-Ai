@@ -77,6 +77,7 @@ export function ReportCard({ report, index = 0, detailPath = "/reports" }) {
 
             <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1.5">
               <PriorityChip score={report.priority} />
+              {report.reporterType === "guest" && <Badge variant="outline" className="px-2 py-0.5 text-[10px]">Guest Report</Badge>}
               <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
                 <FileText size={10} aria-hidden />
                 {report.id}
@@ -84,6 +85,7 @@ export function ReportCard({ report, index = 0, detailPath = "/reports" }) {
             </div>
 
             {report.confirmed != null && <p className="mt-2 text-[11px] text-muted-foreground">Legit {report.confirmed} · Not Legit {report.rejected} · {report.legitimacyPercent == null ? "No verification yet" : `${report.legitimacyPercent}% legitimate`}</p>}
+            {report.communityStatus === "community_supported" && <p className="mt-1 text-[11px] font-medium text-success-foreground">Community Supported · priority boost applied</p>}
 
             {report.priority != null && <Progress
               value={report.priority}

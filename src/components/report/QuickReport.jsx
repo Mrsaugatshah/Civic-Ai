@@ -31,13 +31,17 @@ import {
 import { ReportSuccess } from "./ReportSuccess";
 import {
   submitReport,
+  submitGuestReport,
+  analyzeDraft,
+  MAX_MEDIA,
+  MAX_MEDIA_BYTES,
   REPORT_PLACES,
 } from "@/services/report/reportService";
 import { getCurrentLocation } from "@/services/map/geolocation";
 
 let quickSeq = 0;
 
-export function QuickReport() {
+export function QuickReport({ guest = false }) {
   const navigate = useNavigate();
   const inputRef = useRef(null);
   const [media, setMedia] = useState([]);
@@ -57,9 +61,13 @@ export function QuickReport() {
         toast.error("This file type isn't supported.");
         continue;
       }
-      if (file.size > 15 * 1024 * 1024) {
+      if (file.size > MAX_MEDIA_BYTES) {
         toast.error("This file is too large. Please choose a smaller file.");
         continue;
+      }
+      if (media.length + files.indexOf(file) >= MAX_MEDIA) {
+        toast.error(`You can attach up to ${MAX_MEDIA} files.`);
+        break;
       }
       const reader = new FileReader();
       reader.onload = () => {
@@ -99,14 +107,22 @@ export function QuickReport() {
     setError("");
     setPhase("submitting");
     try {
-      const submitResult = await submitReport({
+      let category = "other";
+      try {
+        const analysis = await analyzeDraft({ description, category, location, guest });
+        if (analysis?.category) category = analysis.category;
+      } catch {
+        // AI is advisory; the report remains submit-able with the valid
+        // manual fallback category and is retried asynchronously by the API.
+      }
+      const submitResult = await (guest ? submitGuestReport : submitReport)({
         title: "Quick civic report",
-        category: "other",
+        category,
         description,
         location,
         media: media.map((item) => ({ ...item, kind: "image" })),
       });
-      setSubmission({ ...submitResult, categoryKey: "other" });
+      setSubmission({ ...submitResult, categoryKey: category, guest });
       setPhase("success");
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (submitError) {
@@ -122,7 +138,7 @@ export function QuickReport() {
         <main className="px-4 py-10 sm:px-6">
           <ReportSuccess
             submission={submission}
-            onTrack={() => navigate("/dashboard")}
+            onTrack={() => navigate(guest ? `/track?trackingId=${encodeURIComponent(submission.trackingId)}&accessToken=${encodeURIComponent(submission.accessToken)}` : "/dashboard")}
             onHome={() => navigate("/")}
           />
         </main>
@@ -144,7 +160,7 @@ export function QuickReport() {
             </p>
           </div>
           <Button variant="outline" size="sm" asChild>
-            <Link to="/report">
+              <Link to={guest ? "/guest/report" : "/report"}>
               <LayoutList size={14} />
               Full report
             </Link>
@@ -181,7 +197,7 @@ export function QuickReport() {
                   <Camera size={18} />
                 </span>
                 <span className="text-sm font-medium text-foreground">Take or upload a photo</span>
-                <span className="text-xs text-muted-foreground">Up to 15 MB</span>
+                <span className="text-xs text-muted-foreground">Up to 8 MB each</span>
               </button>
               <input
                 ref={inputRef}
@@ -265,7 +281,7 @@ export function QuickReport() {
           <div className="sticky bottom-0 border-t bg-background/95 py-4 backdrop-blur-sm md:static md:border-0">
             <div className="flex items-center justify-between gap-3">
               <Button variant="ghost" size="sm" asChild>
-                <Link to="/dashboard">
+                <Link to={guest ? "/guest" : "/dashboard"}>
                   <ArrowLeft size={15} />
                   Back
                 </Link>

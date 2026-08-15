@@ -17,6 +17,7 @@ import { ErrorMessage } from "@/components/auth/ErrorMessage";
 
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
 
 export function Login() {
   const navigate = useNavigate();
@@ -128,6 +129,11 @@ export function Login() {
             <ArrowRight size={16} />
           </SubmitButton>
         </form>
+
+        <div className="my-5 flex items-center gap-3 text-xs text-muted-foreground"><span className="h-px flex-1 bg-border" />or<span className="h-px flex-1 bg-border" /></div>
+        <Button type="button" variant="outline" className="w-full" onClick={() => navigate("/guest")}>
+          Continue as Guest
+        </Button>
 
         <p className="mt-6 text-center text-sm text-muted-foreground">
           Don&apos;t have an account?{" "}
