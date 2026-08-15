@@ -111,8 +111,8 @@ export function Register() {
   return (
     <AuthLayout>
       <AuthCard
-        title="Create your CivicAI account"
-        description="Join your community and help turn local problems into real action."
+        title="Create Account"
+        description="Join CivicAI and help improve your community."
       >
         <form onSubmit={handleSubmit} noValidate className="space-y-5">
           {formError && <ErrorMessage network={authService.isOffline()}>{formError}</ErrorMessage>}

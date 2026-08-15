@@ -51,6 +51,9 @@ export function RoleGuard({ allowed, children }) {
       />
     );
   }
+  if (user.mustChangePassword && location.pathname !== "/change-password") {
+    return <Navigate to="/change-password" replace state={{ from: location }} />;
+  }
   if (!allowed.includes(user.role)) {
     return <AccessDenied />;
   }

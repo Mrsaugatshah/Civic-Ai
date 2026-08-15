@@ -46,6 +46,12 @@ export function AuthProvider({ children }) {
     };
   }, []);
 
+  useEffect(() => {
+    const update = (event) => { if (event.detail) setUser(event.detail); };
+    window.addEventListener("civicai:session-updated", update);
+    return () => window.removeEventListener("civicai:session-updated", update);
+  }, []);
+
   const login = useCallback(async (credentials) => {
     const sessionUser = await authService.login(credentials);
     clearSignedOut();

@@ -38,12 +38,14 @@ function fmtDate(iso) {
 export function AssignedTasks({ data, loading, error, onRetry, onOpenTask }) {
   const [filter, setFilter] = useState("all");
   const [query, setQuery] = useState("");
+  const [severity, setSeverity] = useState("all");
 
   const filtered = useMemo(() => {
     if (!data) return [];
     const q = query.trim().toLowerCase();
     return data
       .filter((t) => matchesFilter(t, filter))
+      .filter((t) => severity === "all" || String(t.severity || "").toLowerCase() === severity)
       .filter((t) =>
         !q ||
         t.id.toLowerCase().includes(q) ||
@@ -51,7 +53,7 @@ export function AssignedTasks({ data, loading, error, onRetry, onOpenTask }) {
         t.location.toLowerCase().includes(q) ||
         t.category.toLowerCase().includes(q)
       );
-  }, [data, filter, query]);
+  }, [data, filter, query, severity]);
 
   return (
     <section id="tasks" className="scroll-mt-24">
@@ -83,6 +85,7 @@ export function AssignedTasks({ data, loading, error, onRetry, onOpenTask }) {
               {f.label}
             </Button>
           ))}
+          <select value={severity} onChange={(event) => setSeverity(event.target.value)} aria-label="Filter by severity" className="h-9 rounded-md border border-input bg-background px-2.5 text-xs text-foreground"><option value="all">All Severities</option><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option><option value="critical">Critical</option></select>
         </div>
       </div>
 

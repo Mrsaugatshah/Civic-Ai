@@ -99,6 +99,24 @@
     --input: 220 13% 83%;
   }
 
+  .auth-premium {
+    --background: 231 48% 10%;
+    --foreground: 210 40% 98%;
+    --card: 229 38% 16%;
+    --card-foreground: 210 40% 98%;
+    --popover: 229 38% 16%;
+    --popover-foreground: 210 40% 98%;
+    --muted: 228 30% 22%;
+    --muted-foreground: 218 20% 76%;
+    --accent: 228 30% 25%;
+    --accent-foreground: 210 40% 98%;
+    --border: 220 28% 42%;
+    --input: 224 30% 30%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 222 47% 11%;
+    --ring: 217 91% 65%;
+  }
+
   [data-theme="dark"] .text-success-foreground,
   .dark .text-success-foreground { color: #86efac; }
   [data-theme="dark"] .text-warning-foreground,
@@ -158,6 +176,18 @@
 }
 
 @layer components {
+  .auth-premium input,
+  .auth-premium textarea,
+  .auth-premium select {
+    background-color: hsl(var(--background) / 0.38);
+    border-color: hsl(var(--border) / 0.8);
+    color: hsl(var(--foreground));
+  }
+  .auth-premium input::placeholder,
+  .auth-premium textarea::placeholder { color: hsl(var(--muted-foreground)); }
+  .auth-premium .bg-primary {
+    background-image: linear-gradient(135deg, #2563eb, #4f46e5 55%, #7c3aed);
+  }
   /* ---------- AI visual language ---------- */
   /* Soft indigo→violet wash used behind AI panels */
   .bg-ai-gradient {

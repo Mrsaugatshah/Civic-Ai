@@ -54,7 +54,7 @@ export function Login() {
     try {
       const authed = await login({ email, password, remember });
       toast.success(`Welcome back, ${authed.name.split(" ")[0]}!`);
-      navigate(resolveDestination(from, authed.role), { replace: true });
+      navigate(authed.mustChangePassword ? "/change-password" : resolveDestination(from, authed.role), { replace: true });
     } catch (error) {
       setFormError(
         isOffline()
@@ -69,8 +69,8 @@ export function Login() {
   return (
     <AuthLayout>
       <AuthCard
-        title="Welcome back"
-        description="Sign in to continue making a difference in your community."
+        title="Welcome Back"
+        description="Sign in to continue to CivicAI."
       >
         {sessionExpired && (
           <ErrorMessage tone="warning" className="mb-5">

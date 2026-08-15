@@ -61,6 +61,9 @@ export async function forgotPassword(email) {
 export async function resetPassword(token, password) {
   return request("/reset-password", { method: "POST", body: JSON.stringify({ token, password }) });
 }
+export async function changeInitialPassword(newPassword, confirmPassword) {
+  return request("/change-initial-password", { method: "POST", body: JSON.stringify({ newPassword, confirmPassword }) });
+}
 
 export async function logout() {
   try { await request("/logout", { method: "POST" }); } catch { /* local auth state is cleared by the caller */ }

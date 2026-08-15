@@ -1,92 +1,27 @@
-import { motion } from "framer-motion";
-import {
-  MapPin,
-  Sparkles,
-  ShieldCheck,
-  Lightbulb,
-  TrendingUp,
-  Zap,
-} from "lucide-react";
-
-import { AuthLogo } from "./AuthLogo";
-
-function BrandPanel() {
-  return (
-    <div className="relative hidden overflow-hidden bg-gradient-to-br from-primary-dark via-[#1D3E8A] to-ai-deep lg:flex">
-      {/* Grid + glow washes */}
-      <div className="bg-grid absolute inset-0 opacity-[0.15] [mask-image:radial-gradient(80%_80%_at_50%_40%,black,transparent)]" />
-      <div className="absolute -right-24 -top-24 h-96 w-96 rounded-full bg-ai/30 blur-3xl" />
-      <div className="absolute -bottom-32 -left-24 h-96 w-96 rounded-full bg-primary/30 blur-3xl" />
-
-      {/* Twinkling dots */}
-      {[
-        ["8%", "16%", 3, "0s"],
-        ["26%", "10%", 2, "0.9s"],
-        ["72%", "12%", 3, "1.7s"],
-        ["88%", "26%", 2, "0.5s"],
-        ["18%", "48%", 2, "2.1s"],
-      ].map(([left, top, size, delay], i) => (
-        <span
-          key={i}
-          aria-hidden
-          className="absolute animate-twinkle rounded-full bg-white/70"
-          style={{ left, top, width: size, height: size, animationDelay: delay }}
-        />
-      ))}
-
-      <div className="relative flex w-full flex-col justify-between p-10 xl:p-14">
-        <AuthLogo variant="light" />
-
-        <div className="py-12">
-          <h2 className="font-display max-w-md text-4xl font-bold leading-tight tracking-tight text-white text-balance xl:text-5xl">
-            Better cities start with people who care.
-          </h2>
-          <p className="mt-4 max-w-sm text-base leading-relaxed text-primary-light/90 text-pretty">
-            Report problems, track progress, and help your community become
-            smarter and safer.
-          </p>
-
-          <div className="relative mt-12 flex h-48 items-center justify-center gap-5" aria-hidden>
-            {[MapPin, Sparkles, TrendingUp, Lightbulb].map((Icon, index) => (
-              <motion.span key={index} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 + index * 0.1 }} className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/15 bg-white/10 text-primary-light shadow-card backdrop-blur-md">
-                <Icon size={22} />
-              </motion.span>
-            ))}
-          </div>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2 text-xs text-white/70">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 backdrop-blur-sm">
-            <ShieldCheck size={13} className="text-brand-light" />
-            Your data stays with the city
-          </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 backdrop-blur-sm">
-            <Zap size={13} className="text-ai-light" />
-            SDG 11 · Sustainable cities
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-}
+import { useLocation, useNavigate } from "react-router-dom";
+import { Logo } from "@/components/layout/Navbar";
+import { cn } from "@/lib/utils";
 
 export function AuthLayout({ children }) {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const registerActive = location.pathname === "/register";
+
   return (
-    <div className="min-h-screen bg-background lg:grid lg:grid-cols-[45fr_55fr]">
-      <BrandPanel />
-
-      <main className="relative flex min-h-screen flex-col items-center justify-center px-4 py-10 sm:px-8">
-        <div className="absolute inset-x-0 top-0 flex justify-center pt-6 lg:hidden">
-          <AuthLogo />
-        </div>
-
-        <div className="w-full max-w-[440px] pt-12 lg:pt-0">
+    <div className="auth-premium relative min-h-screen overflow-hidden bg-background px-4 py-6 sm:px-6 sm:py-8" style={{ backgroundImage: "radial-gradient(circle at 10% 12%, rgb(37 99 235 / 0.42), transparent 30%), radial-gradient(circle at 90% 18%, rgb(124 58 237 / 0.4), transparent 32%), radial-gradient(circle at 76% 88%, rgb(219 39 119 / 0.26), transparent 30%), linear-gradient(135deg, #071334 0%, #111c4d 44%, #24134f 100%)" }}>
+      <span aria-hidden className="pointer-events-none absolute -left-24 top-1/4 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
+      <span aria-hidden className="pointer-events-none absolute -right-24 bottom-1/4 h-80 w-80 rounded-full bg-ai/10 blur-3xl" />
+      <div aria-label="CivicAI home" className="fixed left-4 top-5 z-10 rounded-md sm:left-8 sm:top-7">
+        <Logo />
+      </div>
+      <main className="relative z-[1] flex min-h-[calc(100vh-3rem)] items-center justify-center py-16 sm:min-h-[calc(100vh-4rem)] sm:py-20">
+        <div className="w-full max-w-[500px] rounded-3xl border border-border/80 bg-card/60 p-5 text-card-foreground shadow-lift backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-2xl sm:p-8">
+          <div className="mb-7 grid grid-cols-2 gap-2 rounded-xl bg-muted p-1.5" role="tablist" aria-label="Authentication">
+            <button type="button" role="tab" aria-selected={!registerActive} onClick={() => navigate("/login")} className={cn("h-11 rounded-lg text-sm font-semibold transition-all", !registerActive ? "bg-primary text-primary-foreground shadow-soft" : "text-muted-foreground hover:bg-background hover:text-foreground")}>Login</button>
+            <button type="button" role="tab" aria-selected={registerActive} onClick={() => navigate("/register")} className={cn("h-11 rounded-lg text-sm font-semibold transition-all", registerActive ? "bg-primary text-primary-foreground shadow-soft" : "text-muted-foreground hover:bg-background hover:text-foreground")}>Register</button>
+          </div>
           {children}
         </div>
-
-        <p className="mt-10 text-xs text-muted-foreground">
-          Protected with secure, server-side authentication
-        </p>
       </main>
     </div>
   );

@@ -3,7 +3,7 @@ import express from "express";
 import cors from "cors";
 import fs from "node:fs";
 import path from "node:path";
-import { authRouter, withAuth } from "./auth.js";
+import { authRouter, adminUserRouter, withAuth, requirePasswordChanged } from "./auth.js";
 import { reportsRouter, resumePendingAnalyses } from "./reports.js";
 import { isTrustedFrontendOrigin, requireTrustedMutation } from "./security.js";
 
@@ -17,7 +17,8 @@ app.use(requireTrustedMutation);
 
 app.get("/api/health", (_req, res) => res.json({ ok: true }));
 app.use("/api/auth", authRouter);
-app.use("/api", withAuth, reportsRouter);
+app.use("/api/admin", withAuth, requirePasswordChanged, adminUserRouter);
+app.use("/api", withAuth, requirePasswordChanged, reportsRouter);
 
 app.use("/api", (_req, res) => res.status(404).json({ code: "not_found", error: "API endpoint not found." }));
 app.use((error, _req, res, _next) => {

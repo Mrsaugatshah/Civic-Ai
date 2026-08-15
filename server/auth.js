@@ -4,8 +4,10 @@ import { createHash, randomBytes, randomInt, randomUUID } from "node:crypto";
 import { db, persist, sql } from "./db.js";
 import { sendPasswordResetEmail, sendVerificationEmail } from "./email.js";
 import { createRateLimiter } from "./security.js";
+import { CATEGORIES } from "./analysis.js";
 
 export const authRouter = express.Router();
+export const adminUserRouter = express.Router();
 
 const SALT_ROUNDS = Number(process.env.BCRYPT_ROUNDS || 12);
 const VERIFY_TTL_MS = 30 * 60 * 1000;
@@ -33,7 +35,7 @@ function validatePassword(password) {
   return "";
 }
 function publicUser(row) {
-  return row && { id: row.id, name: row.name, email: row.email, role: row.role, phone: row.phone || "", location: row.location || "", organization: row.organization || "", department: row.department || "", status: row.status, emailVerified: Boolean(row.email_verified), provider: row.provider, createdAt: row.created_at, updatedAt: row.updated_at };
+  return row && { id: row.id, name: row.name, email: row.email, role: row.role, phone: row.phone || "", location: row.location || "", organization: row.organization || "", department: row.department || "", status: row.status, emailVerified: Boolean(row.email_verified), mustChangePassword: row.status === "pending_setup", provider: row.provider, createdAt: row.created_at, updatedAt: row.updated_at };
 }
 function userByEmail(email) { return sql.prepare("SELECT * FROM users WHERE email = ?").get(normalizeEmail(email)); }
 function userById(id) { return sql.prepare("SELECT * FROM users WHERE id = ?").get(id); }
@@ -81,6 +83,7 @@ function invalidateToken(table, id) { sql.prepare(`UPDATE ${table} SET used_at =
 
 export function withAuth(req, _res, next) { req.sessionRecord = sessionFromRequest(req); req.user = req.sessionRecord ? publicUser(userById(req.sessionRecord.user_id)) : null; next(); }
 export function requireAuth(req, res, next) { if (!req.user) return res.status(401).json({ code: "unauthenticated", error: "Not signed in." }); next(); }
+export function requirePasswordChanged(req, res, next) { if (req.user?.mustChangePassword) return res.status(428).json({ code: "password_change_required", error: "Change your temporary password before continuing." }); next(); }
 
 authRouter.post("/login", loginLimiter, async (req, res, next) => {
   try {
@@ -89,7 +92,7 @@ authRouter.post("/login", loginLimiter, async (req, res, next) => {
     const user = userByEmail(email); const ok = user && ["password", "provisioned"].includes(user.provider) && await bcrypt.compare(password, user.password_hash);
     if (!ok) return res.status(401).json({ code: "invalid_credentials", error: "We couldn't sign you in with those details." });
     if (user.status === "disabled") return res.status(403).json({ code: "disabled", error: "This account is currently unavailable. Please contact support." });
-    if (user.role === "authority" && user.status !== "active") return res.status(403).json({ code: "pending", error: "Your authority account is awaiting approval." });
+    if (user.role === "authority" && !["active", "pending_setup"].includes(user.status)) return res.status(403).json({ code: "pending", error: "Your authority account is awaiting approval." });
     createSession(res, user.id, Boolean(req.body?.remember)); return res.json({ user: publicUser(user) });
   } catch (error) { next(error); }
 });
@@ -171,15 +174,64 @@ authRouter.post("/reset-password", resetLimiter, async (req, res, next) => {
     if (Date.now() >= record.expires_at) { invalidateToken("password_reset_tokens", record.id); return res.status(410).json({ code: "expired_token", error: "This password reset link has expired. Request a new one." }); }
     const passwordHash = await bcrypt.hash(req.body.password, SALT_ROUNDS);
     sql.exec("BEGIN IMMEDIATE");
-    try { const now=Date.now(); sql.prepare("UPDATE users SET password_hash=?, updated_at=? WHERE id=?").run(passwordHash, now, record.user_id); sql.prepare("UPDATE password_reset_tokens SET used_at=? WHERE user_id=? AND used_at IS NULL").run(now, record.user_id); sql.prepare("DELETE FROM sessions WHERE user_id=?").run(record.user_id); sql.exec("COMMIT"); }
+    try { const now=Date.now(); sql.prepare("UPDATE users SET password_hash=?, status=CASE WHEN status='pending_setup' THEN 'active' ELSE status END, email_verified=1, updated_at=? WHERE id=?").run(passwordHash, now, record.user_id); sql.prepare("UPDATE password_reset_tokens SET used_at=? WHERE user_id=? AND used_at IS NULL").run(now, record.user_id); sql.prepare("DELETE FROM sessions WHERE user_id=?").run(record.user_id); sql.exec("COMMIT"); }
     catch (error) { sql.exec("ROLLBACK"); throw error; }
     res.clearCookie(SESSION_COOKIE, { httpOnly:true,secure:process.env.NODE_ENV==="production",sameSite:"lax",path:"/" }); res.json({ ok: true });
+  } catch (error) { next(error); }
+});
+
+authRouter.post("/change-initial-password", requireAuth, async (req, res, next) => {
+  try {
+    const user = userById(req.user.id);
+    if (user?.status !== "pending_setup") return res.status(409).json({ code: "not_required", error: "A first-login password change is not required." });
+    const password = req.body?.newPassword;
+    const confirm = req.body?.confirmPassword;
+    const passwordError = validatePassword(password); if (passwordError) return res.status(400).json({ code: "weak_password", error: passwordError });
+    if (password !== confirm) return res.status(400).json({ code: "password_mismatch", error: "Passwords do not match." });
+    if (await bcrypt.compare(password, user.password_hash)) return res.status(400).json({ code: "password_reused", error: "Choose a password different from your temporary password." });
+    const now = Date.now();
+    sql.prepare("UPDATE users SET password_hash=?,status='active',email_verified=1,updated_at=? WHERE id=?").run(await bcrypt.hash(password, SALT_ROUNDS), now, user.id);
+    res.json({ user: publicUser(sql.prepare("SELECT * FROM users WHERE id=?").get(user.id)) });
   } catch (error) { next(error); }
 });
 
 authRouter.get("/me", withAuth, (req, res) => res.json(req.user || null));
 authRouter.get("/session", withAuth, (req, res) => res.json(req.user || null));
 authRouter.post("/logout", withAuth, (req, res) => { if (req.sessionRecord) sql.prepare("DELETE FROM sessions WHERE id=?").run(req.sessionRecord.id); res.clearCookie(SESSION_COOKIE, { httpOnly:true,secure:process.env.NODE_ENV==="production",sameSite:"lax",path:"/" }); res.json({ ok: true }); });
+
+const ADMIN_ROLES = new Set(["citizen", "authority", "admin"]);
+const ADMIN_DEPARTMENTS = new Set(CATEGORIES.map((category) => category.department));
+function requireAdmin(req, res, next) { if (!req.user) return res.status(401).json({ code: "unauthenticated", error: "Not signed in." }); if (req.user.role !== "admin") return res.status(403).json({ code: "admin_required", error: "Administrator access required." }); next(); }
+function adminUser(row) { return { id: row.id, name: row.name, email: row.email, role: row.role, department: row.department || "", status: row.status, mustChangePassword: row.status === "pending_setup", emailVerified: Boolean(row.email_verified), provider: row.provider, createdAt: row.created_at, updatedAt: row.updated_at }; }
+
+adminUserRouter.use(requireAdmin);
+adminUserRouter.get("/users", (_req, res) => {
+  const rows = sql.prepare("SELECT id,name,email,role,department,status,email_verified,provider,created_at,updated_at FROM users ORDER BY CASE role WHEN 'admin' THEN 0 WHEN 'authority' THEN 1 ELSE 2 END, created_at DESC").all();
+  res.json({ success: true, data: rows.map(adminUser) });
+});
+adminUserRouter.post("/users", async (req, res, next) => {
+  try {
+    const name = String(req.body?.name || "").trim();
+    const email = normalizeEmail(req.body?.email);
+    const role = String(req.body?.role || "");
+    const department = String(req.body?.department || "").trim();
+    const password = req.body?.password;
+    const confirmPassword = req.body?.confirmPassword;
+    if (name.length < 2 || name.length > 100) return res.status(400).json({ code: "invalid_name", error: "Enter a valid name between 2 and 100 characters." });
+    if (!validateEmail(email)) return res.status(400).json({ code: "invalid_email", error: "Enter a valid email address." });
+    const passwordError = validatePassword(password); if (passwordError) return res.status(400).json({ code: "weak_password", error: passwordError });
+    if (password !== confirmPassword) return res.status(400).json({ code: "password_mismatch", error: "Temporary passwords do not match." });
+    if (!ADMIN_ROLES.has(role)) return res.status(400).json({ code: "invalid_role", error: "Choose a supported user role." });
+    if (role === "authority" && !ADMIN_DEPARTMENTS.has(department)) return res.status(400).json({ code: "invalid_department", error: "Choose a valid department for an Authority account." });
+    if (role !== "authority" && department) return res.status(400).json({ code: "invalid_department", error: "Only Authority accounts can have a department." });
+    if (userByEmail(email)) return res.status(409).json({ code: "email_in_use", error: "An account with this email already exists." });
+    const now = Date.now();
+    const id = `u_${randomUUID()}`;
+    const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
+    sql.prepare("INSERT INTO users (id,name,email,password_hash,role,phone,location,organization,department,status,email_verified,provider,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)").run(id, name, email, passwordHash, role, "", "", "", department, "pending_setup", 1, "provisioned", now, now);
+    res.status(201).json({ success: true, data: { user: adminUser(sql.prepare("SELECT * FROM users WHERE id=?").get(id)) } });
+  } catch (error) { next(error); }
+});
 
 export function seedIfEmpty() {
   if (sql.prepare("SELECT 1 FROM users LIMIT 1").get()) return;

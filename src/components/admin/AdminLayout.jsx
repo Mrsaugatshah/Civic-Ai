@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
-  LayoutDashboard, ListOrdered, AlertTriangle, Map, Sparkles, BarChart3, Tags,
+  LayoutDashboard, ListOrdered, AlertTriangle, Map, Sparkles, BarChart3, Tags, Users,
 } from "lucide-react";
 
 import { Logo } from "@/components/layout/Navbar";
@@ -16,6 +16,7 @@ const NAV = [
   { key: "queue", label: "Priority Queue", icon: ListOrdered, id: "queue" },
   { key: "critical", label: "Critical Issues", icon: AlertTriangle, id: "critical" },
   { key: "categories", label: "Categories", icon: Tags, id: "categories" },
+  { key: "users", label: "User Management", icon: Users, route: "/admin/users" },
   { key: "map", label: "City Map", icon: Map, external: "/map" },
   { key: "insights", label: "AI Insights", icon: Sparkles, id: "insights" },
   { key: "analytics", label: "Analytics", icon: BarChart3, route: "/admin/analytics" },
@@ -29,6 +30,8 @@ export function AdminLayout({ children, initialActive = "overview" }) {
     ? "analytics"
     : location.pathname === "/admin/reports"
       ? "all-reports"
+    : location.pathname === "/admin/users"
+      ? "users"
     : location.pathname.startsWith("/admin/issues")
       ? "queue"
       : active;

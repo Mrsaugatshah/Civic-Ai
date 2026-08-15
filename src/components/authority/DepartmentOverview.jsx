@@ -16,6 +16,7 @@ export function DepartmentOverview({ data, loading, error, onRetry }) {
           Department Operations
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">{department}</p>
+        <p className="mt-1 text-xs text-muted-foreground">Manage assigned civic issues and update their progress.</p>
       </div>
 
       {error ? (

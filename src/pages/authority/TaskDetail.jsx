@@ -10,10 +10,9 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useAsync } from "@/hooks/useAsync";
 import {
   getDepartmentTask, getDepartmentTaskActivity, updateTaskStatus,
-  uploadCompletionEvidence, markTaskCompleted, ISSUE_STATUSES,
+  uploadCompletionEvidence, markTaskCompleted,
   DepartmentAccessError, addDepartmentNote,
 } from "@/services/authority/authorityService";
-import { allowedTransitions } from "@/services/admin/adminService";
 
 import { AuthorityLayout } from "@/components/authority/AuthorityLayout";
 import { ResolutionUpload } from "@/components/admin/issue/ResolutionUpload";
@@ -25,9 +24,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { SeverityBadge } from "@/components/civic/SeverityBadge";
 import { StatusBadge } from "@/components/civic/StatusBadge";
 import { PriorityMeter } from "@/components/civic/PriorityMeter";
-import {
-  Select, SelectTrigger, SelectValue, SelectContent, SelectItem,
-} from "@/components/ui/select";
 import {
   AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle,
   AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction,
@@ -42,7 +38,11 @@ function fmtDateTime(iso) {
 }
 
 function statusLabel(key) {
-  return ISSUE_STATUSES.find((s) => s.key === key)?.label ?? key;
+  return { submitted: "Received", reported: "Received", under_review: "Under Review", verified: "Under Review", assigned: "Received", in_progress: "Work In Progress", resolved: "Completed", closed: "Completed", rejected: "Rejected", reopened: "Reopened" }[key] ?? key;
+}
+
+function nextAction(status) {
+  return { submitted: ["under_review", "Start Review"], under_review: ["verified", "Start Work"], verified: ["assigned", "Assign Work"], assigned: ["in_progress", "Start Work"], in_progress: ["resolved", "Mark Work Completed"], reopened: ["assigned", "Assign Work"] }[status] || null;
 }
 
 function ActivityTimeline({ items, loading }) {
@@ -198,11 +198,11 @@ export function AuthorityTaskDetail() {
                   <p className="text-sm leading-relaxed text-foreground/85">{task.description}</p>
 
                   {task.evidence?.find((item) => item.kind === "citizen")?.url ? (
-                    <figure className="overflow-hidden rounded-lg border bg-muted/40">
+                  <figure className="overflow-hidden rounded-lg border bg-muted/40">
                       <img
                         src={task.evidence.find((item) => item.kind === "citizen").url}
                         alt={`Citizen evidence for ${task.title}`}
-                        className="aspect-video w-full object-contain"
+                        className="max-h-[460px] w-full object-contain"
                       />
                       <figcaption className="border-t px-3 py-2 text-xs text-muted-foreground">
                         Original photo uploaded by the citizen
@@ -306,25 +306,14 @@ export function AuthorityTaskDetail() {
                   <p className="text-xs text-muted-foreground">
                     Current status: <span className="font-medium text-foreground">{statusLabel(task.status)}</span>
                   </p>
-                  <Select value={task.status} onValueChange={setPendingStatus} disabled={statusSaving}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Update status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {ISSUE_STATUSES.filter((s) => allowedTransitions(task.status).includes(s.key)).map((s) => (
-                        <SelectItem key={s.key} value={s.key}>{s.label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <p className="text-[11px] text-muted-foreground">
-                    {allowedTransitions(task.status).length === 0
-                      ? "No further status changes are available."
-                      : `Allowed next: ${allowedTransitions(task.status).map(statusLabel).join(" → ")}`}
-                  </p>
+                  {nextAction(task.status) ? <>
+                    <p className="text-xs text-muted-foreground">Next step: <span className="font-medium text-foreground">{nextAction(task.status)[1]}</span></p>
+                    <Button className="mt-1 w-full" onClick={() => setPendingStatus(nextAction(task.status)[0])} disabled={statusSaving}>{statusSaving ? <Loader2 size={14} className="animate-spin" /> : nextAction(task.status)[1]}</Button>
+                  </> : <p className="text-sm text-muted-foreground">{task.status === "rejected" ? "This report was rejected and is not active work." : "No further status changes are available."}</p>}
                 </CardContent>
               </Card>
 
-              <Card>
+              {(task.status === "in_progress" || isCompleted) && <Card>
                 <CardHeader className="pb-2">
                   <CardTitle className="flex items-center gap-1.5 text-base">
                     <FileText size={15} /> Completion Evidence
@@ -362,7 +351,7 @@ export function AuthorityTaskDetail() {
                     </Button>
                   )}
                 </CardContent>
-              </Card>
+              </Card>}
             </div>
           </div>
         )}

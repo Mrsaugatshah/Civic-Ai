@@ -10,8 +10,10 @@ const STATUS = {
   in_progress: { label: "Work In Progress", icon: Clock, className: "bg-info/10 text-info-foreground border-info/25" },
   pending: { label: "Pending", icon: Hourglass, className: "bg-warning/10 text-warning-foreground border-warning/25" },
   under_review: { label: "Under Review", icon: Eye, className: "bg-ai/10 text-ai-foreground border-ai/25" },
+  verified: { label: "Under Review", icon: Eye, className: "bg-ai/10 text-ai-foreground border-ai/25" },
   assigned: { label: "Assigned", icon: UserCheck, className: "bg-primary/10 text-primary border-primary/25" },
   rejected: { label: "Rejected", icon: Archive, className: "bg-error/10 text-error-foreground border-error/25" },
+  reopened: { label: "Reopened", icon: FileText, className: "bg-warning/10 text-warning-foreground border-warning/25" },
   critical: { label: "Critical", icon: AlertTriangle, className: "bg-error/10 text-error-foreground border-error/25" },
 };
 
