@@ -59,7 +59,11 @@ export function CriticalIssues({ data, loading, error, onRetry, onOpenIssue }) {
                   </span>
                 </div>
 
-                <p className="text-xs text-muted-foreground">AI authenticity assessment: {issue.legitimacy.assessment?.replaceAll("_", " ") ?? "Not analyzed"} · Human review remains final</p>
+                <p className="text-xs text-muted-foreground">
+                  {issue.legitimacy.total
+                    ? `Community legitimacy: ${issue.legitimacy.score == null ? "Unverified" : `${issue.legitimacy.score}% legit`} · ${issue.legitimacy.legit} legit / ${issue.legitimacy.fake} fake`
+                    : "Community verification unavailable"}
+                </p>
 
                 <p className="text-xs text-muted-foreground">{issue.department}</p>
 

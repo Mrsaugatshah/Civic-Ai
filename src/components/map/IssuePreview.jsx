@@ -29,9 +29,7 @@ export function IssuePreview({ issue, screen, flip = false, flipY = false }) {
       </div>
       <div className="mt-1.5 flex items-center justify-between text-[11px] text-muted-foreground">
         <span>{CATEGORY_LABEL[issue.category] ?? "Issue"}</span>
-        <span>
-          <span className="font-semibold text-foreground">AI {issue.priority}</span>/100
-        </span>
+        <span>{issue.priority == null ? "AI analysis pending" : <><span className="font-semibold text-foreground">AI {issue.priority}</span>/100</>}</span>
       </div>
     </motion.div>
   );

@@ -1,4 +1,19 @@
                    CivicAI
+
+Quick start after cloning:
+
+```bash
+npm install
+cp .env.example .env
+npm run db:setup
+npm run dev
+```
+
+The SQLite schema and demo users are created locally. Runtime database files,
+SQLite WAL/SHM lock files, uploads, and `.env` secrets are not stored in Git, so
+each developer gets a clean database without copying another machine's locks.
+See `README.local.md` for demo accounts and SMTP setup.
+
  -> Making civic's problem reporting simpler, smarter, and more transparent..
 
  -> CivicAI is an AI-powered civic issue reporting and management platform

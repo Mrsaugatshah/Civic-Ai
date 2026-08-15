@@ -11,7 +11,7 @@ import { useAsync } from "@/hooks/useAsync";
 import {
   getDepartmentTask, getDepartmentTaskActivity, updateTaskStatus,
   uploadCompletionEvidence, markTaskCompleted, ISSUE_STATUSES,
-  DepartmentAccessError,
+  DepartmentAccessError, addDepartmentNote,
 } from "@/services/authority/authorityService";
 import { allowedTransitions } from "@/services/admin/adminService";
 
@@ -80,6 +80,8 @@ export function AuthorityTaskDetail() {
   const [pendingStatus, setPendingStatus] = useState(null);
   const [statusSaving, setStatusSaving] = useState(false);
   const [noteText, setNoteText] = useState("");
+  const [internalNote, setInternalNote] = useState("");
+  const [noteSaving, setNoteSaving] = useState(false);
   const [confirmComplete, setConfirmComplete] = useState(false);
   const [completing, setCompleting] = useState(false);
 
@@ -195,10 +197,10 @@ export function AuthorityTaskDetail() {
 
                   <p className="text-sm leading-relaxed text-foreground/85">{task.description}</p>
 
-                  {task.imageDataUrl ? (
+                  {task.evidence?.find((item) => item.kind === "citizen")?.url ? (
                     <figure className="overflow-hidden rounded-lg border bg-muted/40">
                       <img
-                        src={task.imageDataUrl}
+                        src={task.evidence.find((item) => item.kind === "citizen").url}
                         alt={`Citizen evidence for ${task.title}`}
                         className="aspect-video w-full object-contain"
                       />
@@ -257,7 +259,30 @@ export function AuthorityTaskDetail() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="pt-0">
-                  <AIAnalysisCard analysis={task} />
+                  <AIAnalysisCard
+                    analysis={{
+                      ...task,
+                      // Keep the stored human decision in `task.priority` and
+                      // render the AI recommendation independently.
+                      category: task.aiCategory || task.category,
+                      priority: task.aiPriority ?? task.priority,
+                      state: task.aiStatus === "pending" ? "pending" : task.aiStatus === "failed" ? "failed" : "complete",
+                    }}
+                  />
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="pb-2"><CardTitle className="text-base">Internal Notes</CardTitle></CardHeader>
+                <CardContent className="space-y-3 pt-0">
+                  <Textarea value={internalNote} onChange={(event) => setInternalNote(event.target.value)} placeholder="Add an operational note for your department…" rows={3} disabled={noteSaving} />
+                  <Button size="sm" disabled={noteSaving || internalNote.trim().length < 2} onClick={async () => {
+                    setNoteSaving(true);
+                    try { await addDepartmentNote(id, internalNote.trim()); setInternalNote(""); toast.success("Note saved"); reload(); }
+                    catch { toast.error("Couldn't save the note. Please try again."); }
+                    finally { setNoteSaving(false); }
+                  }}>{noteSaving ? <Loader2 size={14} className="animate-spin" /> : "Save note"}</Button>
+                  {!!task.notes?.length && <div className="space-y-2 border-t pt-3">{task.notes.slice(0, 5).map((note) => <p key={note.id} className="rounded-md bg-muted/30 p-2 text-xs"><span className="font-medium">{note.author || "Staff"}</span> · {fmtDateTime(note.createdAt)}<br />{note.content}</p>)}</div>}
                 </CardContent>
               </Card>
 

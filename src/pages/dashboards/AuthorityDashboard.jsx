@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "@/contexts/AuthContext";
 import { useAsync } from "@/hooks/useAsync";
-import { getDepartmentStats, getDepartmentTasks } from "@/services/authority/authorityService";
+import { getDepartmentDashboard } from "@/services/authority/authorityService";
 
 import { AuthorityLayout } from "@/components/authority/AuthorityLayout";
 import { DepartmentOverview } from "@/components/authority/DepartmentOverview";
@@ -13,20 +13,19 @@ export function AuthorityDashboard() {
   const { user } = useAuth();
   const department = user?.department || "Your Department";
 
-  const stats = useAsync(() => getDepartmentStats(department), [department]);
-  const tasks = useAsync(() => getDepartmentTasks(department), [department]);
+  const dashboard = useAsync(() => getDepartmentDashboard(department), [department]);
 
   const openTask = (task) => navigate(`/authority/issues/${task.id}`);
 
   return (
     <AuthorityLayout>
       <div className="space-y-10">
-        <DepartmentOverview data={stats.data} loading={stats.loading} error={stats.error} onRetry={stats.reload} />
+        <DepartmentOverview data={dashboard.data?.stats} loading={dashboard.loading} error={dashboard.error} onRetry={dashboard.reload} />
         <AssignedTasks
-          data={tasks.data}
-          loading={tasks.loading}
-          error={tasks.error}
-          onRetry={tasks.reload}
+          data={dashboard.data?.tasks}
+          loading={dashboard.loading}
+          error={dashboard.error}
+          onRetry={dashboard.reload}
           onOpenTask={openTask}
         />
       </div>

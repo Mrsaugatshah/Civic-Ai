@@ -15,6 +15,7 @@ export const REPORT_STATUS_OPTIONS = [
   { key: "all", label: "All" },
   { key: "submitted", label: "Submitted" },
   { key: "under_review", label: "Under Review" },
+  { key: "verified", label: "Verified" },
   { key: "assigned", label: "Assigned" },
   { key: "in_progress", label: "In Progress" },
   { key: "resolved", label: "Resolved" },

@@ -83,7 +83,7 @@ export function PriorityQueue({ data, loading, error, onRetry, onOpenIssue }) {
                     )}>
                       {issue.legitimacy.score == null ? "Unverified" : `${issue.legitimacy.score}% legit`}
                     </span>
-                    <span>{issue.legitimacy.total} votes</span>
+                    <span>{issue.legitimacy.total ? `${issue.legitimacy.total} votes` : "No community votes"}</span>
                   </span>
                   <span className="truncate text-xs text-muted-foreground">{issue.department}</span>
                   <StatusBadge status={issue.status} className="w-fit px-2 py-0.5 text-[11px]" />
@@ -110,7 +110,11 @@ export function PriorityQueue({ data, loading, error, onRetry, onOpenIssue }) {
                   <StatusBadge status={issue.status} className="shrink-0 px-2 py-0.5 text-[11px]" />
                 </div>
                 <AIAnalysisCard analysis={issue} />
-                <p className="text-xs text-muted-foreground">AI authenticity assessment: {issue.legitimacy.assessment?.replaceAll("_", " ") ?? "Not analyzed"} · Advisory only</p>
+                <p className="text-xs text-muted-foreground">
+                  {issue.legitimacy.total
+                    ? `Community legitimacy: ${issue.legitimacy.score == null ? "Unverified" : `${issue.legitimacy.score}%`} · ${issue.legitimacy.legit} legit / ${issue.legitimacy.fake} fake`
+                    : "Community verification unavailable"}
+                </p>
               </button>
             ))}
           </div>

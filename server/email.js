@@ -34,14 +34,17 @@ function frontendLink(pathname, token) {
   return `${base}${pathname}?token=${encodeURIComponent(token)}`;
 }
 
-export async function sendVerificationEmail({ to, token }) {
-  const url = frontendLink("/verify-email", token);
+export async function sendVerificationEmail({ to, code }) {
   await send({
     to,
-    subject: "Verify your CivicAI email address",
-    text: `Welcome to CivicAI. Verify your email by opening this link:\n\n${url}\n\nThis link expires in 30 minutes and works once. If you did not create this account, ignore this email.`,
-    html: emailHtml({ heading: "Verify your email", explanation: "Welcome to CivicAI. Confirm that this email address belongs to you.", button: "Verify email", url, expiry: "30 minutes", notice: "If you did not create a CivicAI account, you can safely ignore this email." }),
+    subject: `${code} is your CivicAI verification code`,
+    text: `Welcome to CivicAI. Your email verification code is: ${code}\n\nThis code expires in 30 minutes and works once. If you did not create this account, ignore this email.`,
+    html: codeEmailHtml({ code }),
   });
+}
+
+function codeEmailHtml({ code }) {
+  return `<!doctype html><html><body style="margin:0;background:#f4f7f6;font-family:Arial,sans-serif;color:#17352d"><table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td align="center" style="padding:32px 12px"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:600px;background:#fff;border-radius:16px;overflow:hidden;border:1px solid #dce7e3"><tr><td style="padding:24px 32px;background:#0f766e;color:#fff;font-size:22px;font-weight:700">CivicAI</td></tr><tr><td style="padding:32px"><h1 style="margin:0 0 16px;font-size:24px">Verify your email</h1><p style="line-height:1.6;color:#49635c">Welcome to CivicAI. Enter this code on the verification screen:</p><p style="margin:28px 0;padding:18px;background:#f0fdfa;border-radius:10px;text-align:center;font-size:32px;font-weight:700;letter-spacing:8px;color:#0f766e">${escapeHtml(code)}</p><p style="font-size:14px;color:#607871">This code expires in 30 minutes and can be used only once.</p><hr style="border:0;border-top:1px solid #e4ece9;margin:24px 0"><p style="font-size:12px;color:#6d817b">If you did not create a CivicAI account, you can safely ignore this email.</p></td></tr></table></td></tr></table></body></html>`;
 }
 
 export async function sendPasswordResetEmail({ to, token }) {

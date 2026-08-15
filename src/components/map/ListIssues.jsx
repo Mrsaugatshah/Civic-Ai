@@ -69,11 +69,9 @@ export function ListIssues({ issues, onSelect, onBackToMap, onClearFilters, clas
                         {issue.location} · {reportedLabel(issue.reportedAt)}
                       </span>
                       <SeverityBadge severity={issue.severity} className="px-2 py-0 text-[10px]" />
-                      <span className="font-semibold text-foreground">{level.label}</span>
+                      <span className="font-semibold text-foreground">{issue.priority == null ? "AI analysis pending" : level.label}</span>
                     </span>
-                    <span className="mt-2 block">
-                      <PriorityMeter score={issue.priority} className="!space-y-1" />
-                    </span>
+                    {issue.priority != null && <span className="mt-2 block"><PriorityMeter score={issue.priority} className="!space-y-1" /></span>}
                     <span className="mt-1 block text-[11px] text-muted-foreground">
                       {CATEGORY_LABEL[issue.category] ?? "Issue"} · {issue.id}
                     </span>

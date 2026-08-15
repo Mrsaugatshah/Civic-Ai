@@ -9,14 +9,34 @@ npm install
 npm --prefix server install
 ```
 
+Create the local SQLite database and seed the demo accounts:
+
+```bash
+cp .env.example .env
+npm run db:setup
+```
+
+Each clone creates its own `server/civicai.sqlite` database. Database files,
+SQLite lock files, uploaded evidence, and `.env` secrets are intentionally not
+committed to Git. The server also creates the schema automatically if
+`db:setup` was not run first.
+
 Then start the complete app from the project root:
 
 ```bash
 npm run dev
 ```
 
-This launches both the CivicAI web app and its authentication API. Production
-accounts use the password `Civic@123`.
+This launches both the CivicAI web app and its authentication API. The seeded
+demo accounts use the password `Civic@123`:
+
+- Citizen: `asha@city.gov`
+- Authority: `ward11@city.gov`
+- Admin: `admin@city.gov`
+
+To send real verification codes, replace the SMTP placeholders in `.env` with
+credentials from your email provider. Keep `EMAIL_VERIFICATION_REQUIRED=false`
+only for local development when SMTP is not available.
 
 For a production-style local run:
 

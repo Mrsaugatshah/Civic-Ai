@@ -1,31 +1,15 @@
-# Dependencies
 node_modules/
-server/node_modules/
-
-# Build output
 dist/
-build/
-
-# Environment files
-.env
-.env.local
-.env.*.local
-server/.env
-
-# Logs
 *.log
-
-# Vite/cache
-.vite/
-
-# OS
+.env
 .DS_Store
-Thumbs.db
+Civic-Shield/
 
-# IDE
-.vscode/
-.idea/
-
-# Temporary files
-*.tmp
-*.temp
+# Local server runtime data (created automatically on each machine)
+server/*.sqlite
+server/*.sqlite-shm
+server/*.sqlite-wal
+server/db.json
+server/db.json.*.tmp
+server/uploads/*
+!server/uploads/.gitkeep

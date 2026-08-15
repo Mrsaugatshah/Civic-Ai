@@ -156,7 +156,7 @@ export function AnalyticsPage() {
                   label={FILTER_LABEL[key]}
                   value={filters[key][0] ?? ""}
                   onValueChange={(v) => setFilter(key, v)}
-                  options={ANALYTICS_FILTER_OPTIONS[key]}
+                  options={data?.filterOptions?.[key] ?? ANALYTICS_FILTER_OPTIONS[key]}
                 />
               ))}
             </div>

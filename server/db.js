@@ -4,8 +4,16 @@ import { fileURLToPath } from "url";
 import { DatabaseSync } from "node:sqlite";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DB_PATH = process.env.DB_PATH ? path.resolve(process.env.DB_PATH) : path.join(__dirname, "db.json");
-const SQL_PATH = process.env.SQLITE_PATH ? path.resolve(process.env.SQLITE_PATH) : path.join(__dirname, "civicai.sqlite");
+// SQLite is the production source of truth. DB_PATH is retained only as an
+// explicit legacy-import hook for tests/migrations; it is never created by a
+// normal server boot.
+const LEGACY_DB_PATH = process.env.LEGACY_DB_PATH || path.join(__dirname, "db.json");
+const DB_PATH = process.env.DB_PATH
+  ? path.resolve(process.env.DB_PATH)
+  : (fs.existsSync(LEGACY_DB_PATH) ? path.resolve(LEGACY_DB_PATH) : null);
+const SQL_PATH = process.env.DATABASE_PATH || process.env.SQLITE_PATH
+  ? path.resolve(process.env.DATABASE_PATH || process.env.SQLITE_PATH)
+  : path.join(__dirname, "civicai.sqlite");
 
 export const sql = new DatabaseSync(SQL_PATH);
 sql.exec(`
@@ -19,11 +27,12 @@ sql.exec(`
     ai_confidence REAL, ai_summary TEXT, ai_department TEXT, ai_analyzed_at TEXT,
     possible_duplicate_id TEXT, duplicate_similarity REAL,
     created_at TEXT NOT NULL, updated_at TEXT NOT NULL, submitted_at TEXT NOT NULL,
-    acknowledged_at TEXT, assigned_at TEXT, resolved_at TEXT, closed_at TEXT
+    acknowledged_at TEXT, assigned_at TEXT, resolved_at TEXT, resolved_by TEXT, closed_at TEXT
   );
   CREATE INDEX IF NOT EXISTS idx_reports_citizen_created ON reports(citizen_id, created_at DESC);
   CREATE INDEX IF NOT EXISTS idx_reports_department_status ON reports(department, status);
   CREATE INDEX IF NOT EXISTS idx_reports_status_category_priority ON reports(status, category, priority);
+  CREATE INDEX IF NOT EXISTS idx_reports_map_query ON reports(citizen_id, department, status, category, latitude, longitude);
   CREATE TABLE IF NOT EXISTS report_evidence (
     id TEXT PRIMARY KEY, report_id TEXT NOT NULL REFERENCES reports(id) ON DELETE CASCADE,
     storage_name TEXT NOT NULL UNIQUE, original_name TEXT NOT NULL, mime_type TEXT NOT NULL,
@@ -34,10 +43,22 @@ sql.exec(`
     old_status TEXT, new_status TEXT NOT NULL, changed_by TEXT NOT NULL, reason TEXT, created_at TEXT NOT NULL
   );
   CREATE INDEX IF NOT EXISTS idx_history_report_created ON report_status_history(report_id, created_at);
+  CREATE TABLE IF NOT EXISTS report_assignments (
+    id TEXT PRIMARY KEY, report_id TEXT NOT NULL REFERENCES reports(id) ON DELETE CASCADE,
+    authority_id TEXT REFERENCES users(id) ON DELETE SET NULL, department TEXT,
+    assigned_by TEXT NOT NULL, assigned_at TEXT NOT NULL, unassigned_at TEXT
+  );
+  CREATE INDEX IF NOT EXISTS idx_assignments_report_created ON report_assignments(report_id, assigned_at);
+  CREATE INDEX IF NOT EXISTS idx_assignments_authority_active ON report_assignments(authority_id, unassigned_at);
   CREATE TABLE IF NOT EXISTS report_notes (
     id TEXT PRIMARY KEY, report_id TEXT NOT NULL REFERENCES reports(id) ON DELETE CASCADE,
     author_id TEXT NOT NULL, content TEXT NOT NULL, created_at TEXT NOT NULL
   );
+  CREATE TABLE IF NOT EXISTS audit_logs (
+    id TEXT PRIMARY KEY, actor_id TEXT NOT NULL, action TEXT NOT NULL,
+    entity_type TEXT NOT NULL, entity_id TEXT NOT NULL, metadata TEXT, created_at TEXT NOT NULL
+  );
+  CREATE INDEX IF NOT EXISTS idx_audit_entity_created ON audit_logs(entity_type, entity_id, created_at);
   CREATE TABLE IF NOT EXISTS notifications (
     id TEXT PRIMARY KEY, user_id TEXT NOT NULL, report_id TEXT REFERENCES reports(id) ON DELETE CASCADE,
     kind TEXT NOT NULL, title TEXT NOT NULL, body TEXT NOT NULL, read_at TEXT, created_at TEXT NOT NULL
@@ -65,40 +86,12 @@ sql.exec(`
     token_hash TEXT NOT NULL UNIQUE, created_at INTEGER NOT NULL, expires_at INTEGER NOT NULL
   );
   CREATE INDEX IF NOT EXISTS idx_sessions_user ON sessions(user_id);
-  CREATE TABLE IF NOT EXISTS report_ai_analyses (
-    id TEXT PRIMARY KEY, report_id TEXT NOT NULL REFERENCES reports(id) ON DELETE CASCADE,
-    version INTEGER NOT NULL, status TEXT NOT NULL,
-    category TEXT, subcategory TEXT, priority_level TEXT, priority_score INTEGER, severity TEXT,
-    department TEXT, confidence REAL, summary TEXT, reasoning_summary TEXT, safety_risk TEXT,
-    requires_immediate_attention INTEGER, authenticity_assessment TEXT,
-    suspicion_indicators_json TEXT, duplicate_keywords_json TEXT, similar_report_ids_json TEXT,
-    tags_json TEXT, detected_language TEXT, provider TEXT, model TEXT, failure_code TEXT,
-    attempt_count INTEGER NOT NULL DEFAULT 0, requested_by TEXT, started_at TEXT,
-    completed_at TEXT, created_at TEXT NOT NULL, updated_at TEXT NOT NULL,
-    UNIQUE(report_id, version)
-  );
-  CREATE INDEX IF NOT EXISTS idx_ai_analyses_report_version ON report_ai_analyses(report_id, version DESC);
-  CREATE INDEX IF NOT EXISTS idx_ai_analyses_status ON report_ai_analyses(status, created_at);
-  CREATE TABLE IF NOT EXISTS report_overrides (
-    id TEXT PRIMARY KEY, report_id TEXT NOT NULL REFERENCES reports(id) ON DELETE CASCADE,
-    actor_id TEXT NOT NULL, field TEXT NOT NULL, previous_value TEXT, new_value TEXT NOT NULL,
-    reason TEXT, created_at TEXT NOT NULL
-  );
-  CREATE INDEX IF NOT EXISTS idx_report_overrides_report ON report_overrides(report_id, created_at DESC);
 `);
 
-function ensureReportColumn(name, definition) {
-  const columns = new Set(sql.prepare("PRAGMA table_info(reports)").all().map((column) => column.name));
-  if (!columns.has(name)) sql.exec(`ALTER TABLE reports ADD COLUMN ${name} ${definition}`);
-}
-
-for (const [name, definition] of [
-  ["ai_analysis_id", "TEXT"], ["ai_priority_level", "TEXT"], ["ai_severity", "TEXT"],
-  ["ai_reasoning_summary", "TEXT"], ["ai_safety_risk", "TEXT"], ["ai_immediate_attention", "INTEGER"],
-  ["ai_authenticity", "TEXT"], ["ai_language", "TEXT"], ["ai_tags_json", "TEXT"],
-  ["ai_duplicate_keywords_json", "TEXT"], ["ai_similar_ids_json", "TEXT"], ["ai_provider", "TEXT"],
-  ["ai_model", "TEXT"], ["ai_failure_code", "TEXT"], ["ai_attempt_count", "INTEGER NOT NULL DEFAULT 0"],
-]) ensureReportColumn(name, definition);
+// Forward-compatible migration for databases created before resolution actor
+// tracking was introduced.  SQLite has no IF NOT EXISTS for columns.
+const reportColumns = sql.prepare("PRAGMA table_info(reports)").all().map((column) => column.name);
+if (!reportColumns.includes("resolved_by")) sql.exec("ALTER TABLE reports ADD COLUMN resolved_by TEXT");
 
 function defaultDB() {
   return {
@@ -113,10 +106,9 @@ function defaultDB() {
 }
 
 function load() {
+  if (!DB_PATH) return defaultDB();
   if (!fs.existsSync(DB_PATH)) {
-    const fresh = defaultDB();
-    fs.writeFileSync(DB_PATH, JSON.stringify(fresh, null, 2));
-    return fresh;
+    return defaultDB();
   }
   try {
     const raw = fs.readFileSync(DB_PATH, "utf-8");
@@ -140,6 +132,7 @@ function load() {
 export const db = load();
 
 export function persist() {
+  if (!DB_PATH) return;
   const tempPath = `${DB_PATH}.${process.pid}.tmp`;
   fs.writeFileSync(tempPath, JSON.stringify(db, null, 2), { mode: 0o600 });
   fs.renameSync(tempPath, DB_PATH);

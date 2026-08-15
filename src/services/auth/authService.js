@@ -50,8 +50,8 @@ export async function resendVerification(email) {
   return request("/resend-verification", { method: "POST", body: JSON.stringify({ email }) });
 }
 
-export async function verifyEmail(token) {
-  return request("/verify-email", { method: "POST", body: JSON.stringify({ token }) });
+export async function verifyEmail(email, code) {
+  return request("/verify-email", { method: "POST", body: JSON.stringify({ email, code }) });
 }
 
 export async function forgotPassword(email) {

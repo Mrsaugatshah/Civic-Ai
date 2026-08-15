@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Link, useLocation, useSearchParams } from "react-router-dom";
+import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { CircleCheck, RefreshCw } from "lucide-react";
 import * as authService from "@/services/auth/authService";
 import { useCountdown } from "@/hooks/useCountdown";
@@ -11,17 +11,53 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 export function VerifyEmail() {
-  const [params] = useSearchParams(); const location = useLocation();
-  const token=params.get("token") || ""; const [email,setEmail]=useState(location.state?.email || "");
-  const [status,setStatus]=useState(token ? "loading" : "awaiting"); const [error,setError]=useState("");
-  const {seconds,active,start}=useCountdown();
-  useEffect(() => { if (!token) return; let live=true; authService.verifyEmail(token).then(()=>live&&setStatus("verified")).catch((e)=>{ if(live){ setError(e.message); setStatus(e.code === "expired_token" ? "expired" : e.code === "used_token" ? "used" : "invalid"); }}); return()=>{live=false}; },[token]);
-  const resend=async()=>{ if(active||!email)return; try{await authService.resendVerification(email);setError("");start(30);}catch(e){setError(e.message);} };
-  return <AuthLayout><AuthCard title={status==="verified"?"Email verified":"Verify your email"}>
-    {status==="loading"&&<p className="py-10 text-center text-muted-foreground">Verifying your secure link…</p>}
-    {status==="verified"&&<div className="py-8 text-center"><CircleCheck className="mx-auto text-success" size={48}/><p className="mt-4">Your email is confirmed. You can now sign in.</p><Button asChild className="mt-6"><Link to="/login">Sign in</Link></Button></div>}
-    {["invalid","expired","used"].includes(status)&&<div className="space-y-5"><ErrorMessage>{error}</ErrorMessage>{status==="expired"&&<VerificationNotice title="Request a fresh link" description="Enter your email address. For privacy, the response is the same for every account."/>}<Resend email={email} setEmail={setEmail} active={active} seconds={seconds} onClick={resend}/></div>}
-    {status==="awaiting"&&<div className="space-y-5"><VerificationNotice title="Check your inbox" description="Open the secure verification link sent by CivicAI. It expires after 30 minutes."/><Resend email={email} setEmail={setEmail} active={active} seconds={seconds} onClick={resend}/>{error&&<ErrorMessage>{error}</ErrorMessage>}</div>}
+  const location = useLocation();
+  const [email, setEmail] = useState(location.state?.email || "");
+  const [code, setCode] = useState("");
+  const [status, setStatus] = useState("awaiting");
+  const [error, setError] = useState("");
+  const [pending, setPending] = useState(false);
+  const { seconds, active, start } = useCountdown();
+
+  const verify = async (event) => {
+    event.preventDefault();
+    if (!email.trim() || !/^\d{6}$/.test(code)) {
+      setError("Enter your email address and the 6-digit code from your email.");
+      return;
+    }
+    setPending(true);
+    setError("");
+    try {
+      await authService.verifyEmail(email, code);
+      setStatus("verified");
+    } catch (verificationError) {
+      setError(verificationError.message);
+    } finally {
+      setPending(false);
+    }
+  };
+
+  const resend = async () => {
+    if (active || !email.trim()) return;
+    try {
+      await authService.resendVerification(email);
+      setCode("");
+      setError("");
+      start(30);
+    } catch (resendError) {
+      setError(resendError.message);
+    }
+  };
+
+  return <AuthLayout><AuthCard title={status === "verified" ? "Email verified" : "Verify your email"}>
+    {status === "verified" ? <div className="py-8 text-center"><CircleCheck className="mx-auto text-success" size={48}/><p className="mt-4">Your email is confirmed. You can now sign in.</p><Button asChild className="mt-6"><Link to="/login">Sign in</Link></Button></div> :
+      <form onSubmit={verify} className="space-y-5">
+        <VerificationNotice title="Check your inbox" description="Enter the 6-digit verification code sent by CivicAI. It expires after 30 minutes."/>
+        <Input type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" aria-label="Email address"/>
+        <Input inputMode="numeric" autoComplete="one-time-code" maxLength={6} value={code} onChange={(event) => setCode(event.target.value.replace(/\D/g, "").slice(0, 6))} placeholder="000000" aria-label="6-digit verification code" className="h-12 text-center text-xl tracking-[0.4em]"/>
+        {error && <ErrorMessage>{error}</ErrorMessage>}
+        <Button type="submit" className="w-full" disabled={pending || code.length !== 6 || !email.trim()}>{pending ? "Verifying…" : "Verify email"}</Button>
+        <Button type="button" variant="outline" className="w-full" disabled={active || !email.trim()} onClick={resend}><RefreshCw size={15}/>{active ? `Resend available in ${seconds}s` : "Resend verification code"}</Button>
+      </form>}
   </AuthCard></AuthLayout>;
 }
-function Resend({email,setEmail,active,seconds,onClick}) { return <div className="space-y-3"><Input type="email" autoComplete="email" value={email} onChange={(e)=>setEmail(e.target.value)} placeholder="you@example.com"/><Button variant="outline" className="w-full" disabled={active||!email} onClick={onClick}><RefreshCw size={15}/>{active?`Resend available in ${seconds}s`:"Resend verification email"}</Button></div>; }

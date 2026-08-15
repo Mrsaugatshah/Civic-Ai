@@ -137,7 +137,7 @@ const routeElements = (
     <Route
       path="/reports/:id"
       element={
-        <RoleGuard allowed={["citizen"]}>
+        <RoleGuard allowed={["citizen", "authority", "admin"]}>
           <ReportDetails />
         </RoleGuard>
       }

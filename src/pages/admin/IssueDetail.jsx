@@ -11,7 +11,7 @@ import { useAsync } from "@/hooks/useAsync";
 import {
   getIssue, getIssueActivity, assignDepartment, updateIssueStatus,
   addInternalNote, uploadResolutionImage, markIssueResolved,
-  retryAIAnalysis, overrideAIRecommendation, ISSUE_STATUSES, DEPARTMENTS, allowedTransitions,
+  ISSUE_STATUSES, DEPARTMENTS, allowedTransitions,
 } from "@/services/admin/adminService";
 
 import { AdminLayout } from "@/components/admin/AdminLayout";
@@ -31,7 +31,6 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction,
 } from "@/components/ui/alert-dialog";
 import { cn } from "@/lib/utils";
-import { DEFAULT_CATEGORIES } from "@/services/categories/categoryService";
 
 function fmtDateTime(iso) {
   if (!iso) return "—";
@@ -85,7 +84,6 @@ export function AdminIssueDetail() {
   const [noteSaving, setNoteSaving] = useState(false);
   const [resolutionNote, setResolutionNote] = useState("");
   const [resolving, setResolving] = useState(false);
-  const [aiSaving, setAiSaving] = useState(false);
 
   const reload = () => {
     issueAsync.reload();
@@ -93,27 +91,6 @@ export function AdminIssueDetail() {
   };
 
   const adminName = user?.name ? `${user.name} (Admin)` : "You (Admin)";
-
-  const retryAnalysis = async () => {
-    setAiSaving(true);
-    try { await retryAIAnalysis(id); toast.success("AI re-analysis queued"); reload(); }
-    catch (error) { toast.error(error.message || "Couldn't queue AI analysis."); }
-    finally { setAiSaving(false); }
-  };
-
-  const overridePriority = async (priority) => {
-    setAiSaving(true);
-    try { await overrideAIRecommendation(id,"priority",priority,"Administrator reviewed the AI recommendation."); toast.success("Final priority updated with an audit record"); reload(); }
-    catch (error) { toast.error(error.message || "Couldn't update priority."); }
-    finally { setAiSaving(false); }
-  };
-
-  const overrideCategory = async (category) => {
-    setAiSaving(true);
-    try { await overrideAIRecommendation(id,"category",category,"Administrator reviewed the AI category recommendation."); toast.success("Final category updated with an audit record"); reload(); }
-    catch (error) { toast.error(error.message || "Couldn't update category."); }
-    finally { setAiSaving(false); }
-  };
 
   const handleDepartmentChange = async (department) => {
     if (!issueAsync.data || department === issueAsync.data.department) return;
@@ -246,12 +223,16 @@ export function AdminIssueDetail() {
 
                   <p className="text-sm leading-relaxed text-foreground/85">{issue.description}</p>
 
-                  <div className="flex aspect-video w-full items-center justify-center rounded-lg border bg-muted/40 text-muted-foreground">
-                    <span className="flex flex-col items-center gap-1.5 text-xs">
-                      <ImageOff size={22} />
-                      Original report image (not available in demo data)
-                    </span>
-                  </div>
+                  {issue.evidence?.find((item) => item.kind === "citizen")?.url ? (
+                    <figure className="overflow-hidden rounded-lg border bg-muted/40">
+                      <img src={issue.evidence.find((item) => item.kind === "citizen").url} alt={`Evidence for ${issue.title}`} className="aspect-video w-full object-contain" />
+                      <figcaption className="border-t px-3 py-2 text-xs text-muted-foreground">Original citizen evidence</figcaption>
+                    </figure>
+                  ) : (
+                    <div className="flex aspect-video w-full items-center justify-center rounded-lg border bg-muted/40 text-muted-foreground">
+                      <span className="flex flex-col items-center gap-1.5 text-xs"><ImageOff size={22} />No photo was attached to this report</span>
+                    </div>
+                  )}
 
                   <div className="grid gap-2 text-sm sm:grid-cols-2">
                     <p className="flex items-center gap-1.5 text-muted-foreground">
@@ -290,13 +271,17 @@ export function AdminIssueDetail() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="grid gap-3 pt-0 sm:grid-cols-3">
-                  <div className="flex items-center justify-between gap-3 rounded-md border bg-accent/30 p-3 sm:col-span-3">
-                    <div><p className="text-xs text-muted-foreground">Analysis status</p><p className="text-sm font-medium uppercase">{issue.aiStatus}</p></div>
-                    {!['pending','processing'].includes(issue.aiStatus) && <Button size="sm" variant="outline" onClick={retryAnalysis} disabled={aiSaving}>{aiSaving?<Loader2 size={14} className="animate-spin"/>:<Sparkles size={14}/>}Re-analyze</Button>}
+                  <div className="rounded-md border bg-muted/30 p-3">
+                    <p className="text-xs text-muted-foreground">Classification confidence</p>
+                    <p className="font-display text-lg font-semibold text-foreground">{issue.aiConfidence.classification ? `${issue.aiConfidence.classification}%` : "Pending"}</p>
                   </div>
-                  <div className="rounded-md border bg-muted/30 p-3 sm:col-span-3">
-                    <p className="text-xs text-muted-foreground">Overall AI classification confidence</p>
-                    <p className="font-display text-lg font-semibold text-foreground">{issue.aiConfidence.classification == null ? "—" : `${issue.aiConfidence.classification}%`}</p>
+                  <div className="rounded-md border bg-muted/30 p-3">
+                    <p className="text-xs text-muted-foreground">Severity confidence</p>
+                    <p className="font-display text-lg font-semibold text-foreground">{issue.aiConfidence.severity ? `${issue.aiConfidence.severity}%` : "Pending"}</p>
+                  </div>
+                  <div className="rounded-md border bg-muted/30 p-3">
+                    <p className="text-xs text-muted-foreground">Department match</p>
+                    <p className="font-display text-lg font-semibold text-foreground">{issue.aiConfidence.department ? `${issue.aiConfidence.department}%` : "Pending"}</p>
                   </div>
                   <div className="flex items-center gap-1.5 rounded-md border bg-accent/40 p-3 text-sm text-foreground sm:col-span-3">
                     <Building2 size={14} className="text-primary shrink-0" />
@@ -306,14 +291,6 @@ export function AdminIssueDetail() {
                         <GitBranch size={12} /> Admin assigned {issue.department}
                       </span>
                     )}
-                  </div>
-                  <div className="rounded-md border bg-background p-3 sm:col-span-3">
-                    <p className="mb-2 text-xs text-muted-foreground">Final priority override (AI remains in history)</p>
-                    <Select onValueChange={overridePriority} disabled={aiSaving}><SelectTrigger><SelectValue placeholder="Set reviewed priority" /></SelectTrigger><SelectContent>{["low","medium","high","critical"].map(value=><SelectItem key={value} value={value}>{value.toUpperCase()}</SelectItem>)}</SelectContent></Select>
-                  </div>
-                  <div className="rounded-md border bg-background p-3 sm:col-span-3">
-                    <p className="mb-2 text-xs text-muted-foreground">Final category override (AI remains in history)</p>
-                    <Select onValueChange={overrideCategory} disabled={aiSaving}><SelectTrigger><SelectValue placeholder="Set reviewed category" /></SelectTrigger><SelectContent>{DEFAULT_CATEGORIES.map(item=><SelectItem key={item.key} value={item.key}>{item.label}</SelectItem>)}</SelectContent></Select>
                   </div>
                 </CardContent>
               </Card>
@@ -421,7 +398,7 @@ export function AdminIssueDetail() {
                       {issue.notes.map((n) => (
                         <div key={n.id} className="rounded-md border bg-muted/30 p-2.5 text-sm">
                           <p className="text-foreground/90">{n.content}</p>
-                          <p className="mt-1 text-[11px] text-muted-foreground">{n.author} · {fmtDateTime(n.at)}</p>
+                          <p className="mt-1 text-[11px] text-muted-foreground">{n.author} · {fmtDateTime(n.createdAt)}</p>
                         </div>
                       ))}
                     </div>

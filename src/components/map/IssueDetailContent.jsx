@@ -58,7 +58,7 @@ export function IssueDetailContent({ issue, onSelectRelated }) {
           <span className="mr-1 inline-block h-1.5 w-1.5 rounded-full" style={{ backgroundColor: statusMeta.color }} />
           {statusMeta.label}
         </Badge>
-        <Badge variant="outline" className="font-medium text-foreground">{level.label} priority</Badge>
+        <Badge variant="outline" className="font-medium text-foreground">{issue.priority == null ? "AI analysis pending" : `${level.label} priority`}</Badge>
         <Badge variant="secondary" className="font-normal text-muted-foreground">
           <ThumbsUp size={11} className="mr-1 text-primary" />
           {issue.votes}
@@ -70,7 +70,7 @@ export function IssueDetailContent({ issue, onSelectRelated }) {
         <span className="inline-flex items-center gap-1"><Calendar size={12} />{reportedLabel(issue.reportedAt)}</span>
       </p>
 
-      <PriorityMeter score={issue.priority} />
+      {issue.priority != null && <PriorityMeter score={issue.priority} />}
 
       <p className="text-sm leading-relaxed text-foreground/80">{issue.description}</p>
 

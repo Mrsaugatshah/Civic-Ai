@@ -92,7 +92,7 @@ export function Login() {
             <VerificationNotice
               tone="info"
               title="Verify your email to continue"
-              description="Open the secure verification link sent to your email. You won't be able to sign in until it's confirmed."
+              description="Enter the 6-digit verification code sent to your email. You won't be able to sign in until it's confirmed."
               actions={
                 <Link
                   to="/verify-email"

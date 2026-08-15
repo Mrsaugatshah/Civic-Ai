@@ -18,9 +18,8 @@ import { AIMapInsight } from "@/components/map/AIMapInsight";
 import { IssueDetailDrawer } from "@/components/map/IssueDetailDrawer";
 import { IssueBottomSheet } from "@/components/map/IssueBottomSheet";
 import { ListIssues } from "@/components/map/ListIssues";
+import { Button } from "@/components/ui/button";
 
-// Demo city GPS reference so the "Locate me" control behaves plausibly.
-// Anchored at Chitwan's Bharatpur (the metro core of the district).
 const CITY_REF = { lat: 27.68, lon: 84.43 };
 const KM_PER_DEG_LAT = 111.32;
 const KM_PER_DEG_LON = 111.32 * Math.cos((27.704 * Math.PI) / 180);
@@ -50,7 +49,15 @@ export function CityMapPage() {
   const notifShown = useRef(false);
 
   const [allIssues,setAllIssues]=useState([]);
-  useEffect(()=>{let live=true;fetchCityIssues().then(items=>live&&setAllIssues(items)).catch(()=>toast.error("Could not load reports for the map."));return()=>{live=false};},[]);
+  const [mapLoading,setMapLoading]=useState(true);
+  const [mapError,setMapError]=useState("");
+  const loadIssues = useCallback(async () => {
+    setMapLoading(true); setMapError("");
+    try { setAllIssues(await fetchCityIssues()); }
+    catch (error) { setMapError(error.message || "Unable to load civic reports."); }
+    finally { setMapLoading(false); }
+  }, []);
+  useEffect(() => { loadIssues(); }, [loadIssues]);
   const filtered = useMemo(() => allIssues.filter((issue) => matchesFilters(issue, filters)), [allIssues, filters]);
   const insights = useMemo(() => computeInsights(allIssues), [allIssues]);
 
@@ -115,21 +122,15 @@ export function CityMapPage() {
       flyTo(clamped.x, clamped.y, 2.2, 600);
       setLocating(false);
     };
-    const fallback = () => {
-      const demo = { x: 400, y: 330, accuracyKm: 0.35 };
-      setUserLocation(demo);
-      flyTo(demo.x, demo.y, 2.2, 600);
-      setLocating(false);
-      toast.info("Using a demo location for “Locate me”.");
-    };
+    const failed = () => { setLocating(false); toast.error("Your location could not be determined. Check permission and try again."); };
     if (typeof navigator !== "undefined" && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (g) => finish({ lat: g.coords.latitude, lon: g.coords.longitude, accuracy: g.coords.accuracy }),
-        fallback,
+        failed,
         { timeout: 4000, maximumAge: 120000 }
       );
     } else {
-      fallback();
+      failed();
     }
   }, [flyTo]);
 
@@ -138,10 +139,13 @@ export function CityMapPage() {
     if (parsed.statuses?.length) next.statuses = [...new Set([...next.statuses, ...parsed.statuses])];
     if (parsed.priorities?.length) next.priorities = [...new Set([...next.priorities, ...parsed.priorities])];
     if (parsed.maxKm) next.distance = true;
-    if (parsed.nearMe) {
+    if (parsed.nearMe && userLocation) {
       next.distance = true;
-      next.center = { x: 400, y: 330 };
+      next.center = { x: userLocation.x, y: userLocation.y };
       next.maxKm = next.maxKm ?? 2;
+    } else if (parsed.nearMe) {
+      locate();
+      toast.info("Allow location access to filter nearby reports.");
     }
     if (parsed.center && parsed.maxKm) {
       next.center = parsed.center;
@@ -151,7 +155,7 @@ export function CityMapPage() {
       setFilters(next);
       toast.success("Filters applied from your search.");
     }
-  }, [filters]);
+  }, [filters, locate, userLocation]);
 
   return (
     <div className="min-h-dvh bg-background">
@@ -176,7 +180,7 @@ export function CityMapPage() {
           <div className="ml-auto flex shrink-0 items-center gap-2">
             <span className="hidden items-center gap-1 rounded-full bg-success/10 px-2.5 py-1 text-xs font-medium text-success-foreground sm:inline-flex">
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-success" />
-              {filtered.length} live
+                {filtered.length} authorized
             </span>
             <div className="flex rounded-md border bg-background p-0.5" role="tablist" aria-label="Map or list view">
               <button
@@ -223,6 +227,9 @@ export function CityMapPage() {
                 onSelect={selectIssue}
                 onViewChange={handleViewChange}
               />
+              {mapLoading && <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/35 backdrop-blur-[1px]"><div className="rounded-lg border bg-background/95 px-4 py-3 text-sm text-muted-foreground shadow-lift">Loading authorized civic reports…</div></div>}
+              {!mapLoading && mapError && <div className="absolute inset-0 z-20 flex items-center justify-center bg-background/35 px-4"><div className="max-w-sm rounded-lg border bg-background p-5 text-center shadow-lift"><p className="font-semibold text-foreground">Unable to load civic reports</p><p className="mt-1 text-sm text-muted-foreground">{mapError}</p><Button variant="outline" className="mt-4" onClick={loadIssues}>Retry</Button></div></div>}
+              {!mapLoading && !mapError && allIssues.length === 0 && <div className="pointer-events-none absolute inset-x-0 top-1/2 z-10 flex -translate-y-1/2 justify-center px-4"><div className="rounded-lg border bg-background/95 px-4 py-3 text-center text-sm text-muted-foreground shadow-lift">No reported issues in this area yet.</div></div>}
 
               {/* left column */}
               <div className="pointer-events-none absolute left-3 top-3 z-20 flex flex-col gap-2 lg:bottom-3 lg:top-auto">
@@ -270,6 +277,8 @@ export function CityMapPage() {
                   <MapFilters
                     filters={filters}
                     onChange={setFilters}
+                    userLocation={userLocation}
+                    onRequestLocation={locate}
                     className="pointer-events-auto max-h-[60dvh] overflow-y-auto"
                   />
                 )}

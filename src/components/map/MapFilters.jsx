@@ -19,8 +19,6 @@ export const DEFAULT_FILTERS = {
   distance: false,
 };
 
-const NEAR_ME = { distance: true, center: { x: 400, y: 330 }, maxKm: 2 };
-
 export function countActiveFilters(filters) {
   return (
     filters.categories.length +
@@ -50,7 +48,7 @@ function ToggleChip({ active, onClick, children, className }) {
   );
 }
 
-export function MapFilters({ filters, onChange, className }) {
+export function MapFilters({ filters, onChange, className, userLocation, onRequestLocation }) {
   const toggle = (field, value) => {
     const list = filters[field];
     onChange({
@@ -108,7 +106,11 @@ export function MapFilters({ filters, onChange, className }) {
             type="button"
             role="switch"
             aria-checked={Boolean(filters.distance)}
-            onClick={() => onChange({ ...filters, ...(filters.distance ? { distance: false } : NEAR_ME) })}
+            onClick={() => {
+              if (filters.distance) onChange({ ...filters, distance: false });
+              else if (userLocation) onChange({ ...filters, distance: true, center: { x: userLocation.x, y: userLocation.y }, maxKm: 2 });
+              else onRequestLocation?.();
+            }}
             className={cn(
               "relative h-5 w-9 rounded-full transition-colors",
               filters.distance ? "bg-primary" : "bg-input"

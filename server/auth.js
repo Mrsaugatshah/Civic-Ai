@@ -1,6 +1,6 @@
 import express from "express";
 import bcrypt from "bcryptjs";
-import { createHash, randomBytes, randomUUID } from "node:crypto";
+import { createHash, randomBytes, randomInt, randomUUID } from "node:crypto";
 import { db, persist, sql } from "./db.js";
 import { sendPasswordResetEmail, sendVerificationEmail } from "./email.js";
 import { createRateLimiter } from "./security.js";
@@ -17,7 +17,7 @@ const EMAIL_VERIFICATION_REQUIRED = String(process.env.EMAIL_VERIFICATION_REQUIR
 
 const authLimiter = createRateLimiter({ windowMs: 15 * 60 * 1000, limit: 30 });
 const loginLimiter = createRateLimiter({ windowMs: 15 * 60 * 1000, limit: 10, key: (req) => `${req.ip}:${normalizeEmail(req.body?.email || "")}` });
-const verificationLimiter = createRateLimiter({ windowMs: 15 * 60 * 1000, limit: 10 });
+const verificationLimiter = createRateLimiter({ windowMs: 15 * 60 * 1000, limit: 10, key: (req) => `${req.ip}:${normalizeEmail(req.body?.email || "")}` });
 const resendLimiter = createRateLimiter({ windowMs: 60 * 60 * 1000, limit: 5, key: (req) => `${req.ip}:${normalizeEmail(req.body?.email || "")}` });
 const forgotLimiter = createRateLimiter({ windowMs: 60 * 60 * 1000, limit: 5, key: (req) => `${req.ip}:${normalizeEmail(req.body?.email || "")}` });
 const resetLimiter = createRateLimiter({ windowMs: 15 * 60 * 1000, limit: 10 });
@@ -64,6 +64,19 @@ function createPurposeToken(table, userId, ttl) {
     sql.exec("COMMIT"); return token;
   } catch (error) { sql.exec("ROLLBACK"); throw error; }
 }
+async function createVerificationCode(userId) {
+  const code = String(randomInt(0, 1_000_000)).padStart(6, "0");
+  const codeHash = await bcrypt.hash(code, SALT_ROUNDS);
+  const now = Date.now();
+  sql.exec("BEGIN IMMEDIATE");
+  try {
+    sql.prepare("UPDATE email_verification_tokens SET used_at = ? WHERE user_id = ? AND used_at IS NULL").run(now, userId);
+    const id = `tok_${randomUUID()}`;
+    sql.prepare("INSERT INTO email_verification_tokens (id, user_id, token_hash, expires_at, used_at, created_at) VALUES (?, ?, ?, ?, NULL, ?)").run(id, userId, codeHash, now + VERIFY_TTL_MS, now);
+    sql.exec("COMMIT");
+    return { code, id };
+  } catch (error) { sql.exec("ROLLBACK"); throw error; }
+}
 function tokenRecord(table, token) { return validToken(token) ? sql.prepare(`SELECT * FROM ${table} WHERE token_hash = ?`).get(hashToken(token)) : null; }
 function invalidateToken(table, id) { sql.prepare(`UPDATE ${table} SET used_at = COALESCE(used_at, ?) WHERE id = ?`).run(Date.now(), id); }
 
@@ -96,8 +109,8 @@ authRouter.post("/register", async (req, res, next) => {
     const now = Date.now(); userId = `u_${randomUUID()}`; const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
     sql.prepare("INSERT INTO users (id,name,email,password_hash,role,phone,location,organization,department,status,email_verified,provider,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)").run(userId, name.trim(), email, passwordHash, "citizen", phone.trim(), String(location).trim().slice(0,120), "", "", "active", EMAIL_VERIFICATION_REQUIRED ? 0 : 1, "password", now, now);
     if (!EMAIL_VERIFICATION_REQUIRED) return res.status(201).json({ ok: true, emailVerificationRequired: false, message: "Account created. You can sign in now." });
-    const token = createPurposeToken("email_verification_tokens", userId, VERIFY_TTL_MS);
-    try { await sendVerificationEmail({ to: email, token }); }
+    const verification = await createVerificationCode(userId);
+    try { await sendVerificationEmail({ to: email, code: verification.code }); }
     catch (error) { sql.prepare("DELETE FROM users WHERE id = ?").run(userId); error.emailDelivery = true; throw error; }
     return res.status(201).json({ ok: true, emailVerificationRequired: true, message: "Account created. Check your email to verify it." });
   } catch (error) { next(error); }
@@ -108,19 +121,23 @@ authRouter.post("/resend-verification", resendLimiter, async (req, res, next) =>
     const email = normalizeEmail(req.body?.email); if (!validateEmail(email)) return res.status(400).json({ code: "invalid_email", error: "Enter a valid email address." });
     const user = userByEmail(email);
     if (user && !user.email_verified) {
-      const token = createPurposeToken("email_verification_tokens", user.id, VERIFY_TTL_MS);
-      try { await sendVerificationEmail({ to: user.email, token }); } catch { invalidateToken("email_verification_tokens", tokenRecord("email_verification_tokens", token).id); console.error("Verification email delivery failed."); }
+      const verification = await createVerificationCode(user.id);
+      try { await sendVerificationEmail({ to: user.email, code: verification.code }); } catch { invalidateToken("email_verification_tokens", verification.id); console.error("Verification email delivery failed."); }
     }
     res.json({ ok: true, message: GENERIC_EMAIL_RESPONSE });
   } catch (error) { next(error); }
 });
 
-authRouter.post("/verify-email", verificationLimiter, (req, res, next) => {
+authRouter.post("/verify-email", verificationLimiter, async (req, res, next) => {
   try {
-    const record = tokenRecord("email_verification_tokens", req.body?.token);
-    if (!record) return res.status(400).json({ code: "invalid_token", error: "This verification link is invalid." });
-    if (record.used_at) return res.status(409).json({ code: "used_token", error: "This verification link has already been used." });
-    if (Date.now() >= record.expires_at) { invalidateToken("email_verification_tokens", record.id); return res.status(410).json({ code: "expired_token", error: "This verification link has expired. Request a new one." }); }
+    const email = normalizeEmail(req.body?.email);
+    const code = typeof req.body?.code === "string" ? req.body.code.trim() : "";
+    if (!validateEmail(email) || !/^\d{6}$/.test(code)) return res.status(400).json({ code: "invalid_code", error: "Enter the email address and 6-digit verification code." });
+    const user = userByEmail(email);
+    if (!user || user.email_verified) return res.status(400).json({ code: "invalid_code", error: "The verification code is invalid or has already been used." });
+    const record = sql.prepare("SELECT * FROM email_verification_tokens WHERE user_id = ? AND used_at IS NULL ORDER BY created_at DESC LIMIT 1").get(user.id);
+    if (!record || !(await bcrypt.compare(code, record.token_hash))) return res.status(400).json({ code: "invalid_code", error: "The verification code is invalid or has already been used." });
+    if (Date.now() >= record.expires_at) { invalidateToken("email_verification_tokens", record.id); return res.status(410).json({ code: "expired_code", error: "This verification code has expired. Request a new one." }); }
     sql.exec("BEGIN IMMEDIATE");
     try { sql.prepare("UPDATE users SET email_verified=1, updated_at=? WHERE id=?").run(Date.now(), record.user_id); sql.prepare("UPDATE email_verification_tokens SET used_at=? WHERE user_id=? AND used_at IS NULL").run(Date.now(), record.user_id); sql.exec("COMMIT"); }
     catch (error) { sql.exec("ROLLBACK"); throw error; }

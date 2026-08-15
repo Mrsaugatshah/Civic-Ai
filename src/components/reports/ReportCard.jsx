@@ -12,7 +12,9 @@ import { formatRelativeTime } from "./format";
 import { cn } from "@/lib/utils";
 
 function PriorityChip({ score }) {
-  if (score == null) return <Badge variant="outline" className="px-2 py-0.5 text-[10px]">AI priority pending</Badge>;
+  if (score == null) {
+    return <Badge variant="outline" className="border-transparent bg-muted px-2 py-0.5 text-[10px] font-semibold text-muted-foreground">AI analysis pending</Badge>;
+  }
   const level = priorityLevelForScore(score);
   return (
     <Badge
@@ -26,7 +28,7 @@ function PriorityChip({ score }) {
 }
 
 export function ReportCard({ report, index = 0 }) {
-  const meta = reportCategoryMeta(report.aiStatus === "complete" ? report.aiCategory : report.category);
+  const meta = reportCategoryMeta(report.category);
   const Icon = meta.icon;
 
   return (
@@ -83,11 +85,16 @@ export function ReportCard({ report, index = 0 }) {
               </span>
             </div>
 
-            {report.priority != null && <Progress value={report.priority} indicatorClassName={priorityBarClass(report.priority)} className="mt-2 h-1" aria-hidden />}
+            {report.priority != null && <Progress
+              value={report.priority}
+              indicatorClassName={priorityBarClass(report.priority)}
+              className="mt-2 h-1"
+              aria-hidden
+            />}
 
             <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
               <span className="text-[11px] text-muted-foreground">
-                Last updated {formatRelativeTime(report.lastUpdatedAt)}
+                Last updated {formatRelativeTime(report.updatedAt)}
               </span>
               <span className="inline-flex items-center gap-1 text-xs font-medium text-primary">
                 View Report
