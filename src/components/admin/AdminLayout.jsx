@@ -73,7 +73,7 @@ export function AdminLayout({ children, initialActive = "overview" }) {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="app-page min-h-screen bg-background">
       <aside className="fixed inset-y-0 left-0 z-header hidden w-64 flex-col border-r bg-card lg:flex">
         <div className="flex h-16 items-center gap-2 border-b px-5">
           <Logo />
@@ -118,7 +118,7 @@ export function AdminLayout({ children, initialActive = "overview" }) {
           <UserMenu />
         </header>
 
-        <main className="mx-auto max-w-7xl px-4 pb-16 pt-6 sm:px-6 lg:px-8 lg:pt-8">{children}</main>
+        <main className="page-content-transition mx-auto max-w-7xl px-4 pb-16 pt-6 sm:px-6 lg:px-8 lg:pt-8">{children}</main>
       </div>
 
       <nav

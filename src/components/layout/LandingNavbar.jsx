@@ -8,6 +8,7 @@ import { ThemeSelector } from "@/components/theme/ThemeSelector";
 import { Logo } from "@/components/layout/Navbar";
 import { UserMenu } from "@/components/layout/UserMenu";
 import { useAuth } from "@/contexts/AuthContext";
+import { reportDestination, reportDestinationState } from "@/utils/reportNavigation";
 
 const LINKS = [
   { label: "How It Works", href: "#how-it-works" },
@@ -16,11 +17,12 @@ const LINKS = [
 ];
 
 export function LandingNavbar() {
-  const { isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const [open, setOpen] = useState(false);
   const headerRef = useRef(null);
   const reduceMotion = useReducedMotion();
-  const reportTarget = isAuthenticated ? "/report" : "/guest";
+  const reportTarget = reportDestination(isAuthenticated ? user : null);
+  const reportState = reportDestinationState(isAuthenticated ? user : null);
   const communityTarget = isAuthenticated ? "/issues" : "/map";
 
   useEffect(() => {
@@ -42,12 +44,12 @@ export function LandingNavbar() {
           <div className="flex items-center gap-1">
             <ThemeSelector compact />
           {isAuthenticated ? <UserMenu /> : <Button variant="ghost" asChild className="hidden sm:inline-flex"><Link to="/login">Sign In</Link></Button>}
-          <Button asChild className="hidden sm:inline-flex"><Link to={reportTarget}>Report an Issue</Link></Button>
+          <Button asChild className="hidden sm:inline-flex"><Link to={reportTarget} state={reportState}>Report an Issue</Link></Button>
           <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setOpen((value) => !value)} aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} aria-controls="landing-mobile-nav">{open ? <X size={20} /> : <Menu size={20} />}</Button>
         </div>
       </div>
       <AnimatePresence>
-        {open && <motion.nav id="landing-mobile-nav" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: reduceMotion ? 0 : 0.2 }} className="overflow-hidden border-t bg-background md:hidden"><div className="space-y-1 px-4 py-3">{LINKS.map((link) => <a key={link.label} href={link.href} onClick={() => setOpen(false)} className="block rounded-md px-3 py-3 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-foreground">{link.label}</a>)}<Link to={communityTarget} onClick={() => setOpen(false)} className="block rounded-md px-3 py-3 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-foreground">Community Issues</Link>{!isAuthenticated && <Button variant="outline" asChild className="mt-2 w-full" onClick={() => setOpen(false)}><Link to="/login">Sign In</Link></Button>}<Button asChild className="mt-2 w-full" onClick={() => setOpen(false)}><Link to={reportTarget}>Report an Issue</Link></Button></div></motion.nav>}
+        {open && <motion.nav id="landing-mobile-nav" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: reduceMotion ? 0 : 0.2 }} className="overflow-hidden border-t bg-background md:hidden"><div className="space-y-1 px-4 py-3">{LINKS.map((link) => <a key={link.label} href={link.href} onClick={() => setOpen(false)} className="block rounded-md px-3 py-3 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-foreground">{link.label}</a>)}<Link to={communityTarget} onClick={() => setOpen(false)} className="block rounded-md px-3 py-3 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-foreground">Community Issues</Link>{!isAuthenticated && <Button variant="outline" asChild className="mt-2 w-full" onClick={() => setOpen(false)}><Link to="/login">Sign In</Link></Button>}<Button asChild className="mt-2 w-full" onClick={() => setOpen(false)}><Link to={reportTarget} state={reportState}>Report an Issue</Link></Button></div></motion.nav>}
       </AnimatePresence>
     </header>
   );

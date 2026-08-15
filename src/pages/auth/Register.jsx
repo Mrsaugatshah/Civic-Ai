@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate, Navigate } from "react-router-dom";
+import { Link, useNavigate, Navigate, useLocation } from "react-router-dom";
 import { toast } from "sonner";
 import { ArrowRight } from "lucide-react";
 
@@ -28,6 +28,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 export function Register() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, isAuthenticated, isLoading } = useAuth();
 
   const [role, setRole] = useState("citizen");
@@ -96,7 +97,8 @@ export function Register() {
         department: form.department,
       });
       toast.success(result.emailVerificationRequired ? "Account created! Check your email for the verification code." : "Account created! You can sign in with your password.");
-      navigate(result.emailVerificationRequired ? "/verify-email" : "/login", { replace: true, state: result.emailVerificationRequired ? { email: form.email } : undefined });
+      const nextState = location.state?.from ? { email: form.email, from: location.state.from } : { email: form.email };
+      navigate(result.emailVerificationRequired ? "/verify-email" : "/login", { replace: true, state: result.emailVerificationRequired ? nextState : (location.state?.from ? { from: location.state.from } : undefined) });
     } catch (error) {
       setFormError(
         authService.isOffline()
@@ -263,6 +265,7 @@ export function Register() {
           Already have an account?{" "}
           <Link
             to="/login"
+            state={location.state?.from ? { from: location.state.from } : undefined}
             className="font-semibold text-primary transition-colors hover:text-primary-hover"
           >
             Sign in

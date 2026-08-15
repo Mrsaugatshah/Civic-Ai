@@ -61,7 +61,7 @@ export function CitizenLayout({ children, unreadCount, onOpenNotifications }) {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="app-page min-h-screen bg-background">
       <aside className="fixed inset-y-0 left-0 z-header hidden w-64 flex-col border-r bg-card lg:flex">
         <div className="flex h-16 items-center border-b px-5">
           <Logo />
@@ -125,7 +125,7 @@ export function CitizenLayout({ children, unreadCount, onOpenNotifications }) {
           </div>
         </header>
 
-        <main className="mx-auto max-w-7xl px-4 pb-32 pt-6 sm:px-6 lg:px-8 lg:pb-12 lg:pt-8">
+        <main className="page-content-transition mx-auto max-w-7xl px-4 pb-32 pt-6 sm:px-6 lg:px-8 lg:pb-12 lg:pt-8">
           {children}
         </main>
       </div>

@@ -5,6 +5,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { cn } from "@/lib/utils";
 
 const OPTIONS = [
+  ["gradient", "Gradient", "bg-gradient-to-br from-blue-500 via-indigo-500 to-violet-500"],
   ["light", "Light", "bg-white"],
   ["dark", "Dark", "bg-slate-900"],
   ["warm", "Warm", "bg-amber-50"],

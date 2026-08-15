@@ -32,9 +32,11 @@ export function Login() {
   const [pending, setPending] = useState(false);
 
   const fromLocation = location.state?.from;
-  const from = fromLocation
-    ? `${fromLocation.pathname || ""}${fromLocation.search || ""}`
-    : null;
+  const from = typeof fromLocation === "string"
+    ? fromLocation
+    : fromLocation
+      ? `${fromLocation.pathname || ""}${fromLocation.search || ""}`
+      : null;
   const sessionExpired = location.state?.sessionExpired;
 
   if (isLoading) return null;
@@ -70,7 +72,7 @@ export function Login() {
     <AuthLayout>
       <AuthCard
         title="Welcome Back"
-        description="Sign in to continue to CivicAI."
+        description={from?.startsWith("/report") ? "Sign in or continue as guest to report an issue." : "Sign in to continue to CivicAI."}
       >
         {sessionExpired && (
           <ErrorMessage tone="warning" className="mb-5">
@@ -131,7 +133,7 @@ export function Login() {
         </form>
 
         <div className="my-5 flex items-center gap-3 text-xs text-muted-foreground"><span className="h-px flex-1 bg-border" />or<span className="h-px flex-1 bg-border" /></div>
-        <Button type="button" variant="outline" className="w-full" onClick={() => navigate("/guest")}>
+        <Button type="button" variant="outline" className="w-full" onClick={() => navigate(from?.startsWith("/report") ? "/guest/report" : "/guest")}>
           Continue as Guest
         </Button>
 
@@ -139,6 +141,7 @@ export function Login() {
           Don&apos;t have an account?{" "}
           <Link
             to="/register"
+            state={from ? { from } : undefined}
             className="font-semibold text-primary transition-colors hover:text-primary-hover"
           >
             Create an account

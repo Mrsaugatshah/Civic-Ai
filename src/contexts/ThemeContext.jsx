@@ -1,13 +1,13 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 const STORAGE_KEY = "civicai-theme";
-const THEMES = ["light", "dark", "warm", "gray"];
+const THEMES = ["gradient", "light", "dark", "warm", "gray"];
 const ThemeContext = createContext(null);
 
 function readTheme() {
-  if (typeof window === "undefined") return "light";
+  if (typeof window === "undefined") return "gradient";
   const saved = window.localStorage.getItem(STORAGE_KEY);
-  return THEMES.includes(saved) ? saved : "light";
+  return THEMES.includes(saved) ? saved : "gradient";
 }
 
 export function ThemeProvider({ children }) {

@@ -50,7 +50,7 @@ export function VerifyEmail() {
   };
 
   return <AuthLayout><AuthCard title={status === "verified" ? "Email verified" : "Verify your email"}>
-    {status === "verified" ? <div className="py-8 text-center"><CircleCheck className="mx-auto text-success" size={48}/><p className="mt-4">Your email is confirmed. You can now sign in.</p><Button asChild className="mt-6"><Link to="/login">Sign in</Link></Button></div> :
+    {status === "verified" ? <div className="py-8 text-center"><CircleCheck className="mx-auto text-success" size={48}/><p className="mt-4">Your email is confirmed. You can now sign in.</p><Button asChild className="mt-6"><Link to="/login" state={location.state?.from ? { from: location.state.from } : undefined}>Sign in</Link></Button></div> :
       <form onSubmit={verify} className="space-y-5">
         <VerificationNotice title="Check your inbox" description="Enter the 6-digit verification code sent by CivicAI. It expires after 30 minutes."/>
         <Input type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" aria-label="Email address"/>

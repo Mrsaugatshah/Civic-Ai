@@ -3,7 +3,7 @@ import { Logo } from "./Navbar";
 
 export function LandingFooter() {
   return (
-    <footer className="border-t bg-background">
+    <footer className="landing-footer border-t bg-background">
       <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-10 sm:px-6 md:flex-row md:items-end md:justify-between">
         <div>
           <Logo />

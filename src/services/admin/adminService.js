@@ -10,6 +10,7 @@ async function reports(query=""){return (await api(`/reports?limit=100${query}`)
 export async function getAllReports(){return reports();}
 export async function getAdminUsers(){return api("/admin/users");}
 export async function createAdminUser(payload){return api("/admin/users",{method:"POST",body:JSON.stringify(payload)});}
+export async function deleteAdminUser(id){return api(`/admin/users/${encodeURIComponent(id)}`,{method:"DELETE"});}
 export async function deleteReport(id){return api(`/reports/${encodeURIComponent(id)}`,{method:"DELETE"});}
 export async function rejectAndRemoveReport(id){return api(`/reports/${encodeURIComponent(id)}/reject`,{method:"POST",body:JSON.stringify({})});}
 export async function getIssue(id){return issue(await api(`/reports/${encodeURIComponent(id)}`));}

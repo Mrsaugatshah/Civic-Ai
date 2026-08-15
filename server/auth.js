@@ -91,7 +91,7 @@ authRouter.post("/login", loginLimiter, async (req, res, next) => {
     if (!validateEmail(email) || typeof password !== "string") return res.status(400).json({ code: "invalid_credentials", error: "Email and password are required." });
     const user = userByEmail(email); const ok = user && ["password", "provisioned"].includes(user.provider) && await bcrypt.compare(password, user.password_hash);
     if (!ok) return res.status(401).json({ code: "invalid_credentials", error: "We couldn't sign you in with those details." });
-    if (user.status === "disabled") return res.status(403).json({ code: "disabled", error: "This account is currently unavailable. Please contact support." });
+    if (["disabled", "deleted"].includes(user.status)) return res.status(403).json({ code: "disabled", error: "This account is currently unavailable. Please contact support." });
     if (user.role === "authority" && !["active", "pending_setup"].includes(user.status)) return res.status(403).json({ code: "pending", error: "Your authority account is awaiting approval." });
     createSession(res, user.id, Boolean(req.body?.remember)); return res.json({ user: publicUser(user) });
   } catch (error) { next(error); }
@@ -206,7 +206,7 @@ function adminUser(row) { return { id: row.id, name: row.name, email: row.email,
 
 adminUserRouter.use(requireAdmin);
 adminUserRouter.get("/users", (_req, res) => {
-  const rows = sql.prepare("SELECT id,name,email,role,department,status,email_verified,provider,created_at,updated_at FROM users ORDER BY CASE role WHEN 'admin' THEN 0 WHEN 'authority' THEN 1 ELSE 2 END, created_at DESC").all();
+  const rows = sql.prepare("SELECT id,name,email,role,department,status,email_verified,provider,created_at,updated_at FROM users WHERE status <> 'deleted' ORDER BY CASE role WHEN 'admin' THEN 0 WHEN 'authority' THEN 1 ELSE 2 END, created_at DESC").all();
   res.json({ success: true, data: rows.map(adminUser) });
 });
 adminUserRouter.post("/users", async (req, res, next) => {
@@ -230,6 +230,30 @@ adminUserRouter.post("/users", async (req, res, next) => {
     const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
     sql.prepare("INSERT INTO users (id,name,email,password_hash,role,phone,location,organization,department,status,email_verified,provider,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)").run(id, name, email, passwordHash, role, "", "", "", department, "pending_setup", 1, "provisioned", now, now);
     res.status(201).json({ success: true, data: { user: adminUser(sql.prepare("SELECT * FROM users WHERE id=?").get(id)) } });
+  } catch (error) { next(error); }
+});
+
+adminUserRouter.delete("/users/:id", (req, res, next) => {
+  try {
+    const target = userById(String(req.params.id || ""));
+    if (!target || target.status === "deleted") return res.status(404).json({ code: "user_not_found", error: "User not found." });
+    if (target.id === req.user.id) return res.status(400).json({ code: "cannot_delete_self", error: "You cannot delete your currently signed-in account." });
+    if (!["admin", "authority"].includes(target.role)) return res.status(400).json({ code: "unsupported_user_deletion", error: "Only Admin and Authority accounts can be removed here." });
+    if (target.role === "admin") {
+      const remaining = Number(sql.prepare("SELECT COUNT(*) AS count FROM users WHERE role='admin' AND status IN ('active','pending_setup') AND id<>?").get(target.id).count || 0);
+      if (remaining < 1) return res.status(400).json({ code: "last_admin", error: "At least one Admin account must remain in CivicAI." });
+    }
+    const now = Date.now();
+    sql.exec("BEGIN IMMEDIATE");
+    try {
+      // Soft-delete preserves reports, assignments, votes, notifications and history.
+      sql.prepare("UPDATE users SET status='deleted', updated_at=? WHERE id=?").run(now, target.id);
+      sql.prepare("DELETE FROM sessions WHERE user_id=?").run(target.id);
+      sql.prepare("UPDATE email_verification_tokens SET used_at=COALESCE(used_at, ?) WHERE user_id=?").run(now, target.id);
+      sql.prepare("UPDATE password_reset_tokens SET used_at=COALESCE(used_at, ?) WHERE user_id=?").run(now, target.id);
+      sql.exec("COMMIT");
+    } catch (error) { sql.exec("ROLLBACK"); throw error; }
+    res.json({ success: true, data: { id: target.id } });
   } catch (error) { next(error); }
 });
 
