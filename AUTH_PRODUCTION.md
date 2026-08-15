@@ -1,32 +1,26 @@
-# CivicAI production authentication
+# Production authentication
 
-## Configuration
+## Setup
 
-Copy `.env.example` to `.env` and replace every email placeholder with credentials from a transactional SMTP provider. `FRONTEND_URL` must be the exact public frontend origin (no path). Never commit `.env`.
+1. Copy `.env.example` to `.env` and add real SMTP credentials.
+2. Set `FRONTEND_URL` to the public frontend origin, without a path.
+3. Use `EMAIL_SECURE=false` with required TLS on port 587, or `true` on port 465.
+4. In production, use HTTPS and `NODE_ENV=production`. Set `TRUST_PROXY=true` only behind a trusted reverse proxy.
 
-For port 587 use `EMAIL_SECURE=false` with TLS required. For port 465 use `EMAIL_SECURE=true`. In production, set `NODE_ENV=production` so the session cookie is `Secure`; serve the application only through HTTPS. Set `TRUST_PROXY=true` only when Express is directly behind a trusted reverse proxy.
-
-## Data model and deployment
-
-The existing `server/db.json` store is retained. Authentication records use `emailVerificationTokens`, `passwordResetTokens`, and `sessions`; all contain SHA-256 token hashes, never raw bearer values. Writes use an atomic temporary-file rename, and related mutations use rollback snapshots.
-
-This is safe for one Node server process. Do not run multiple server replicas against the same JSON file. A multi-instance production deployment must migrate the same model to PostgreSQL or another transactional database and use a shared session/rate-limit store.
+Never commit `.env`, SQLite files, WAL/SHM files, or uploaded evidence.
 
 ## Run
 
 ```bash
 npm install
-npm run dev
-```
-
-Production:
-
-```bash
+npm run db:setup
 npm run build
 NODE_ENV=production npm start
 ```
 
-Tests:
+The database is also initialized automatically when the server starts. Use a proper SQLite backup when moving production data; do not copy a live database. Run only one server instance with SQLite. Multiple instances require a shared production database and shared rate-limit storage.
+
+## Verify
 
 ```bash
 npm --prefix server test
@@ -34,4 +28,4 @@ npm run lint
 npm run build
 ```
 
-The automated email tests use an in-memory Nodemailer transport and never expose tokens through an HTTP endpoint. A final live-provider check requires real credentials: register with an inbox you control, follow the received verification link, then request and follow a password-reset email.
+Finally, register with a real inbox, verify the six-digit email code, and test the password-reset link.
