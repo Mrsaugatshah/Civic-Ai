@@ -4,6 +4,19 @@ import { toast } from "sonner";
 import { Card, CardContent } from "@/components/ui/card";
 import { CategorySelector } from "./CategorySelector";
 import { analyzeDraft } from "@/services/report/reportService";
+import { listCategories } from "@/services/categories/categoryService";
+
+function normalizeCategory(value) {
+  const text = String(value || "").trim().toLowerCase();
+  const compact = text.replace(/[^a-z0-9]/g, "");
+  return listCategories().find((item) => {
+    const candidates = [item.key, item.label, item.key.replaceAll("_", " ")];
+    return candidates.some((candidate) => {
+      const normalized = String(candidate).toLowerCase();
+      return normalized === text || normalized.replace(/[^a-z0-9]/g, "") === compact;
+    });
+  })?.key || null;
+}
 
 export function AnalysisStep({ input, edits, setEdits }) {
   const category=edits.category;
@@ -14,7 +27,7 @@ export function AnalysisStep({ input, edits, setEdits }) {
     if (!input?.description || input.description.trim().length < 10) return undefined;
     setLoading(true);
     analyzeDraft({ description: input.description, category: category || "other", location: input.location })
-      .then((data) => { if (active) { setResult(data); if (!edits.category) setEdits((current) => ({ ...current, category: data.category })); } })
+      .then((data) => { if (active) { setResult(data); const suggested = normalizeCategory(data.category); if (suggested && !edits.category) setEdits((current) => ({ ...current, category: suggested })); } })
       .catch((error) => { if (active) { setResult(null); toast.error(error.message); } })
       .finally(() => { if (active) setLoading(false); });
     return () => { active = false; };

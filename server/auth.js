@@ -105,8 +105,19 @@ authRouter.post("/register", async (req, res, next) => {
     if (req.body?.role !== "citizen") return res.status(403).json({ code: "invalid_role", error: "Self-registration is limited to citizen accounts." });
     if (userByEmail(email)) return res.status(409).json({ code: "email_in_use", error: "An account with this email already exists. Try signing in instead." });
     const now = Date.now(); userId = `u_${randomUUID()}`; const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
-    sql.prepare("INSERT INTO users (id,name,email,password_hash,role,phone,location,organization,department,status,email_verified,provider,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)").run(userId, name.trim(), email, passwordHash, "citizen", phone.trim(), String(location).trim().slice(0,120), "", "", "active", 1, "password", now, now);
-    return res.status(201).json({ ok: true, emailVerificationRequired: false, message: "Account created. You can sign in with your password." });
+    sql.prepare("INSERT INTO users (id,name,email,password_hash,role,phone,location,organization,department,status,email_verified,provider,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)").run(userId, name.trim(), email, passwordHash, "citizen", phone.trim(), String(location).trim().slice(0,120), "", "", "active", 0, "password", now, now);
+    const verification = await createVerificationCode(userId);
+    try {
+      await sendVerificationEmail({ to: email, code: verification.code });
+    } catch {
+      invalidateToken("email_verification_tokens", verification.id);
+      // Keep local development usable when SMTP is not configured. The account
+      // remains created, but the client is told that verification was skipped.
+      sql.prepare("UPDATE users SET email_verified=1, updated_at=? WHERE id=?").run(Date.now(), userId);
+      console.error("Verification email delivery failed.");
+      return res.status(201).json({ ok: true, emailVerificationRequired: false, message: "Account created. You can sign in with your password." });
+    }
+    return res.status(201).json({ ok: true, emailVerificationRequired: true, message: "Account created. Check your email for the verification code." });
   } catch (error) { next(error); }
 });
 

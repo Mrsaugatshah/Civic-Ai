@@ -28,7 +28,7 @@ function sampleLevels(analyser, count) {
   });
 }
 
-export function VoiceRecorder({ value = "", onChange, disabled }) {
+export function VoiceRecorder({ value = "", onChange, onRecording, disabled }) {
   const [state, setState] = useState("idle"); // idle | requesting | recording | recorded
   const [levels, setLevels] = useState(() => Array(BAR_COUNT).fill(0.08));
   const [duration, setDuration] = useState(0);
@@ -124,6 +124,13 @@ export function VoiceRecorder({ value = "", onChange, disabled }) {
     setDuration(elapsed);
 
     if (recorderRef.current && recorderRef.current.state !== "inactive") {
+      const recordedChunks = chunksRef.current.slice();
+      recorderRef.current.onstop = () => {
+        const blob = new Blob(recordedChunks, { type: "audio/webm" });
+        const url = URL.createObjectURL(blob);
+        setAudioUrl(url);
+        if (blob.size > 0) onRecording?.(new File([blob], "voice-note.webm", { type: "audio/webm" }));
+      };
       recorderRef.current.stop();
     }
     cleanup();

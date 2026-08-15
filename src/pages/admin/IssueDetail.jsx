@@ -119,7 +119,7 @@ export function AdminIssueDetail() {
         toast.error(err.message);
         setPendingStatus(null);
       } else {
-        toast.error("Couldn't update the status. Please try again.");
+        toast.error(error?.message || "Couldn't update the status. Please try again.");
       }
     } finally {
       setStatusSaving(false);
@@ -157,7 +157,7 @@ export function AdminIssueDetail() {
       if (err.code === "MISSING_EVIDENCE") {
         toast.error(err.message);
       } else {
-        toast.error("Couldn't mark this issue resolved. Please try again.");
+        toast.error(err?.message || "Couldn't mark this issue resolved. Please try again.");
       }
     } finally {
       setResolving(false);

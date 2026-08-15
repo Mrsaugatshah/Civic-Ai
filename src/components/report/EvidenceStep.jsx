@@ -309,7 +309,20 @@ export function EvidenceStep({ value, onChange, error, disabled }) {
               Speak for up to a minute — the AI turns your words into a description.
             </p>
           </div>
-          <VoiceRecorder value={transcript} onChange={(t) => onChange({ transcript: t })} disabled={disabled} />
+          <VoiceRecorder
+            value={transcript}
+            onChange={(t) => onChange({ transcript: t })}
+            onRecording={(file) => {
+              if (media.length >= MAX_MEDIA) {
+                toast.error(`You can attach up to ${MAX_MEDIA} files.`);
+                return;
+              }
+              onChange({
+                media: [...media, { id: `media-${++mediaSeq}`, kind: "audio", name: file.name, size: file.size, file }],
+              });
+            }}
+            disabled={disabled}
+          />
         </CardContent>
       </Card>
 

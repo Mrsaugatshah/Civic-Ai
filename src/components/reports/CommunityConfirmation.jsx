@@ -276,13 +276,19 @@ function CommunityAggregate({ data }) {
             {data.rejected} citizens reported the issue still exists
           </p>
         </div>
-        <div className="mt-3 flex items-center gap-3">
-          <Progress value={pct} indicatorClassName="bg-success" className="h-2 flex-1" />
-          <span className="shrink-0 font-display text-sm font-semibold text-foreground">
-            {data.confirmed} / {total}
-          </span>
-        </div>
-        <p className="mt-1 text-[11px] text-muted-foreground">confirmed</p>
+        {total > 0 ? (
+          <>
+            <div className="mt-3 flex items-center gap-3">
+              <Progress value={pct} indicatorClassName="bg-success" className="h-2 flex-1" />
+              <span className="shrink-0 font-display text-sm font-semibold text-foreground">
+                {data.confirmed} / {total}
+              </span>
+            </div>
+            <p className="mt-1 text-[11px] text-muted-foreground">{pct}% community legitimacy</p>
+          </>
+        ) : (
+          <p className="mt-3 text-xs text-muted-foreground">No community verification yet.</p>
+        )}
       </div>
 
       {data.confidence != null && (
@@ -308,6 +314,7 @@ function CommunityAggregate({ data }) {
 }
 
 export function CommunityConfirmation({ reportId, data, loading, onConfirm, onSubmitFeedback }) {
+  const canVote = data?.canVote !== false;
   return (
     <section className="rounded-lg border bg-card p-5 shadow-soft">
       <h3 className="font-display text-sm font-semibold text-foreground">
@@ -323,13 +330,17 @@ export function CommunityConfirmation({ reportId, data, loading, onConfirm, onSu
             <div className="h-4 w-2/3 animate-pulse rounded bg-muted" />
             <div className="h-10 w-full animate-pulse rounded-md bg-muted" />
           </div>
-        ) : data ? (
+        ) : data && canVote ? (
           <ConfirmationForm
             reportId={reportId}
             data={data}
             onConfirm={onConfirm}
             onSubmitFeedback={onSubmitFeedback}
           />
+        ) : data ? (
+          <div className="rounded-md border bg-accent/30 p-4 text-sm text-muted-foreground">
+            You cannot verify your own report. Other citizens can help confirm whether it is legitimate.
+          </div>
         ) : null}
       </div>
 

@@ -3,7 +3,7 @@ import { WifiOff, RefreshCw, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
-export function SubmitError({ onRetry, onSaveDraft }) {
+export function SubmitError({ onRetry, onSaveDraft, message }) {
   return (
     <Card>
       <CardContent className="flex flex-col items-center gap-4 p-10 text-center">
@@ -15,7 +15,7 @@ export function SubmitError({ onRetry, onSaveDraft }) {
             We couldn't submit your report
           </h2>
           <p className="mx-auto mt-1.5 max-w-sm text-sm leading-relaxed text-muted-foreground">
-            Your information is still here. Check your connection and try again.
+            {message || "Your information is still here. Please try again."}
           </p>
         </div>
         <div className="flex flex-col gap-2.5 sm:flex-row">

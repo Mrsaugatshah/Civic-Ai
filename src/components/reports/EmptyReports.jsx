@@ -5,7 +5,7 @@ import { MapPinned, Plus, SearchX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AIOrb } from "@/components/civic/AICard";
 
-export function EmptyReports() {
+export function EmptyReports({ title = "You haven't reported anything yet.", description = "See something that needs attention? Your first report could help improve your community." }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -21,10 +21,10 @@ export function EmptyReports() {
       </div>
       <div className="max-w-sm">
         <h2 className="font-display text-lg font-semibold tracking-tight text-foreground">
-          You haven't reported anything yet.
+          {title}
         </h2>
         <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-          See something that needs attention? Your first report could help improve your community.
+          {description}
         </p>
       </div>
       <Button asChild>

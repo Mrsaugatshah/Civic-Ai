@@ -24,6 +24,7 @@ import { CommunityImpact } from "@/components/dashboard/CommunityImpact";
 import { CivicInsight } from "@/components/dashboard/CivicInsight";
 import { NotificationsMenu } from "@/components/dashboard/NotificationsMenu";
 import { DashboardSkeleton } from "@/components/dashboard/DashboardSkeleton";
+import { confirmResolution } from "@/services/reports/reportsService";
 
 export function CitizenDashboard() {
   const { user } = useAuth();
@@ -53,9 +54,17 @@ export function CitizenDashboard() {
     toast.success("All notifications marked as read.");
   };
 
-  const handleVerificationVote = (reportId, vote) => {
-    setVotingId(null);
-    toast.info(`Community voting for ${reportId} is not enabled yet; no ${vote} vote was recorded.`);
+  const handleVerificationVote = async (reportId, vote) => {
+    setVotingId(reportId);
+    try {
+      await confirmResolution(reportId, vote === "legit" ? "yes" : "no");
+      toast.success(vote === "legit" ? "Issue confirmed." : "Thanks — your review was recorded.");
+      await issues.reload();
+    } catch (error) {
+      toast.error(error.message || "We couldn't record your review.");
+    } finally {
+      setVotingId(null);
+    }
   };
 
   const allLoading = score.loading && issues.loading && reports.loading && impact.loading && insight.loading;

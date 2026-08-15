@@ -85,7 +85,7 @@ export function Register() {
     setPending(true);
     setFormError("");
     try {
-      await authService.register({
+      const result = await authService.register({
         name: form.name,
         email: form.email,
         password: form.password,
@@ -95,8 +95,8 @@ export function Register() {
         organization: form.organization,
         department: form.department,
       });
-      toast.success("Account created! You can sign in with your password.");
-      navigate("/login", { replace: true });
+      toast.success(result.emailVerificationRequired ? "Account created! Check your email for the verification code." : "Account created! You can sign in with your password.");
+      navigate(result.emailVerificationRequired ? "/verify-email" : "/login", { replace: true, state: result.emailVerificationRequired ? { email: form.email } : undefined });
     } catch (error) {
       setFormError(
         authService.isOffline()

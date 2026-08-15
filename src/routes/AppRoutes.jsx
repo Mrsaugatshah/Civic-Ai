@@ -9,6 +9,7 @@ import { Login } from "@/pages/auth/Login";
 import { Register } from "@/pages/auth/Register";
 import { ForgotPassword } from "@/pages/auth/ForgotPassword";
 import { ResetPassword } from "@/pages/auth/ResetPassword";
+import { VerifyEmail } from "@/pages/auth/VerifyEmail";
 
 // Route-level code splitting: heavier pages (map, dashboards, charts, report
 // flow) load on demand so the initial landing + auth chunk stays small.
@@ -22,6 +23,8 @@ const AuthorityTaskDetail = lazy(() => import("@/pages/authority/TaskDetail").th
 const Report = lazy(() => import("@/pages/Report").then((m) => ({ default: m.Report })));
 const CityMapPage = lazy(() => import("@/pages/CityMap").then((m) => ({ default: m.CityMapPage })));
 const MyReports = lazy(() => import("@/pages/MyReports").then((m) => ({ default: m.MyReports })));
+const CommunityIssues = lazy(() => import("@/pages/CommunityIssues").then((m) => ({ default: m.CommunityIssues })));
+const CommunityIssueDetails = lazy(() => import("@/pages/CommunityIssueDetails").then((m) => ({ default: m.CommunityIssueDetails })));
 const ReportDetails = lazy(() => import("@/pages/ReportDetails").then((m) => ({ default: m.ReportDetails })));
 
 import { RoleGuard } from "@/routes/RoleGuard";
@@ -105,6 +108,7 @@ const routeElements = (
     <Route path="/register" element={<Register />} />
     <Route path="/forgot-password" element={<ForgotPassword />} />
     <Route path="/reset-password" element={<ResetPassword />} />
+    <Route path="/verify-email" element={<VerifyEmail />} />
     <Route path="/design-system" element={<DesignSystem />} />
     <Route
       path="/report"
@@ -136,7 +140,15 @@ const routeElements = (
       path="/issues"
       element={
         <RoleGuard allowed={["citizen"]}>
-          <MyReports />
+          <CommunityIssues />
+        </RoleGuard>
+      }
+    />
+    <Route
+      path="/issues/:id"
+      element={
+        <RoleGuard allowed={["citizen"]}>
+          <CommunityIssueDetails />
         </RoleGuard>
       }
     />

@@ -55,6 +55,7 @@ function GuidedReport() {
   const [errors, setErrors] = useState({});
   const [edits, setEdits] = useState({});
   const [phase, setPhase] = useState("form"); // form | submitting | success | submitError
+  const [submitError, setSubmitError] = useState("");
   const [submission, setSubmission] = useState(null);
   const [draft, setDraft] = useState(null);
   const [restored, setRestored] = useState(false);
@@ -160,6 +161,7 @@ function GuidedReport() {
     const category = edits.category ?? "other";
     const categoryDefinition = getCategory(category);
     setPhase("submitting");
+    setSubmitError("");
     try {
       const result = await submitReport({
         title: categoryDefinition?.label ?? "Civic issue report",
@@ -173,7 +175,8 @@ function GuidedReport() {
       setSubmission({ ...result, categoryKey: category });
       setPhase("success");
       window.scrollTo({ top: 0, behavior: "smooth" });
-    } catch {
+    } catch (error) {
+      setSubmitError(error?.message || "Something went wrong while saving your report.");
       setPhase("submitError");
     }
   };
@@ -251,7 +254,7 @@ function GuidedReport() {
       <div className="min-h-screen bg-background">
         <Navbar active="Home" />
         <main className="mx-auto max-w-xl px-4 py-16 sm:px-6">
-          <SubmitError onRetry={handleSubmit} onSaveDraft={() => toast.success("Report saved as a draft.")} />
+          <SubmitError message={submitError} onRetry={handleSubmit} onSaveDraft={() => toast.success("Report saved as a draft.")} />
           <div className="mt-6 text-center">
             <Button variant="ghost" size="sm" asChild>
               <Link to="/dashboard">

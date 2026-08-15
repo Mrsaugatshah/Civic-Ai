@@ -27,7 +27,7 @@ function PriorityChip({ score }) {
   );
 }
 
-export function ReportCard({ report, index = 0 }) {
+export function ReportCard({ report, index = 0, detailPath = "/reports" }) {
   const meta = reportCategoryMeta(report.category);
   const Icon = meta.icon;
 
@@ -38,16 +38,14 @@ export function ReportCard({ report, index = 0 }) {
       transition={{ duration: 0.3, delay: Math.min(index * 0.04, 0.3), ease: [0.16, 1, 0.3, 1] }}
     >
       <Link
-        to={`/reports/${report.id}`}
+        to={`${detailPath}/${report.id}`}
         className="card-lift group block rounded-lg border bg-card p-3.5 shadow-soft sm:p-4"
         aria-label={`View report ${report.id}: ${report.title}`}
       >
         <div className="flex gap-3.5">
           {/* Issue image / category tile */}
           <div className="relative hidden h-20 w-24 shrink-0 overflow-hidden rounded-md border bg-accent/40 sm:block">
-            <div className="flex h-full w-full items-center justify-center">
-              <Icon size={28} className={cn(meta.tone)} aria-hidden />
-            </div>
+            {report.imageUrl ? <img src={report.imageUrl} alt="" className="h-full w-full object-cover" /> : <div className="flex h-full w-full items-center justify-center"><Icon size={28} className={cn(meta.tone)} aria-hidden /></div>}
             <span className="absolute bottom-0 left-0 right-0 truncate bg-background/80 px-1.5 py-0.5 text-[9px] font-medium text-muted-foreground backdrop-blur-sm">
               {meta.label}
             </span>
@@ -84,6 +82,8 @@ export function ReportCard({ report, index = 0 }) {
                 {report.id}
               </span>
             </div>
+
+            {report.confirmed != null && <p className="mt-2 text-[11px] text-muted-foreground">Legit {report.confirmed} · Not Legit {report.rejected} · {report.legitimacyPercent == null ? "No verification yet" : `${report.legitimacyPercent}% legitimate`}</p>}
 
             {report.priority != null && <Progress
               value={report.priority}

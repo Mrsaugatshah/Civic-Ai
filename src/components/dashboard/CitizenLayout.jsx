@@ -14,12 +14,12 @@ const SIDEBAR_NAV = [
   { key: "home", label: "Home", icon: Home, id: "home" },
   { key: "map", label: "Map", icon: Map, id: "map" },
   { key: "issues", label: "Issues", icon: AlertCircle, id: "issues" },
-  { key: "reports", label: "Reports", icon: FileText, id: "reports" },
+  { key: "reports", label: "My Reports", icon: FileText, id: "reports" },
 ];
 
 const MOBILE_NAV = [
   { key: "home", label: "Home", icon: Home, id: "home" },
-  { key: "reports", label: "Reports", icon: FileText, id: "reports" },
+  { key: "reports", label: "My Reports", icon: FileText, id: "reports" },
   { key: "map", label: "Map", icon: Map, id: "map" },
   { key: "notifications", label: "Notify", icon: Bell, id: null },
   { key: "profile", label: "Profile", icon: User, id: null },

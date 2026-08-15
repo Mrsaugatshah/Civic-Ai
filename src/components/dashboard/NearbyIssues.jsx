@@ -25,7 +25,7 @@ function IssueRow({ issue, user, onVote, voting }) {
   const Icon = meta.icon;
   const voterKey = user?.id || user?.email;
   const currentVote = issue.communityVerification?.votes?.[voterKey];
-  const isOwnReport = Boolean(issue.reporterId && issue.reporterId === voterKey);
+  const isOwnReport = issue.canVote === false || Boolean(issue.reporterId && issue.reporterId === voterKey);
   return (
     <div className="flex items-start gap-3 rounded-lg border bg-background p-3 transition-colors hover:bg-accent/40">
       <span className={cn("flex h-9 w-9 shrink-0 items-center justify-center rounded-lg", meta.tone)}>

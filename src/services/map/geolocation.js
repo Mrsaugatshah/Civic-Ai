@@ -2,6 +2,11 @@ export function getCurrentLocation(options = {}) {
   if (typeof navigator === "undefined" || !navigator.geolocation) {
     return Promise.reject(Object.assign(new Error("This browser does not support location services."), { code: "unsupported" }));
   }
+  const hostname = typeof window !== "undefined" ? window.location.hostname : "";
+  const localDevelopment = hostname === "localhost" || hostname === "127.0.0.1" || hostname === "[::1]";
+  if (typeof window !== "undefined" && window.isSecureContext === false && !localDevelopment) {
+    return Promise.reject(Object.assign(new Error("Location access requires HTTPS. Open CivicAI over a secure connection or choose a location manually."), { code: "insecure_context" }));
+  }
   return new Promise((resolve, reject) => {
     navigator.geolocation.getCurrentPosition(
       (position) => resolve({
