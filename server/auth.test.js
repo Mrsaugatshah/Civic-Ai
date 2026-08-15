@@ -31,29 +31,35 @@ function emailToken(message) {
   return match[1];
 }
 
-test("registration hashes token, sends email and verifies only once", async () => {
+function emailCode(message) {
+  const match = message.text.match(/verification code is: (\d{6})/);
+  assert.ok(match);
+  return match[1];
+}
+
+test("registration hashes code, sends email and verifies only once", async () => {
   const registered = await api("/register", { name: "Test Citizen", email: " Test@Example.com ", password: "Strong@123", phone: "+977 9812345678", role: "citizen" });
   assert.equal(registered.response.status, 201);
   let user = sql.prepare("SELECT * FROM users WHERE email=?").get("test@example.com");
   const record = sql.prepare("SELECT * FROM email_verification_tokens WHERE user_id=?").get(user.id);
-  const token = emailToken(sentMail.at(-1));
+  const code = emailCode(sentMail.at(-1));
   assert.ok(user && !user.email_verified && user.password_hash !== "Strong@123");
-  assert.match(record.token_hash, /^[a-f0-9]{64}$/);
-  assert.equal(JSON.stringify(record).includes(token), false);
-  assert.equal((await api("/verify-email", { token })).response.status, 200);
+  assert.match(record.token_hash, /^\$2[aby]\$/);
+  assert.equal(JSON.stringify(record).includes(code), false);
+  assert.equal((await api("/verify-email", { email: "test@example.com", code })).response.status, 200);
   user = sql.prepare("SELECT * FROM users WHERE id=?").get(user.id);
   assert.equal(user.email_verified, 1);
-  assert.equal((await api("/verify-email", { token })).data.code, "used_token");
+  assert.equal((await api("/verify-email", { email: "test@example.com", code })).data.code, "invalid_code");
 });
 
-test("resend invalidates the previous verification token", async () => {
+test("resend invalidates the previous verification code", async () => {
   await api("/register", { name: "Resend Citizen", email: "resend@example.com", password: "Strong@123", phone: "+977 9812345679", role: "citizen" });
-  const first = emailToken(sentMail.at(-1));
+  const first = emailCode(sentMail.at(-1));
   assert.equal((await api("/resend-verification", { email: "resend@example.com" })).response.status, 200);
-  const second = emailToken(sentMail.at(-1));
+  const second = emailCode(sentMail.at(-1));
   assert.notEqual(first, second);
-  assert.equal((await api("/verify-email", { token: first })).data.code, "used_token");
-  assert.equal((await api("/verify-email", { token: second })).response.status, 200);
+  assert.equal((await api("/verify-email", { email: "resend@example.com", code: first })).data.code, "invalid_code");
+  assert.equal((await api("/verify-email", { email: "resend@example.com", code: second })).response.status, 200);
 });
 
 test("reset is generic and one-time, invalidates sessions, and changes login", async () => {
@@ -74,7 +80,7 @@ test("reset is generic and one-time, invalidates sessions, and changes login", a
 });
 
 test("malformed, expired and weak-password cases are rejected", async () => {
-  assert.equal((await api("/verify-email", { token: "invalid" })).data.code, "invalid_token");
+  assert.equal((await api("/verify-email", { email: "invalid@example.com", code: "invalid" })).data.code, "invalid_code");
   assert.equal((await api("/reset-password", { token: "invalid", password: "weak" })).data.code, "weak_password");
   await api("/forgot-password", { email: "admin@city.gov" });
   const token = emailToken(sentMail.at(-1));
