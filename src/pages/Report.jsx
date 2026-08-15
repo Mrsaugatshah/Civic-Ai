@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowLeft, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
@@ -38,6 +38,8 @@ const EMPTY_REPORT = { media: [], transcript: "", description: "", location: nul
 export function Report({ guest = false }) {
   const [searchParams] = useSearchParams();
   const quick = searchParams.get("quick") === "1";
+
+  if (quick && !guest) return <Navigate to="/report" replace />;
 
   if (quick) {
     return <QuickReportEntry guest={guest} />;

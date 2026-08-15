@@ -173,7 +173,7 @@ export function CitizenLayout({ children, unreadCount, onOpenNotifications }) {
           aria-label="Report an issue"
           className="h-14 w-14 rounded-full shadow-lift"
         >
-          <Link to="/report?quick=1">
+          <Link to="/report">
             <Plus size={22} strokeWidth={2.25} />
           </Link>
         </Button>
