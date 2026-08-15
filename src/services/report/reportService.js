@@ -16,7 +16,7 @@ export const TRACKING_STEPS = [
   { key: "analyzed", label: "AI analysis stored" },
   { key: "awaiting", label: "Awaiting assignment" },
   { key: "in_progress", label: "In progress" },
-  { key: "resolved", label: "Resolved" },
+  { key: "resolved", label: "Completed" },
 ];
 
 export const PRIORITY_FACTORS = [

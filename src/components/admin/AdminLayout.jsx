@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard, ListOrdered, AlertTriangle, Map, Sparkles, BarChart3, Tags,
@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 
 const NAV = [
   { key: "overview", label: "Overview", icon: LayoutDashboard, id: "overview" },
+  { key: "all-reports", label: "All Reports", icon: ListOrdered, route: "/admin/reports" },
   { key: "queue", label: "Priority Queue", icon: ListOrdered, id: "queue" },
   { key: "critical", label: "Critical Issues", icon: AlertTriangle, id: "critical" },
   { key: "categories", label: "Categories", icon: Tags, id: "categories" },
@@ -24,6 +25,31 @@ export function AdminLayout({ children, initialActive = "overview" }) {
   const [active, setActive] = useState(initialActive);
   const navigate = useNavigate();
   const location = useLocation();
+  const routeActive = location.pathname === "/admin/analytics"
+    ? "analytics"
+    : location.pathname === "/admin/reports"
+      ? "all-reports"
+    : location.pathname.startsWith("/admin/issues")
+      ? "queue"
+      : active;
+
+  useEffect(() => {
+    if (location.pathname !== "/admin/dashboard") return undefined;
+    const sectionIds = NAV.filter((item) => item.id).map((item) => item.id);
+    const sections = sectionIds.map((id) => document.getElementById(id)).filter(Boolean);
+    if (!sections.length) return undefined;
+    const observer = new IntersectionObserver(() => {
+      const headerOffset = 80;
+      const midpoint = headerOffset + (window.innerHeight - headerOffset) * 0.35;
+      const current = sections
+        .map((section) => ({ section, rect: section.getBoundingClientRect() }))
+        .filter(({ rect }) => rect.top <= midpoint && rect.bottom > headerOffset)
+        .sort((a, b) => Math.abs(a.rect.top - headerOffset) - Math.abs(b.rect.top - headerOffset));
+      if (current[0]) setActive(current[0].section.id);
+    }, { rootMargin: "-72px 0px -55% 0px", threshold: [0, 0.2, 0.5] });
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, [location.pathname]);
 
   const handleNav = (item) => {
     if (item.route) {
@@ -62,7 +88,7 @@ export function AdminLayout({ children, initialActive = "overview" }) {
                 onClick={() => handleNav(item)}
                 className={cn(
                   "w-full justify-start gap-2.5",
-                  active === item.key && !item.external
+                  routeActive === item.key && !item.external
                     ? "bg-accent text-accent-foreground"
                     : "text-muted-foreground hover:text-foreground"
                 )}
@@ -100,7 +126,7 @@ export function AdminLayout({ children, initialActive = "overview" }) {
         <div className="mx-auto flex max-w-xl overflow-x-auto">
           {NAV.map((item) => {
             const Icon = item.icon;
-            const isActive = active === item.key && !item.external;
+            const isActive = routeActive === item.key && !item.external;
             return (
               <button
                 key={item.key}

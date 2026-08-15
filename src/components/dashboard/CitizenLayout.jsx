@@ -9,9 +9,9 @@ import { NotificationsTrigger } from "./NotificationsMenu";
 import { cn } from "@/lib/utils";
 
 const SIDEBAR_NAV = [
-  { key: "home", label: "Home", icon: Home, id: "home" },
+  { key: "home", label: "Dashboard", icon: Home, id: "home" },
   { key: "map", label: "Map", icon: Map, id: "map" },
-  { key: "issues", label: "Issues", icon: AlertCircle, id: "issues" },
+  { key: "issues", label: "Community Issues", icon: AlertCircle, id: "issues" },
   { key: "reports", label: "My Reports", icon: FileText, id: "reports" },
 ];
 
@@ -105,14 +105,13 @@ export function CitizenLayout({ children, unreadCount, onOpenNotifications }) {
         </nav>
         <div className="space-y-3 border-t p-4">
           <Button asChild className="w-full">
-            <Link to="/report?quick=1">
+            <Link to="/report">
               <Sparkles size={15} />
               Report an issue
             </Link>
           </Button>
           <div className="flex items-center justify-between gap-2">
             <UserMenu />
-            <span className="text-[11px] text-muted-foreground">v0.1 · demo</span>
           </div>
         </div>
       </aside>

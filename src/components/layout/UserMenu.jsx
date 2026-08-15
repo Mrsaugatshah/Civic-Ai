@@ -35,8 +35,6 @@ function initialsOf(name) {
     .join("");
 }
 
-const COMING_SOON = "This section is built in a later part of the project.";
-
 export function UserMenu({ className }) {
   const { user, logout } = useAuth();
 
@@ -94,17 +92,17 @@ export function UserMenu({ className }) {
             <LayoutDashboard size={14} /> Dashboard
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => toast.info(COMING_SOON)}>
-          <User size={14} /> Profile
+        <DropdownMenuItem asChild>
+          <Link to="/profile"><User size={14} /> Profile</Link>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => toast.info(COMING_SOON)}>
-          <Bell size={14} /> Notifications
+        <DropdownMenuItem asChild>
+          <Link to={user.role === "citizen" ? "/dashboard?notifications=1" : roleHome(user.role)}><Bell size={14} /> Notifications</Link>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => toast.info(COMING_SOON)}>
-          <Settings size={14} /> Settings
+        <DropdownMenuItem asChild>
+          <Link to="/settings"><Settings size={14} /> Settings</Link>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => toast.info(COMING_SOON)}>
-          <HelpCircle size={14} /> Help
+        <DropdownMenuItem asChild>
+          <Link to="/help"><HelpCircle size={14} /> Help</Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="text-error focus:text-error" onClick={handleSignOut}>

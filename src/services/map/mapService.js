@@ -26,19 +26,19 @@ export const MAP_CATEGORIES = [
 
 export const CATEGORY_LABEL = Object.fromEntries(MAP_CATEGORIES.map((item) => [item.key, item.label]));
 export const MAP_STATUSES = [
-  { key: "submitted", label: "Submitted" }, { key: "under_review", label: "Under Review" },
+  { key: "submitted", label: "Received" }, { key: "under_review", label: "Under Review" },
   { key: "verified", label: "Verified" }, { key: "assigned", label: "Assigned" },
-  { key: "in_progress", label: "In Progress" }, { key: "resolved", label: "Resolved" },
-  { key: "closed", label: "Closed" },
+  { key: "in_progress", label: "Work In Progress" }, { key: "resolved", label: "Completed" },
+  { key: "closed", label: "Completed" },
 ];
 export const STATUS_META = {
-  submitted: { label: "Submitted", color: "#94A3B8" },
+  submitted: { label: "Received", color: "#94A3B8" },
   under_review: { label: "Under Review", color: "#F59E0B" },
   verified: { label: "Verified", color: "#8B5CF6" },
   assigned: { label: "Assigned", color: "#8B5CF6" },
-  in_progress: { label: "In Progress", color: "#0EA5E9" },
-  resolved: { label: "Resolved", color: "#16A34A" },
-  closed: { label: "Closed", color: "#64748B" },
+  in_progress: { label: "Work In Progress", color: "#0EA5E9" },
+  resolved: { label: "Completed", color: "#16A34A" },
+  closed: { label: "Completed", color: "#64748B" },
   rejected: { label: "Rejected", color: "#DC2626" },
   reopened: { label: "Reopened", color: "#F97316" },
 };
@@ -116,9 +116,9 @@ export function queryCityIssues({ bounds, filters = {}, signal } = {}) { if (sig
 export function viewportBounds(cx, cy, zoom, cw, ch) { const halfW = cw / (2 * zoom), halfH = ch / (2 * zoom), pad = 80; return { minX: cx - halfW - pad, maxX: cx + halfW + pad, minY: cy - halfH - pad, maxY: cy + halfH + pad }; }
 
 export const TIMELINE_STEPS = [
-  { key: "submitted", label: "Submitted" }, { key: "ai_analyzed", label: "AI Analyzed" },
+  { key: "submitted", label: "Received" }, { key: "ai_analyzed", label: "AI Analyzed" },
   { key: "under_review", label: "Under Review" }, { key: "assigned", label: "Assigned" },
-  { key: "in_progress", label: "In Progress" }, { key: "resolved", label: "Resolved" },
+  { key: "in_progress", label: "Work In Progress" }, { key: "resolved", label: "Completed" },
 ];
 const STATUS_INDEX = { submitted: 1, under_review: 3, verified: 3, assigned: 4, in_progress: 5, resolved: 6, closed: 6 };
 export function timelineFor(issue) { const doneIdx = STATUS_INDEX[issue.status] ?? 1; return TIMELINE_STEPS.map((step, index) => ({ ...step, done: index < doneIdx, current: index === doneIdx - 1, at: index === 0 ? issue.reportedAt : null })); }

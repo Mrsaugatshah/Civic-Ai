@@ -9,42 +9,6 @@ import {
 } from "lucide-react";
 
 import { AuthLogo } from "./AuthLogo";
-import { cn } from "@/lib/utils";
-
-const FLOATERS = [
-  {
-    icon: MapPin,
-    title: "Pothole reported",
-    meta: "Ward 11 · now",
-    tone: "text-warning",
-    className: "left-[8%] top-[30%]",
-    delay: "0s",
-  },
-  {
-    icon: Sparkles,
-    title: "AI priority · 92",
-    meta: "ranked #1 of 214",
-    tone: "text-ai-light",
-    className: "right-[10%] top-[24%]",
-    delay: "0.8s",
-  },
-  {
-    icon: TrendingUp,
-    title: "Fixed this week",
-    meta: "118 issues resolved",
-    tone: "text-success-light",
-    className: "left-[12%] bottom-[26%]",
-    delay: "1.6s",
-  },
-  {
-    icon: Lightbulb,
-    title: "Streetlight · done",
-    meta: "Green Lane",
-    tone: "text-brand-light",
-    className: "right-[12%] bottom-[30%]",
-    delay: "0.4s",
-  },
-];
 
 function BrandPanel() {
   return (
@@ -82,37 +46,12 @@ function BrandPanel() {
             smarter and safer.
           </p>
 
-          {/* Floating issue markers */}
-          <div className="relative mt-12 h-64">
-            {FLOATERS.map(({ icon: Icon, title, meta, tone, className, delay }, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 + i * 0.12, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                className={cn("absolute animate-float", className)}
-                style={{ animationDelay: delay }}
-              >
-                <div className="flex items-center gap-2.5 rounded-xl border border-white/15 bg-white/10 px-3.5 py-2.5 shadow-card backdrop-blur-md">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/15">
-                    <Icon size={14} className={tone} />
-                  </span>
-                  <div className="min-w-0">
-                    <p className="text-xs font-semibold text-white">{title}</p>
-                    <p className="text-[10px] text-white/70">{meta}</p>
-                  </div>
-                </div>
-              </motion.div>
+          <div className="relative mt-12 flex h-48 items-center justify-center gap-5" aria-hidden>
+            {[MapPin, Sparkles, TrendingUp, Lightbulb].map((Icon, index) => (
+              <motion.span key={index} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 + index * 0.1 }} className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/15 bg-white/10 text-primary-light shadow-card backdrop-blur-md">
+                <Icon size={22} />
+              </motion.span>
             ))}
-
-            {/* AI orb accent */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.5, duration: 0.6 }}
-              aria-hidden
-              className="ai-orb absolute right-[16%] top-[12%] h-20 w-20"
-            />
           </div>
         </div>
 

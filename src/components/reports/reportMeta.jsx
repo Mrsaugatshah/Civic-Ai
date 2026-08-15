@@ -24,10 +24,10 @@ export { reportCategoryMeta } from "@/components/report/reportMeta";
 
 export const REPORT_STATUS_META = {
   submitted: {
-    label: "Submitted",
+    label: "Received",
     icon: Send,
     dot: "#2563EB",
-    classes: "bg-primary/10 text-primary-foreground border-primary/25",
+    classes: "bg-blue-50 text-blue-800 border-blue-200",
   },
   under_review: {
     label: "Under Review",
@@ -42,22 +42,28 @@ export const REPORT_STATUS_META = {
     classes: "bg-indigo-500/10 text-indigo-700 border-indigo-500/25",
   },
   in_progress: {
-    label: "In Progress",
+    label: "Work In Progress",
     icon: Clock,
     dot: "#F97316",
     classes: "bg-orange-500/10 text-orange-700 border-orange-500/25",
   },
   resolved: {
-    label: "Resolved",
+    label: "Completed",
     icon: CheckCircle2,
     dot: "#16A34A",
     classes: "bg-success/10 text-success-foreground border-success/25",
   },
   closed: {
-    label: "Closed",
+    label: "Completed",
     icon: Archive,
     dot: "#64748B",
     classes: "bg-muted text-muted-foreground border-border",
+  },
+  rejected: {
+    label: "Rejected",
+    icon: Archive,
+    dot: "#DC2626",
+    classes: "bg-error/10 text-error-foreground border-error/25",
   },
 };
 

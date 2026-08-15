@@ -3,38 +3,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export function DashboardSkeleton() {
   return (
-    <div className="grid gap-6 lg:grid-cols-12">
-      <Card className="lg:col-span-5">
-        <CardContent className="space-y-4 p-6">
-          <Skeleton className="h-8 w-40" />
-          <Skeleton className="h-4 w-64" />
-          <Skeleton className="h-16 w-full" />
-        </CardContent>
-      </Card>
-      <Card className="lg:col-span-7">
-        <CardContent className="flex items-center gap-6 p-6">
-          <Skeleton className="h-32 w-32 rounded-full" />
-          <div className="flex-1 space-y-3">
-            <Skeleton className="h-8 w-32" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-3/4" />
-            <Skeleton className="h-2 w-full" />
-          </div>
-        </CardContent>
-      </Card>
-      <Card className="lg:col-span-5">
-        <CardContent className="space-y-3 p-6">
-          <Skeleton className="h-6 w-40" />
-          <Skeleton className="h-20 w-full" />
-          <Skeleton className="h-20 w-full" />
-        </CardContent>
-      </Card>
-      <Card className="lg:col-span-7">
-        <CardContent className="space-y-3 p-6">
-          <Skeleton className="h-6 w-40" />
-          <Skeleton className="h-64 w-full" />
-        </CardContent>
-      </Card>
+    <div className="space-y-6">
+      <div className="space-y-2"><Skeleton className="h-8 w-48" /><Skeleton className="h-4 w-64" /></div>
+      <Card><CardContent className="flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between"><div className="space-y-2"><Skeleton className="h-5 w-44" /><Skeleton className="h-4 w-56" /></div><div className="flex gap-2"><Skeleton className="h-10 w-36" /><Skeleton className="h-10 w-28" /></div></CardContent></Card>
+      <div className="grid gap-3 sm:grid-cols-3">{[1, 2, 3].map((item) => <Card key={item}><CardContent className="space-y-3 p-4"><Skeleton className="h-3 w-20" /><Skeleton className="h-8 w-12" /></CardContent></Card>)}</div>
+      <Card><CardContent className="space-y-3 p-5"><Skeleton className="h-5 w-40" /><Skeleton className="h-16 w-full" /><Skeleton className="h-16 w-full" /><Skeleton className="h-16 w-full" /></CardContent></Card>
+      <Card><CardContent className="space-y-3 p-5"><Skeleton className="h-5 w-44" /><Skeleton className="h-14 w-full" /><Skeleton className="h-14 w-full" /></CardContent></Card>
     </div>
   );
 }

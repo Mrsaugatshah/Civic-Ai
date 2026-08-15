@@ -4,6 +4,7 @@ import { MotionConfig } from "framer-motion";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 import { AppRoutes } from "@/routes/AppRoutes";
 import { ErrorBoundary } from "@/components/layout/ErrorBoundary";
 
@@ -15,11 +16,13 @@ export default function App() {
     <MotionConfig reducedMotion="user">
       <ErrorBoundary>
         <TooltipProvider delayDuration={150}>
-          <AuthProvider>
-            <BrowserRouter>
-              <AppRoutes />
-            </BrowserRouter>
-          </AuthProvider>
+          <ThemeProvider>
+            <AuthProvider>
+              <BrowserRouter>
+                <AppRoutes />
+              </BrowserRouter>
+            </AuthProvider>
+          </ThemeProvider>
           <Toaster position="bottom-right" />
         </TooltipProvider>
       </ErrorBoundary>

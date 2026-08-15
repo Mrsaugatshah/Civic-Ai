@@ -17,8 +17,8 @@ const W = 800;
 const H = 500;
 
 export function markerTone(issue) {
-  if (issue.status === "resolved") return { label: "Resolved", color: "#16A34A" };
-  if (issue.status === "under_review") return { label: "Under review", color: "#0EA5E9" };
+  if (issue.status === "resolved") return { label: "Completed", color: "#16A34A" };
+  if (issue.status === "under_review") return { label: "Under Review", color: "#0EA5E9" };
   if (issue.severity === "critical") return { label: "Critical", color: "#DC2626" };
   if (issue.severity === "high") return { label: "High", color: "#F97316" };
   if (issue.severity === "medium") return { label: "Medium", color: "#EAB308" };
@@ -29,8 +29,8 @@ const LEGEND = [
   { label: "Critical", color: "#DC2626" },
   { label: "High", color: "#F97316" },
   { label: "Medium", color: "#EAB308" },
-  { label: "Under review", color: "#0EA5E9" },
-  { label: "Resolved", color: "#16A34A" },
+  { label: "Under Review", color: "#0EA5E9" },
+  { label: "Completed", color: "#16A34A" },
 ];
 
 export function BaseMap() {

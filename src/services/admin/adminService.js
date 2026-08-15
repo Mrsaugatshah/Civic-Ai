@@ -7,6 +7,9 @@ async function api(path,options={}){const multipart=options.body instanceof Form
 function severity(priority){return priority>=85?"critical":priority>=70?"high":priority>=45?"medium":"low";}
 function issue(r){return{...r,severity:severity(r.priority||0),reportCount:1,location:r.address||r.location,legitimacy:{score:null,legit:0,fake:0,total:0},aiConfidence:{classification:Math.round((r.aiConfidence||0)*100),severity:Math.round((r.aiConfidence||0)*100),department:Math.round((r.aiConfidence||0)*100)},explanation:r.aiSummary,activity:r.activity||[]};}
 async function reports(query=""){return (await api(`/reports?limit=100${query}`)).map(issue);}
+export async function getAllReports(){return reports();}
+export async function deleteReport(id){return api(`/reports/${encodeURIComponent(id)}`,{method:"DELETE"});}
+export async function rejectAndRemoveReport(id){return api(`/reports/${encodeURIComponent(id)}/reject`,{method:"POST",body:JSON.stringify({})});}
 export async function getIssue(id){return issue(await api(`/reports/${encodeURIComponent(id)}`));}
 export async function getIssueActivity(id){return (await getIssue(id)).activity;}
 export async function getDepartmentIssues(department){return reports(`&department=${encodeURIComponent(department)}`);}

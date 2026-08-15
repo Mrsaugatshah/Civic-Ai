@@ -65,6 +65,51 @@
     --ring: 221 83% 60%;
   }
 
+  [data-theme="warm"] {
+    --background: 40 33% 97%;
+    --foreground: 25 24% 16%;
+    --card: 40 40% 99%;
+    --card-foreground: 25 24% 16%;
+    --popover: 40 40% 99%;
+    --popover-foreground: 25 24% 16%;
+    --secondary: 38 26% 93%;
+    --secondary-foreground: 25 24% 16%;
+    --muted: 38 26% 93%;
+    --muted-foreground: 25 12% 42%;
+    --accent: 38 35% 91%;
+    --accent-foreground: 25 24% 16%;
+    --border: 35 22% 85%;
+    --input: 35 22% 85%;
+  }
+
+  [data-theme="gray"] {
+    --background: 220 14% 96%;
+    --foreground: 222 20% 16%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 20% 16%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 20% 16%;
+    --secondary: 220 13% 91%;
+    --secondary-foreground: 222 20% 16%;
+    --muted: 220 13% 91%;
+    --muted-foreground: 220 9% 40%;
+    --accent: 220 16% 89%;
+    --accent-foreground: 222 20% 16%;
+    --border: 220 13% 83%;
+    --input: 220 13% 83%;
+  }
+
+  [data-theme="dark"] .text-success-foreground,
+  .dark .text-success-foreground { color: #86efac; }
+  [data-theme="dark"] .text-warning-foreground,
+  .dark .text-warning-foreground { color: #fcd34d; }
+  [data-theme="dark"] .text-error-foreground,
+  .dark .text-error-foreground { color: #fca5a5; }
+  [data-theme="dark"] .text-info-foreground,
+  .dark .text-info-foreground { color: #7dd3fc; }
+  [data-theme="dark"] .text-ai-foreground,
+  .dark .text-ai-foreground { color: #c4b5fd; }
+
   * {
     border-color: hsl(var(--border));
   }
@@ -177,6 +222,20 @@
     transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 200ms ease,
       border-color 200ms ease;
   }
+
+  .civic-card {
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    border-radius: 0.875rem;
+    box-shadow: 0 1px 2px rgb(15 23 42 / 0.06);
+  }
+
+  [data-theme="dark"] .bg-blue-50,
+  .dark .bg-blue-50 { background-color: rgb(30 64 175 / 0.28); }
+  [data-theme="dark"] .text-blue-800,
+  .dark .text-blue-800 { color: #bfdbfe; }
+  [data-theme="dark"] .border-blue-200,
+  .dark .border-blue-200 { border-color: rgb(96 165 250 / 0.55); }
   .card-lift:hover {
     transform: translateY(-2px);
     box-shadow: 0 2px 4px 0 rgb(15 23 42 / 0.05), 0 16px 40px -16px rgb(15 23 42 / 0.18);

@@ -13,6 +13,7 @@ import {
   addInternalNote, uploadResolutionImage, markIssueResolved,
   ISSUE_STATUSES, DEPARTMENTS, allowedTransitions,
 } from "@/services/admin/adminService";
+import { getCommunityConfirmation } from "@/services/reports/reportsService";
 
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { ResolutionUpload } from "@/components/admin/issue/ResolutionUpload";
@@ -76,6 +77,7 @@ export function AdminIssueDetail() {
 
   const issueAsync = useAsync(() => getIssue(id), [id]);
   const activityAsync = useAsync(() => getIssueActivity(id), [id]);
+  const communityAsync = useAsync(() => getCommunityConfirmation(id), [id]);
 
   const [deptSaving, setDeptSaving] = useState(false);
   const [pendingStatus, setPendingStatus] = useState(null); // status key awaiting confirmation
@@ -162,6 +164,16 @@ export function AdminIssueDetail() {
     } finally {
       setResolving(false);
     }
+  };
+
+  const handleNextAction = () => {
+    if (!issue) return;
+    if (issue.status === "in_progress") {
+      handleMarkResolved();
+      return;
+    }
+    const next = allowedTransitions(issue.status).find((status) => status !== "rejected");
+    if (next) setPendingStatus(next);
   };
 
   if (issueAsync.error) {
@@ -354,23 +366,16 @@ export function AdminIssueDetail() {
                   <CardTitle className="text-base">Status</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2 pt-0">
-                  <p className="text-xs text-muted-foreground">Current status: <span className="font-medium text-foreground">{statusLabel(issue.status)}</span></p>
-                  <Select value={issue.status} onValueChange={setPendingStatus} disabled={statusSaving}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Change status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {ISSUE_STATUSES.filter((s) => allowedTransitions(issue.status).includes(s.key)).map((s) => (
-                        <SelectItem key={s.key} value={s.key}>{s.label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <p className="text-[11px] text-muted-foreground">
-                    {allowedTransitions(issue.status).length === 0
-                      ? "This issue has no further status changes available."
-                      : `Allowed next: ${allowedTransitions(issue.status).map(statusLabel).join(" → ")}`}
-                  </p>
+                  <p className="text-xs text-muted-foreground">Current status</p>
+                  <StatusBadge status={issue.status} />
+                  {allowedTransitions(issue.status).length > 0 && <Button className="mt-2 w-full" onClick={handleNextAction} disabled={statusSaving || resolving}>{resolving && <Loader2 size={14} className="animate-spin" />}{issue.status === "submitted" ? "Start Review" : issue.status === "under_review" ? "Continue Review" : issue.status === "in_progress" ? "Mark Completed" : "Continue Workflow"}</Button>}
+                  {allowedTransitions(issue.status).length === 0 && <p className="text-[11px] text-muted-foreground">No further status changes are available.</p>}
                 </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="pb-2"><CardTitle className="text-base">Community Verification</CardTitle></CardHeader>
+                <CardContent className="space-y-2 pt-0">{communityAsync.loading ? <Skeleton className="h-8 w-full" /> : <><p className="text-sm text-foreground">{communityAsync.data?.confirmed ?? 0} Agree <span className="text-muted-foreground">·</span> {communityAsync.data?.rejected ?? 0} Disagree</p><p className="text-xs text-muted-foreground">Community feedback helps prioritize public reports.</p></>}</CardContent>
               </Card>
 
               <Card>
@@ -426,12 +431,13 @@ export function AdminIssueDetail() {
                   ) : (
                     <>
                       <Textarea
-                        placeholder="Resolution note (e.g. what was fixed)…"
+                        placeholder="Resolution note (optional)…"
                         value={resolutionNote}
                         onChange={(e) => setResolutionNote(e.target.value)}
                         rows={2}
                         disabled={resolving}
                       />
+                      <p className="text-[11px] text-muted-foreground">Resolution note and image evidence are optional where supported.</p>
                       <Button className="w-full" onClick={handleMarkResolved} disabled={resolving}>
                         {resolving && <Loader2 size={14} className="animate-spin" />}
                         Mark as Resolved

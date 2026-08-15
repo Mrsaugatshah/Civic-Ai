@@ -1,4 +1,4 @@
-import { FileText, AlertCircle, Flame, Clock, CheckCircle2, Timer } from "lucide-react";
+import { FileText, AlertCircle, Flame, Clock, CheckCircle2 } from "lucide-react";
 
 import { StatCard } from "@/components/civic/StatCard";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -38,13 +38,12 @@ export function CityOverview({ data, loading, error, onRetry }) {
           ))}
         </div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           <StatCard icon={FileText} label="Total Reports" value={data.stats.totalReports.toLocaleString()} tone="primary" />
-          <StatCard icon={AlertCircle} label="Active Issues" value={data.stats.activeIssues} tone="info" />
+          <StatCard icon={AlertCircle} label="Active" value={data.stats.activeIssues} tone="info" />
           <StatCard icon={Flame} label="Critical" value={data.stats.criticalIssues} tone="error" />
-          <StatCard icon={Timer} label="In Progress" value={data.stats.inProgress} tone="warning" />
-          <StatCard icon={CheckCircle2} label="Resolved" value={data.stats.resolved.toLocaleString()} tone="success" />
-          <StatCard icon={Clock} label="Avg. Resolution" value={`${data.stats.avgResolutionDays}d`} tone="ai" />
+          <StatCard icon={Clock} label="In Progress" value={data.stats.inProgress} tone="warning" />
+          <StatCard icon={CheckCircle2} label="Completed" value={data.stats.resolved.toLocaleString()} tone="success" />
         </div>
       )}
     </section>

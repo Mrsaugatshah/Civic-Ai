@@ -13,13 +13,13 @@ import { cn } from "@/lib/utils";
 
 export const REPORT_STATUS_OPTIONS = [
   { key: "all", label: "All" },
-  { key: "submitted", label: "Submitted" },
+  { key: "submitted", label: "Received" },
   { key: "under_review", label: "Under Review" },
   { key: "verified", label: "Verified" },
   { key: "assigned", label: "Assigned" },
-  { key: "in_progress", label: "In Progress" },
-  { key: "resolved", label: "Resolved" },
-  { key: "closed", label: "Closed" },
+  { key: "in_progress", label: "Work In Progress" },
+  { key: "resolved", label: "Completed" },
+  { key: "closed", label: "Completed" },
 ];
 
 export const REPORT_SORT_OPTIONS = [

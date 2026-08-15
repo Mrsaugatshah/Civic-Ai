@@ -9,18 +9,18 @@ const ITEMS = [
   { label: "High", color: SEVERITY_MARKER_COLORS.high, hint: "priority 70–84" },
   { label: "Medium", color: SEVERITY_MARKER_COLORS.medium, hint: "priority 50–69" },
   { label: "Low", color: SEVERITY_MARKER_COLORS.low, hint: "priority < 50" },
-  { label: "Resolved", color: "#16A34A", hint: "completed / closed" },
+  { label: "Completed", color: "#16A34A", hint: "completed / closed" },
 ];
 
 export function MapLegend({ className, mode }) {
   const [open, setOpen] = useState(true);
   const items = mode === "progress"
     ? [
-        { label: "Resolved", color: "#16A34A" },
-        { label: "In progress", color: "#0EA5E9" },
-        { label: "Under review", color: "#F59E0B" },
+        { label: "Completed", color: "#16A34A" },
+        { label: "Work In Progress", color: "#0EA5E9" },
+        { label: "Under Review", color: "#F59E0B" },
         { label: "Assigned", color: "#8B5CF6" },
-        { label: "Reported", color: "#94A3B8" },
+        { label: "Received", color: "#94A3B8" },
       ]
     : ITEMS;
 

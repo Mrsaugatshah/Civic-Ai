@@ -1,4 +1,5 @@
-import { Landmark, Globe, Send, Mail, Code2, MessageCircle } from "lucide-react";
+import { Landmark } from "lucide-react";
+import { Link } from "react-router-dom";
 
 import { Logo } from "./Navbar";
 import { Badge } from "@/components/ui/badge";
@@ -6,24 +7,16 @@ import { Badge } from "@/components/ui/badge";
 const COLUMNS = [
   {
     title: "Platform",
-    links: ["Report an issue", "City map", "Priority queue", "AI analysis"],
+    links: [["Report an issue", "/report"], ["City map", "/map"], ["Priority queue", "/admin/dashboard#queue"], ["AI analysis", "/admin/dashboard#insights"]],
   },
   {
     title: "Resources",
-    links: ["How it works", "For authorities", "Data & privacy", "Status"],
+    links: [["How it works", "/#how-it-works"], ["For authorities", "/login"], ["Data & privacy", "/#faq"], ["Status", "/"]],
   },
   {
     title: "Community",
-    links: ["About", "Blog", "Contact", "Careers"],
+    links: [["Community issues", "/issues"], ["Report an issue", "/report"], ["Contact", "mailto:civicai@example.com"]],
   },
-];
-
-const SOCIALS = [
-  { icon: Code2, label: "Open source" },
-  { icon: MessageCircle, label: "Community" },
-  { icon: Globe, label: "Website" },
-  { icon: Send, label: "Feedback" },
-  { icon: Mail, label: "Email" },
 ];
 
 export function Footer() {
@@ -43,32 +36,15 @@ export function Footer() {
                 All systems operational
               </Badge>
             </div>
-            <div className="mt-5 flex items-center gap-2">
-              {SOCIALS.map(({ icon: Icon, label }) => (
-                <a
-                  key={label}
-                  href="#"
-                  aria-label={label}
-                  className="flex h-9 w-9 items-center justify-center rounded-lg border text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
-                >
-                  <Icon size={16} />
-                </a>
-              ))}
-            </div>
           </div>
 
           {COLUMNS.map((col) => (
             <div key={col.title}>
               <p className="text-sm font-semibold text-foreground">{col.title}</p>
               <ul className="mt-4 space-y-2.5">
-                {col.links.map((link) => (
-                  <li key={link}>
-                    <a
-                      href="#"
-                      className="text-sm text-muted-foreground transition-colors hover:text-primary"
-                    >
-                      {link}
-                    </a>
+                {col.links.map(([label, href]) => (
+                  <li key={label}>
+                    {href.startsWith("/") ? <Link to={href} className="text-sm text-muted-foreground transition-colors hover:text-primary">{label}</Link> : <a href={href} className="text-sm text-muted-foreground transition-colors hover:text-primary">{label}</a>}
                   </li>
                 ))}
               </ul>

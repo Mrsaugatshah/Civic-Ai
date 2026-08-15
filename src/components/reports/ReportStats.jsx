@@ -6,8 +6,8 @@ import { cn } from "@/lib/utils";
 
 const ITEMS = [
   { key: "total", label: "Total Reports" },
-  { key: "inProgress", label: "In Progress" },
-  { key: "resolved", label: "Resolved" },
+  { key: "inProgress", label: "Work In Progress" },
+  { key: "resolved", label: "Completed" },
   { key: "awaiting", label: "Awaiting Review" },
 ];
 

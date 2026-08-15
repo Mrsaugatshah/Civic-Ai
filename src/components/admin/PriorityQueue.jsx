@@ -1,133 +1,31 @@
-import { useState } from "react";
-
+import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+import { Search, X } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { SeverityBadge } from "@/components/civic/SeverityBadge";
 import { StatusBadge } from "@/components/civic/StatusBadge";
 import { priorityTone } from "@/components/civic/PriorityMeter";
-import { AIAnalysisCard } from "@/components/report/ai/AIAnalysisCard";
 import { SectionError } from "@/components/dashboard/SectionError";
-import { cn } from "@/lib/utils";
 
-const PAGE_SIZE = 8;
+const PAGE_SIZE = 10;
+const EMPTY_REPORTS = [];
 
-export function PriorityQueue({ data, loading, error, onRetry, onOpenIssue }) {
+export function PriorityQueue({ data, loading, error, onRetry }) {
   const [visible, setVisible] = useState(PAGE_SIZE);
-
-  return (
-    <section id="queue" className="scroll-mt-24">
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="font-display text-xl font-bold text-foreground">Priority Queue</h2>
-        <span className="text-sm text-muted-foreground">{data ? `${data.length} active` : ""}</span>
-      </div>
-
-      {error ? (
-        <SectionError title="Couldn't load priority queue" onRetry={onRetry} />
-      ) : loading ? (
-        <Skeleton className="h-96 rounded-lg" />
-      ) : data.length === 0 ? (
-        <Card>
-          <CardContent className="p-8 text-center">
-            <p className="font-medium text-foreground">No reports awaiting review</p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              New reports submitted by citizens will appear here automatically.
-            </p>
-          </CardContent>
-        </Card>
-      ) : (
-        <Card className="overflow-hidden">
-          {/* Desktop table */}
-          <div className="hidden md:block">
-            <div className="grid grid-cols-[2.5rem_1fr_7rem_7rem_8rem_9rem_8rem] gap-3 border-b bg-muted/40 px-5 py-3 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              <span>#</span>
-              <span>Issue</span>
-              <span>Severity</span>
-              <span>Priority</span>
-              <span>Legitimacy</span>
-              <span>Department</span>
-              <span>Status</span>
-            </div>
-            <div className="divide-y">
-              {data.slice(0, visible).map((issue, i) => (
-                <button
-                  key={issue.id}
-                  onClick={() => onOpenIssue?.(issue)}
-                  className={cn(
-                    "grid w-full grid-cols-[2.5rem_1fr_7rem_7rem_8rem_9rem_8rem] items-center gap-3 px-5 py-3.5 text-left transition-colors hover:bg-accent",
-                    i === 0 && "bg-ai/[0.04]"
-                  )}
-                >
-                  <span className={cn("font-display text-sm", i === 0 ? "font-bold text-ai" : "text-muted-foreground")}>
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span className="min-w-0">
-                    <p className="truncate text-sm font-medium text-foreground">{issue.title}</p>
-                    <p className="truncate text-xs text-muted-foreground">{issue.location}</p>
-                  </span>
-                  <SeverityBadge severity={issue.severity} className="w-fit px-2 py-0.5 text-[11px]" />
-                  <span className={cn("font-display text-sm font-semibold", priorityTone(issue.priority))}>
-                    {issue.priority}
-                    <span className="text-xs font-normal text-muted-foreground">/100</span>
-                  </span>
-                  <span className="text-xs text-muted-foreground">
-                    <span className={cn(
-                      "block font-semibold",
-                      issue.legitimacy.score == null
-                        ? "text-muted-foreground"
-                        : issue.legitimacy.score >= 67
-                          ? "text-success-foreground"
-                          : issue.legitimacy.score <= 33
-                            ? "text-error-foreground"
-                            : "text-warning-foreground"
-                    )}>
-                      {issue.legitimacy.score == null ? "Unverified" : `${issue.legitimacy.score}% legit`}
-                    </span>
-                    <span>{issue.legitimacy.total ? `${issue.legitimacy.total} votes` : "No community votes"}</span>
-                  </span>
-                  <span className="truncate text-xs text-muted-foreground">{issue.department}</span>
-                  <StatusBadge status={issue.status} className="w-fit px-2 py-0.5 text-[11px]" />
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Mobile cards */}
-          <div className="divide-y md:hidden">
-            {data.slice(0, visible).map((issue, i) => (
-              <button
-                key={issue.id}
-                onClick={() => onOpenIssue?.(issue)}
-                className={cn("flex w-full flex-col gap-2 px-4 py-4 text-left", i === 0 && "bg-ai/[0.04]")}
-              >
-                <div className="flex items-start justify-between gap-2">
-                  <span className="min-w-0">
-                    <p className="truncate text-sm font-medium text-foreground">
-                      #{i + 1} {issue.title}
-                    </p>
-                    <p className="truncate text-xs text-muted-foreground">{issue.location}</p>
-                  </span>
-                  <StatusBadge status={issue.status} className="shrink-0 px-2 py-0.5 text-[11px]" />
-                </div>
-                <AIAnalysisCard analysis={issue} />
-                <p className="text-xs text-muted-foreground">
-                  {issue.legitimacy.total
-                    ? `Community legitimacy: ${issue.legitimacy.score == null ? "Unverified" : `${issue.legitimacy.score}%`} · ${issue.legitimacy.legit} legit / ${issue.legitimacy.fake} fake`
-                    : "Community verification unavailable"}
-                </p>
-              </button>
-            ))}
-          </div>
-
-          {visible < data.length && (
-            <CardContent className="border-t p-3">
-              <Button variant="ghost" size="sm" className="w-full" onClick={() => setVisible((v) => v + PAGE_SIZE)}>
-                Show more ({data.length - visible} remaining)
-              </Button>
-            </CardContent>
-          )}
-        </Card>
-      )}
-    </section>
-  );
+  const [filters, setFilters] = useState({ search: "", category: "all", status: "all", severity: "all", department: "all" });
+  const values = data ?? EMPTY_REPORTS;
+  const options = useMemo(() => ({
+    categories: [...new Set(values.map((item) => item.categoryLabel || item.category).filter(Boolean))].sort(),
+    departments: [...new Set(values.map((item) => item.department).filter(Boolean))].sort(),
+  }), [values]);
+  const filtered = useMemo(() => values.filter((item) => {
+    const search = filters.search.trim().toLowerCase();
+    const haystack = [item.title, item.location, item.categoryLabel, item.category, item.department].filter(Boolean).join(" ").toLowerCase();
+    return (!search || haystack.includes(search)) && (filters.category === "all" || (item.categoryLabel || item.category) === filters.category) && (filters.status === "all" || item.status === filters.status) && (filters.severity === "all" || String(item.severity || "").toLowerCase() === filters.severity) && (filters.department === "all" || item.department === filters.department);
+  }), [filters, values]);
+  const setFilter = (key, value) => { setFilters((current) => ({ ...current, [key]: value })); setVisible(PAGE_SIZE); };
+  const reset = () => { setFilters({ search: "", category: "all", status: "all", severity: "all", department: "all" }); setVisible(PAGE_SIZE); };
+  const active = Object.values(filters).some((value) => value !== "all" && value !== "");
+  return <section id="queue" className="scroll-mt-24"><div className="mb-4 flex flex-wrap items-end justify-between gap-3"><div><h2 className="font-display text-xl font-bold text-foreground">Priority Queue</h2><p className="mt-1 text-sm text-muted-foreground">Reports needing the next review or action.</p></div><span className="text-sm text-muted-foreground">{data ? `${filtered.length} of ${data.length} active` : ""}</span></div>{error ? <SectionError title="Couldn't load priority queue" onRetry={onRetry} /> : loading ? <Skeleton className="h-96 rounded-xl" /> : !data?.length ? <Card><CardContent className="p-6 text-sm text-muted-foreground">No reports need attention right now.</CardContent></Card> : <><div className="mb-4 space-y-2"><div className="relative"><Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" /><input value={filters.search} onChange={(event) => setFilter("search", event.target.value)} placeholder="Search reports…" aria-label="Search priority queue" className="h-10 w-full rounded-md border border-input bg-background pl-9 pr-3 text-sm outline-none focus:ring-2 focus:ring-ring" /></div><div className="flex flex-wrap gap-2">{[["category", "All categories", options.categories], ["status", "All statuses", [["submitted", "Received"], ["pending", "Pending"], ["under_review", "Under Review"], ["in_progress", "Work In Progress"], ["resolved", "Completed"], ["rejected", "Rejected"]]], ["severity", "All severities", [["low", "Low"], ["medium", "Medium"], ["high", "High"], ["critical", "Critical"]]], ["department", "All departments", options.departments]].map(([key, allLabel, list]) => <select key={key} value={filters[key]} onChange={(event) => setFilter(key, event.target.value)} aria-label={allLabel} className="h-9 min-w-36 rounded-md border border-input bg-background px-2.5 text-xs text-foreground"><option value="all">{allLabel}</option>{list.map((item) => { const value = Array.isArray(item) ? item[0] : item; const label = Array.isArray(item) ? item[1] : item; return <option key={value} value={value}>{label}</option>; })}</select>)}{active && <Button type="button" variant="ghost" size="sm" className="h-9 gap-1 text-xs" onClick={reset}><X size={14} />Clear filters</Button>}</div></div>{filtered.length === 0 ? <Card><CardContent className="p-6 text-sm text-muted-foreground">No reports match these filters. Try changing or clearing your filters.</CardContent></Card> : <Card className="civic-card overflow-hidden"><div className="overflow-x-auto"><table className="w-full min-w-[760px] text-sm"><thead className="border-b bg-muted/40 text-left text-xs uppercase tracking-wide text-muted-foreground"><tr><th className="px-4 py-3 font-medium">Issue</th><th className="px-4 py-3 font-medium">Category</th><th className="px-4 py-3 font-medium">Priority</th><th className="px-4 py-3 font-medium">Community</th><th className="px-4 py-3 font-medium">Department</th><th className="px-4 py-3 font-medium">Status</th></tr></thead><tbody className="divide-y">{filtered.slice(0, visible).map((issue) => <tr key={issue.id} className="transition-colors hover:bg-accent/50"><td className="max-w-[240px] px-4 py-3"><Link to={`/admin/issues/${issue.id}`} className="block truncate font-medium text-foreground hover:text-primary">{issue.title}</Link><span className="block truncate text-xs text-muted-foreground">{issue.location}</span></td><td className="px-4 py-3 text-xs text-muted-foreground">{issue.categoryLabel || issue.category}</td><td className={`px-4 py-3 font-display font-semibold ${priorityTone(issue.priority)}`}>{issue.priority == null ? "—" : <>{issue.priority}<span className="text-xs font-normal text-muted-foreground">/100</span></>}</td><td className="px-4 py-3 text-xs text-muted-foreground">{issue.legitimacy?.total ? `${issue.legitimacy.legit} Agree · ${issue.legitimacy.fake} Disagree` : "No votes"}</td><td className="max-w-[170px] truncate px-4 py-3 text-xs text-muted-foreground">{issue.department || "—"}</td><td className="px-4 py-3"><StatusBadge status={issue.status} className="whitespace-nowrap px-2 py-0.5 text-[10px]" /></td></tr>)}</tbody></table></div>{visible < filtered.length && <CardContent className="border-t p-3"><Button variant="ghost" size="sm" className="w-full" onClick={() => setVisible((value) => value + PAGE_SIZE)}>Show more ({filtered.length - visible} remaining)</Button></CardContent>}</Card>}</>}</section>;
 }

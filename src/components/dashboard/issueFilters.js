@@ -5,8 +5,8 @@ export const ISSUE_FILTERS = [
   { key: "critical", label: "Critical", icon: Flame },
   { key: "high", label: "High", icon: AlertTriangle },
   { key: "in_progress", label: "In progress", icon: Clock },
-  { key: "under_review", label: "Under review", icon: Eye },
-  { key: "resolved", label: "Resolved", icon: CheckCircle2 },
+  { key: "under_review", label: "Under Review", icon: Eye },
+  { key: "resolved", label: "Completed", icon: CheckCircle2 },
 ];
 
 export const ISSUE_SORTS = [

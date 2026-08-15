@@ -12,6 +12,10 @@ import { ResetPassword } from "@/pages/auth/ResetPassword";
 import { VerifyEmail } from "@/pages/auth/VerifyEmail";
 import GuestLanding from "@/pages/GuestLanding";
 import GuestTrack from "@/pages/GuestTrack";
+import { Profile } from "@/pages/Profile";
+import { Settings } from "@/pages/Settings";
+import { Help } from "@/pages/Help";
+import { AllReports } from "@/pages/admin/AllReports";
 
 // Route-level code splitting: heavier pages (map, dashboards, charts, report
 // flow) load on demand so the initial landing + auth chunk stays small.
@@ -111,6 +115,9 @@ const routeElements = (
     <Route path="/verify-email" element={<VerifyEmail />} />
     <Route path="/guest" element={<GuestLanding />} />
     <Route path="/track" element={<GuestTrack />} />
+    <Route path="/profile" element={<RoleGuard allowed={["citizen", "authority", "admin"]}><Profile /></RoleGuard>} />
+    <Route path="/settings" element={<RoleGuard allowed={["citizen", "authority", "admin"]}><Settings /></RoleGuard>} />
+    <Route path="/help" element={<RoleGuard allowed={["citizen", "authority", "admin"]}><Help /></RoleGuard>} />
     <Route path="/design-system" element={<DesignSystem />} />
     <Route
       path="/report"
@@ -219,6 +226,7 @@ const routeElements = (
         </RoleGuard>
       }
     />
+    <Route path="/admin/reports" element={<RoleGuard allowed={["admin"]}><AllReports /></RoleGuard>} />
     <Route
       path="/admin/issues/:id"
       element={

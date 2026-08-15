@@ -59,18 +59,18 @@ export function AdminDashboard() {
           error={overview.error}
           onRetry={overview.reload}
         />
-        <CriticalIssues
-          data={critical.data}
-          loading={critical.loading}
-          error={critical.error}
-          onRetry={critical.reload}
-          onOpenIssue={openIssue}
-        />
         <PriorityQueue
           data={queue.data}
           loading={queue.loading}
           error={queue.error}
           onRetry={queue.reload}
+          onOpenIssue={openIssue}
+        />
+        <CriticalIssues
+          data={critical.data}
+          loading={critical.loading}
+          error={critical.error}
+          onRetry={critical.reload}
           onOpenIssue={openIssue}
         />
         <Categories />
