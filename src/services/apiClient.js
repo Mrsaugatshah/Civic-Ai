@@ -31,7 +31,7 @@ export async function apiFetch(path, options = {}) {
 
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
-    throw new ApiError(data.code || "error", data.error || "Something went wrong. Please try again.");
+    throw new ApiError(data.error?.code || data.code || "error", data.error?.message || data.error || "Something went wrong. Please try again.");
   }
   return data;
 }

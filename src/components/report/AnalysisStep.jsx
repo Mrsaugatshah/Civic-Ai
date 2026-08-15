@@ -1,8 +1,25 @@
-import { Sparkles } from "lucide-react";
+import { Sparkles, Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { Card, CardContent } from "@/components/ui/card";
 import { CategorySelector } from "./CategorySelector";
+import { analyzeDraft } from "@/services/report/reportService";
 
-export function AnalysisStep({ edits, setEdits }) {
+export function AnalysisStep({ input, edits, setEdits }) {
   const category=edits.category;
-  return <div className="space-y-4"><Card><CardContent className="p-6"><div className="flex gap-3"><Sparkles className="mt-0.5 text-ai" size={20}/><div><h2 className="font-display font-semibold">Backend AI analysis</h2><p className="mt-1 text-sm text-muted-foreground">Choose the category that best describes the issue. After submission, CivicAI’s backend analyzes the report, validates the provider response, and stores recommendations separately from your selection.</p></div></div></CardContent></Card><Card><CardContent className="p-6"><CategorySelector value={category} onChange={(key)=>setEdits({...edits,category:key})}/></CardContent></Card></div>;
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState(null);
+  useEffect(() => {
+    let active = true;
+    if (!input?.description || input.description.trim().length < 10) return undefined;
+    setLoading(true);
+    analyzeDraft({ description: input.description, category: category || "other", location: input.location })
+      .then((data) => { if (active) { setResult(data); if (!edits.category) setEdits((current) => ({ ...current, category: data.category })); } })
+      .catch((error) => { if (active) { setResult(null); toast.error(error.message); } })
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+    // Re-run only when the citizen's description changes; manual category edits must not trigger a new request.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [input?.description]);
+  return <div className="space-y-4"><Card><CardContent className="p-6"><div className="flex gap-3"><Sparkles className="mt-0.5 text-ai" size={20}/><div><h2 className="font-display font-semibold">AI category suggestion</h2><p className="mt-1 text-sm text-muted-foreground">AI suggests a category from your description. You can always change it manually before submitting.</p>{loading&&<p className="mt-3 flex items-center gap-2 text-xs text-muted-foreground"><Loader2 size={13} className="animate-spin"/>Analyzing your report…</p>}{result&&!loading&&<p className="mt-3 text-xs text-muted-foreground">Suggested department: <span className="font-medium text-foreground">{result.department}</span> · {Math.round(result.confidence*100)}% confidence</p>}</div></div></CardContent></Card><Card><CardContent className="p-6"><CategorySelector value={category} onChange={(key)=>setEdits({...edits,category:key})}/></CardContent></Card></div>;
 }

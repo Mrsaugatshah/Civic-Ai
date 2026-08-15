@@ -9,7 +9,6 @@ import { Login } from "@/pages/auth/Login";
 import { Register } from "@/pages/auth/Register";
 import { ForgotPassword } from "@/pages/auth/ForgotPassword";
 import { ResetPassword } from "@/pages/auth/ResetPassword";
-import { VerifyEmail } from "@/pages/auth/VerifyEmail";
 
 // Route-level code splitting: heavier pages (map, dashboards, charts, report
 // flow) load on demand so the initial landing + auth chunk stays small.
@@ -106,7 +105,6 @@ const routeElements = (
     <Route path="/register" element={<Register />} />
     <Route path="/forgot-password" element={<ForgotPassword />} />
     <Route path="/reset-password" element={<ResetPassword />} />
-    <Route path="/verify-email" element={<VerifyEmail />} />
     <Route path="/design-system" element={<DesignSystem />} />
     <Route
       path="/report"
@@ -128,6 +126,14 @@ const routeElements = (
     />
     <Route
       path="/reports"
+      element={
+        <RoleGuard allowed={["citizen"]}>
+          <MyReports />
+        </RoleGuard>
+      }
+    />
+    <Route
+      path="/issues"
       element={
         <RoleGuard allowed={["citizen"]}>
           <MyReports />

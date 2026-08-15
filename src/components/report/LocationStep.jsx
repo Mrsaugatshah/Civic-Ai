@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { BaseMap } from "@/components/dashboard/CivicMap";
 import { REPORT_PLACES, placeNameForCoords } from "@/services/report/reportService";
+import { getCurrentLocation } from "@/services/map/geolocation";
 
 const W = 800;
 const H = 500;
@@ -136,7 +137,6 @@ export function LocationStep({ value, onChange, error, disabled }) {
       const x = drag.pinX + (e.clientX - drag.startX) / zoom;
       const y = drag.pinY + (e.clientY - drag.startY) / zoom;
       applyPin(x, y);
-      onChange({ name: value?.name || "Current GPS location", mapX: Math.round((clamp(x,0,W)/W)*100), mapY: Math.round((clamp(y,0,H)/H)*100), latitude: lat, longitude: lng, confirmed: true });
       return;
     }
     if (
@@ -154,42 +154,21 @@ export function LocationStep({ value, onChange, error, disabled }) {
     applyPin((place.mapX / 100) * W, (place.mapY / 100) * H);
   };
 
-  const useMyLocation = () => {
-    if (!navigator.geolocation) {
-      fallbackLocation();
-      return;
-    }
+  const useMyLocation = async () => {
     setLocating(true);
-    let settled = false;
-    const once = (fn) => () => {
-      if (settled) return;
-      settled = true;
-      fn();
-    };
-    const onSuccess = once((pos) => {
-      const lng = pos.coords.longitude;
-      const lat = pos.coords.latitude;
+    try {
+      const { longitude: lng, latitude: lat, accuracy } = await getCurrentLocation();
       const x = ((lng - 84.34) / 0.18) * W;
       const y = ((27.78 - lat) / 0.12) * H;
       applyPin(x, y);
+      onChange({ name: `Current location (${lat.toFixed(5)}, ${lng.toFixed(5)})`, latitude: lat, longitude: lng, accuracy, confirmed: true });
       setSimulated(false);
-      setLocating(false);
       toast.success("Location updated to your current position.");
-    });
-    const onError = once(() => fallbackLocation());
-    try {
-      navigator.geolocation.getCurrentPosition(onSuccess, onError, { timeout: 6000 });
-      // Some browsers hang instead of resolving permission — fall back anyway.
-      setTimeout(once(() => fallbackLocation()), 5000);
-    } catch {
-      fallbackLocation();
+    } catch (locationError) {
+      toast.error(locationError.message);
+    } finally {
+      setLocating(false);
     }
-  };
-
-  const fallbackLocation = () => {
-    setSimulated(false);
-    setLocating(false);
-    toast.error("Location sharing is unavailable. Search for an area or drop the pin manually.");
   };
 
   const matches = query

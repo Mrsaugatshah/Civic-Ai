@@ -30,16 +30,13 @@ export function ReportMedia({ report }) {
             <Camera size={13} className="text-primary" aria-hidden />
             Original Photos
           </p>
-          <div className="mt-2 flex gap-2">
-            {Array.from({ length: Math.max(report.media?.photos ?? 1, 1) }).map((_, i) => (
-              <div
-                key={i}
-                className="flex h-16 w-16 items-center justify-center rounded-md border bg-accent/40"
-                aria-hidden
-              >
-                <Icon size={20} className={meta.tone} />
-              </div>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {(report.evidence || []).filter((item) => item.kind === "citizen").map((item) => (
+              <a key={item.id} href={item.url} target="_blank" rel="noreferrer" className="block h-16 w-16 overflow-hidden rounded-md border bg-accent/40">
+                <img src={item.url} alt={item.originalName || "Report evidence"} className="h-full w-full object-cover" />
+              </a>
             ))}
+            {!report.evidence?.some((item) => item.kind === "citizen") && <div className="flex h-16 w-16 items-center justify-center rounded-md border bg-accent/40" aria-label="No report image"><Icon size={20} className={meta.tone} /></div>}
           </div>
           <p className="mt-1.5 text-xs text-muted-foreground">
             {report.media?.photos ?? 1} image{report.media?.photos === 1 ? "" : "s"}

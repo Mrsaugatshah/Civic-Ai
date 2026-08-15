@@ -59,6 +59,16 @@ sql.exec(`
     entity_type TEXT NOT NULL, entity_id TEXT NOT NULL, metadata TEXT, created_at TEXT NOT NULL
   );
   CREATE INDEX IF NOT EXISTS idx_audit_entity_created ON audit_logs(entity_type, entity_id, created_at);
+  CREATE TABLE IF NOT EXISTS community_votes (
+    id TEXT PRIMARY KEY,
+    report_id TEXT NOT NULL REFERENCES reports(id) ON DELETE CASCADE,
+    user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    vote_type TEXT NOT NULL CHECK(vote_type IN ('confirm','reject')),
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE(report_id, user_id)
+  );
+  CREATE INDEX IF NOT EXISTS idx_community_votes_report ON community_votes(report_id, vote_type);
   CREATE TABLE IF NOT EXISTS notifications (
     id TEXT PRIMARY KEY, user_id TEXT NOT NULL, report_id TEXT REFERENCES reports(id) ON DELETE CASCADE,
     kind TEXT NOT NULL, title TEXT NOT NULL, body TEXT NOT NULL, read_at TEXT, created_at TEXT NOT NULL

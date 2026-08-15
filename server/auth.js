@@ -13,7 +13,6 @@ const RESET_TTL_MS = 15 * 60 * 1000;
 const SESSION_COOKIE = "civicai_session";
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const GENERIC_EMAIL_RESPONSE = "If an eligible account exists for that email, a message will arrive shortly.";
-const EMAIL_VERIFICATION_REQUIRED = String(process.env.EMAIL_VERIFICATION_REQUIRED ?? "true").toLowerCase() !== "false";
 
 const authLimiter = createRateLimiter({ windowMs: 15 * 60 * 1000, limit: 30 });
 const loginLimiter = createRateLimiter({ windowMs: 15 * 60 * 1000, limit: 10, key: (req) => `${req.ip}:${normalizeEmail(req.body?.email || "")}` });
@@ -90,7 +89,6 @@ authRouter.post("/login", loginLimiter, async (req, res, next) => {
     const user = userByEmail(email); const ok = user && ["password", "provisioned"].includes(user.provider) && await bcrypt.compare(password, user.password_hash);
     if (!ok) return res.status(401).json({ code: "invalid_credentials", error: "We couldn't sign you in with those details." });
     if (user.status === "disabled") return res.status(403).json({ code: "disabled", error: "This account is currently unavailable. Please contact support." });
-    if (EMAIL_VERIFICATION_REQUIRED && !user.email_verified) return res.status(403).json({ code: "unverified", error: "Please verify your email before signing in." });
     if (user.role === "authority" && user.status !== "active") return res.status(403).json({ code: "pending", error: "Your authority account is awaiting approval." });
     createSession(res, user.id, Boolean(req.body?.remember)); return res.json({ user: publicUser(user) });
   } catch (error) { next(error); }
@@ -107,12 +105,8 @@ authRouter.post("/register", async (req, res, next) => {
     if (req.body?.role !== "citizen") return res.status(403).json({ code: "invalid_role", error: "Self-registration is limited to citizen accounts." });
     if (userByEmail(email)) return res.status(409).json({ code: "email_in_use", error: "An account with this email already exists. Try signing in instead." });
     const now = Date.now(); userId = `u_${randomUUID()}`; const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
-    sql.prepare("INSERT INTO users (id,name,email,password_hash,role,phone,location,organization,department,status,email_verified,provider,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)").run(userId, name.trim(), email, passwordHash, "citizen", phone.trim(), String(location).trim().slice(0,120), "", "", "active", EMAIL_VERIFICATION_REQUIRED ? 0 : 1, "password", now, now);
-    if (!EMAIL_VERIFICATION_REQUIRED) return res.status(201).json({ ok: true, emailVerificationRequired: false, message: "Account created. You can sign in now." });
-    const verification = await createVerificationCode(userId);
-    try { await sendVerificationEmail({ to: email, code: verification.code }); }
-    catch (error) { sql.prepare("DELETE FROM users WHERE id = ?").run(userId); error.emailDelivery = true; throw error; }
-    return res.status(201).json({ ok: true, emailVerificationRequired: true, message: "Account created. Check your email to verify it." });
+    sql.prepare("INSERT INTO users (id,name,email,password_hash,role,phone,location,organization,department,status,email_verified,provider,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)").run(userId, name.trim(), email, passwordHash, "citizen", phone.trim(), String(location).trim().slice(0,120), "", "", "active", 1, "password", now, now);
+    return res.status(201).json({ ok: true, emailVerificationRequired: false, message: "Account created. You can sign in with your password." });
   } catch (error) { next(error); }
 });
 

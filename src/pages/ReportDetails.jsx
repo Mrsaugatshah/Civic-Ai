@@ -169,15 +169,13 @@ export function ReportDetails() {
               <div className="space-y-6">
                 <ReportMedia report={report} />
                 <ReportLocation report={report} />
-                {resolved && (
-                  <CommunityConfirmation
-                    reportId={report.id}
-                    data={communityAsync.data}
-                    loading={communityAsync.loading}
-                    onConfirm={handleConfirm}
-                    onSubmitFeedback={handleFeedback}
-                  />
-                )}
+                <CommunityConfirmation
+                  reportId={report.id}
+                  data={communityAsync.data}
+                  loading={communityAsync.loading}
+                  onConfirm={handleConfirm}
+                  onSubmitFeedback={handleFeedback}
+                />
               </div>
             </div>
           )

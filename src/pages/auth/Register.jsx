@@ -22,7 +22,6 @@ import { PasswordStrength } from "@/components/auth/PasswordStrength";
 import { RoleSelector } from "@/components/auth/RoleSelector";
 import { SubmitButton } from "@/components/auth/SubmitButton";
 import { ErrorMessage } from "@/components/auth/ErrorMessage";
-import { VerificationNotice } from "@/components/auth/VerificationNotice";
 
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -86,7 +85,7 @@ export function Register() {
     setPending(true);
     setFormError("");
     try {
-      const result = await authService.register({
+      await authService.register({
         name: form.name,
         email: form.email,
         password: form.password,
@@ -96,13 +95,8 @@ export function Register() {
         organization: form.organization,
         department: form.department,
       });
-      if (result.emailVerificationRequired === false) {
-        toast.success("Account created! You can sign in now.");
-        navigate("/login", { replace: true });
-      } else {
-        toast.success("Account created! Check your email to verify it.");
-        navigate("/verify-email", { state: { email: form.email.trim(), role } });
-      }
+      toast.success("Account created! You can sign in with your password.");
+      navigate("/login", { replace: true });
     } catch (error) {
       setFormError(
         authService.isOffline()
@@ -124,14 +118,6 @@ export function Register() {
           {formError && <ErrorMessage network={authService.isOffline()}>{formError}</ErrorMessage>}
 
           <RoleSelector value={role} onChange={setRole} error={errors.role} />
-
-          {role === "authority" && (
-            <VerificationNotice
-              tone="pending"
-              title="Account verification required"
-              description="Authority accounts may require verification before accessing management features. You'll be able to sign in once the CivicAI team approves your account."
-            />
-          )}
 
           {role === "authority" && (
             <div className="grid gap-4 sm:grid-cols-2">

@@ -33,6 +33,7 @@ import {
   submitReport,
   REPORT_PLACES,
 } from "@/services/report/reportService";
+import { getCurrentLocation } from "@/services/map/geolocation";
 
 let quickSeq = 0;
 
@@ -68,36 +69,18 @@ export function QuickReport() {
     }
   };
 
-  const useMyLocation = () => {
-    if (!navigator.geolocation) {
-      fallbackLocation();
-      return;
-    }
+  const useMyLocation = async () => {
     setLocating(true);
-    let settled = false;
-    const once = (fn) => () => {
-      if (settled) return;
-      settled = true;
-      fn();
-    };
-    const onSuccess = once(() => {
-      setLocation(REPORT_PLACES[0]);
-      setLocating(false);
-      toast.success("Location set.");
-    });
-    const onError = once(() => fallbackLocation());
+    setError("");
     try {
-      navigator.geolocation.getCurrentPosition(onSuccess, onError, { timeout: 6000 });
-      setTimeout(once(() => fallbackLocation()), 5000);
-    } catch {
-      fallbackLocation();
+      const coords = await getCurrentLocation();
+      setLocation({ ...coords, name: `Current location (${coords.latitude.toFixed(5)}, ${coords.longitude.toFixed(5)})`, confirmed: true });
+      toast.success("Your current location was added to the report.");
+    } catch (locationError) {
+      toast.error(locationError.message);
+    } finally {
+      setLocating(false);
     }
-  };
-
-  const fallbackLocation = () => {
-    setLocation(REPORT_PLACES[0]);
-    setLocating(false);
-    toast.info("Using a nearby location — position sharing is unavailable.");
   };
 
   const submit = async () => {
@@ -126,9 +109,9 @@ export function QuickReport() {
       setSubmission({ ...submitResult, categoryKey: "other" });
       setPhase("success");
       window.scrollTo({ top: 0, behavior: "smooth" });
-    } catch {
+    } catch (submitError) {
       setPhase("error");
-      toast.error("We couldn't submit your report. Please try again.");
+      toast.error(submitError?.message || "We couldn't submit your report. Please try again.");
     }
   };
 

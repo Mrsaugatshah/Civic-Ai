@@ -8,9 +8,9 @@ export async function getReport(id){return api(`/reports/${encodeURIComponent(id
 export async function getReportTimeline(id){const report=await getReport(id);return(report.timeline||[]).map((h,i,all)=>({key:h.newStatus,label:h.newStatus.replaceAll("_"," "),at:h.createdAt,note:h.reason,detail:h.reason,done:true,current:i===all.length-1}));}
 export async function getReportActivity(id){return(await getReport(id)).activity||[];}
 export async function getResolutionEvidence(id){const report=await getReport(id),before=report.evidence?.find(e=>e.kind==="citizen"),after=report.evidence?.find(e=>e.kind==="resolution");return before&&after?{before:{src:before.url,label:"Original citizen photo",date:before.uploadedAt},after:{src:after.url,label:"Resolution photo",date:after.uploadedAt}}:null;}
-export async function getCommunityConfirmation(){return null;}
-export async function confirmResolution(){throw new Error("Community confirmation is not enabled for this report.");}
-export async function submitResolutionFeedback(){throw new Error("Community confirmation is not enabled for this report.");}
+export async function getCommunityConfirmation(id){return api(`/reports/${encodeURIComponent(id)}/community`);}
+export async function confirmResolution(id, verdict){return api(`/reports/${encodeURIComponent(id)}/community`,{method:"POST",body:JSON.stringify({vote:verdict === "yes" ? "confirm" : "reject"})});}
+export async function submitResolutionFeedback(id){return api(`/reports/${encodeURIComponent(id)}/community`,{method:"POST",body:JSON.stringify({vote:"reject"})});}
 export async function getNotifications(){return api("/notifications");}
 export function markNotificationRead(){return{ids:[],all:false};}
 export function markAllNotificationsRead(){return{ids:[],all:true};}

@@ -57,6 +57,10 @@ export function CitizenLayout({ children, unreadCount, onOpenNotifications }) {
       navigate("/reports");
       return;
     }
+    if (key === "issues") {
+      navigate("/issues");
+      return;
+    }
     scrollTo(id);
   };
 

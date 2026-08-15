@@ -41,7 +41,7 @@ const fadeUp = {
 /* ------------------------------------------------------------------ */
 
 export function ConfirmationForm({ data, onConfirm, onSubmitFeedback }) {
-  const my = data?.confirmedByUser;
+  const my = data?.myVote ? { verdict: data.myVote === "confirm" ? "yes" : "no" } : null;
   const [step, setStep] = useState(
     my ? (my.verdict === "yes" ? "done_yes" : "done_no") : "ask"
   );
@@ -257,8 +257,9 @@ export function ConfirmationForm({ data, onConfirm, onSubmitFeedback }) {
 
 function CommunityAggregate({ data }) {
   if (!data) return null;
-  const pct = data.target
-    ? Math.min(100, Math.round((data.confirmed / data.target) * 100))
+  const total = Number(data.confirmed || 0) + Number(data.rejected || 0);
+  const pct = total
+    ? Math.min(100, Math.round((data.confirmed / total) * 100))
     : 0;
 
   return (
@@ -272,13 +273,13 @@ function CommunityAggregate({ data }) {
           </p>
           <p className="inline-flex items-center gap-1.5 text-muted-foreground">
             <X size={14} className="text-warning" aria-hidden />
-            {data.notConfirmed} citizens reported the issue still exists
+            {data.rejected} citizens reported the issue still exists
           </p>
         </div>
         <div className="mt-3 flex items-center gap-3">
           <Progress value={pct} indicatorClassName="bg-success" className="h-2 flex-1" />
           <span className="shrink-0 font-display text-sm font-semibold text-foreground">
-            {data.confirmed} / {data.target}
+            {data.confirmed} / {total}
           </span>
         </div>
         <p className="mt-1 text-[11px] text-muted-foreground">confirmed</p>

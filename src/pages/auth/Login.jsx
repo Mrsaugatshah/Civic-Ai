@@ -14,7 +14,6 @@ import { FormField } from "@/components/auth/FormField";
 import { PasswordField } from "@/components/auth/PasswordField";
 import { SubmitButton } from "@/components/auth/SubmitButton";
 import { ErrorMessage } from "@/components/auth/ErrorMessage";
-import { VerificationNotice } from "@/components/auth/VerificationNotice";
 
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -30,7 +29,6 @@ export function Login() {
   const [errors, setErrors] = useState({});
   const [formError, setFormError] = useState("");
   const [pending, setPending] = useState(false);
-  const [verification, setVerification] = useState(null);
 
   const fromLocation = location.state?.from;
   const from = fromLocation
@@ -48,7 +46,6 @@ export function Login() {
     if (emailError) errs.email = emailError;
     if (!password) errs.password = "Please enter your password.";
     setErrors(errs);
-    setVerification(null);
     if (Object.keys(errs).length > 0) return;
 
     setPending(true);
@@ -58,9 +55,6 @@ export function Login() {
       toast.success(`Welcome back, ${authed.name.split(" ")[0]}!`);
       navigate(resolveDestination(from, authed.role), { replace: true });
     } catch (error) {
-      if (error.code === "unverified") {
-        setVerification({ email: email.trim() });
-      }
       setFormError(
         isOffline()
           ? "We couldn't connect to CivicAI. Please check your connection and try again."
@@ -84,26 +78,8 @@ export function Login() {
         )}
 
         <form onSubmit={handleSubmit} noValidate className="space-y-5">
-          {formError && !verification && (
+          {formError && (
             <ErrorMessage network={isOffline()}>{formError}</ErrorMessage>
-          )}
-
-          {verification && (
-            <VerificationNotice
-              tone="info"
-              title="Verify your email to continue"
-              description="Enter the 6-digit verification code sent to your email. You won't be able to sign in until it's confirmed."
-              actions={
-                <Link
-                  to="/verify-email"
-                  state={{ email: verification.email }}
-                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary-hover"
-                >
-                  Open verification screen
-                  <ArrowRight size={14} />
-                </Link>
-              }
-            />
           )}
 
           <FormField id="email" label="Email" error={errors.email}>

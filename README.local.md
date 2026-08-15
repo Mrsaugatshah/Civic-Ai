@@ -34,8 +34,8 @@ demo accounts use the password `Civic@123`:
 - Authority: `ward11@city.gov`
 - Admin: `admin@city.gov`
 
-To send real verification codes, replace the SMTP placeholders in `.env` with
-credentials from your email provider. Keep `EMAIL_VERIFICATION_REQUIRED=false`
+Email verification is disabled for the hackathon flow. Accounts are created and
+authenticated with the account email and password only; SMTP is not required.
 only for local development when SMTP is not available.
 
 For a production-style local run:

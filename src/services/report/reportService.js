@@ -66,6 +66,18 @@ export async function submitReport(payload) {
   return { id: report.id, priority: report.priority, aiStatus: report.aiStatus, status: report.status, createdAt: report.submittedAt, category: report.categoryLabel, address: report.address };
 }
 
+export async function analyzeDraft({ description, category = "other", title = "Civic issue", location }) {
+  const response = await fetch("/api/reports/analyze", {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json", "X-CivicAI-CSRF": "1" },
+    body: JSON.stringify({ description, category, title, address: location?.name || "" }),
+  });
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(body.error?.message || "AI analysis is temporarily unavailable.");
+  return body.data;
+}
+
 const DRAFT_KEY = "civicai.report.draft.v1";
 export function saveDraft(draft) { try { if (!draft || !draft.touched) localStorage.removeItem(DRAFT_KEY); else localStorage.setItem(DRAFT_KEY, JSON.stringify(draft)); } catch { /* best effort */ } }
 export function loadDraft() { try { const raw = localStorage.getItem(DRAFT_KEY); return raw ? JSON.parse(raw) : null; } catch { return null; } }

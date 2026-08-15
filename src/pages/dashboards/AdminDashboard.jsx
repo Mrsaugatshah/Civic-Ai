@@ -17,6 +17,7 @@ import { PriorityQueue } from "@/components/admin/PriorityQueue";
 import { AIInsights } from "@/components/admin/AIInsights";
 import { Analytics } from "@/components/admin/Analytics";
 import { AdminSearch } from "@/components/admin/AdminSearch";
+import { Categories } from "@/components/admin/Categories";
 
 export function AdminDashboard() {
   const navigate = useNavigate();
@@ -65,6 +66,7 @@ export function AdminDashboard() {
           onRetry={queue.reload}
           onOpenIssue={openIssue}
         />
+        <Categories />
         <AIInsights data={insights.data} loading={insights.loading} error={insights.error} onRetry={insights.reload} />
         <Analytics
           data={analytics.data}
